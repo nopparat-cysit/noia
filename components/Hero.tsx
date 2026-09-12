@@ -69,30 +69,30 @@ export default function Hero() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative my-2 select-none"
+          className="relative my-1 sm:my-2 select-none"
         >
           {/* Outer Chrome Drop Glow */}
-          <h1 className="font-display text-7xl sm:text-9xl md:text-[11rem] lg:text-[13rem] font-black tracking-[0.18em] leading-none text-chrome-bright drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]">
+          <h1 className="font-display text-6xl sm:text-8xl md:text-[10rem] lg:text-[13rem] font-black tracking-[0.15em] sm:tracking-[0.18em] leading-none text-chrome-bright drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)]">
             NOIRE
           </h1>
           <div
             aria-hidden="true"
-            className="absolute inset-0 font-display text-7xl sm:text-9xl md:text-[11rem] lg:text-[13rem] font-black tracking-[0.18em] leading-none text-white/5 blur-lg pointer-events-none select-none"
+            className="absolute inset-0 font-display text-6xl sm:text-8xl md:text-[10rem] lg:text-[13rem] font-black tracking-[0.15em] sm:tracking-[0.18em] leading-none text-white/5 blur-lg pointer-events-none select-none"
           >
             NOIRE
           </div>
         </motion.div>
 
         {/* Floating Luxury Cosmetics Composition (Surrounding the typography) */}
-        <div className="relative w-full max-w-5xl h-48 sm:h-64 my-2 pointer-events-none">
+        <div className="relative w-full max-w-5xl h-36 sm:h-56 my-1 sm:my-2 pointer-events-none">
           {/* Cushion Compact - Top Left */}
           <motion.div
             style={{
-              x: mousePos.x * -18,
-              y: mousePos.y * -14,
+              x: mousePos.x * -14,
+              y: mousePos.y * -10,
             }}
             transition={{ type: "spring", stiffness: 70, damping: 20 }}
-            className="absolute left-2 sm:left-12 -top-16 sm:-top-20 w-24 sm:w-36 h-28 sm:h-40 drop-shadow-2xl"
+            className="absolute left-2 sm:left-12 -top-12 sm:-top-20 w-20 sm:w-36 h-24 sm:h-40 drop-shadow-2xl"
           >
             <CushionArtwork />
           </motion.div>
@@ -100,11 +100,11 @@ export default function Hero() {
           {/* Lipstick - Top Right */}
           <motion.div
             style={{
-              x: mousePos.x * 20,
-              y: mousePos.y * -18,
+              x: mousePos.x * 16,
+              y: mousePos.y * -14,
             }}
             transition={{ type: "spring", stiffness: 60, damping: 20 }}
-            className="absolute right-4 sm:right-16 -top-24 sm:-top-28 w-20 sm:w-32 h-32 sm:h-48 drop-shadow-2xl"
+            className="absolute right-2 sm:right-16 -top-16 sm:-top-28 w-18 sm:w-32 h-28 sm:h-48 drop-shadow-2xl"
           >
             <LipstickArtwork />
           </motion.div>
@@ -112,11 +112,11 @@ export default function Hero() {
           {/* Foundation Bottle - Center Floating Accent */}
           <motion.div
             style={{
-              x: mousePos.x * -12,
-              y: mousePos.y * 15,
+              x: mousePos.x * -10,
+              y: mousePos.y * 12,
             }}
             transition={{ type: "spring", stiffness: 80, damping: 25 }}
-            className="absolute left-1/4 -bottom-10 w-24 sm:w-36 h-36 sm:h-52 drop-shadow-2xl hidden md:block"
+            className="absolute left-1/4 -bottom-6 w-24 sm:w-36 h-32 sm:h-52 drop-shadow-2xl hidden md:block"
           >
             <FoundationArtwork />
           </motion.div>
@@ -124,11 +124,11 @@ export default function Hero() {
           {/* Serum Dropper - Bottom Right */}
           <motion.div
             style={{
-              x: mousePos.x * 16,
-              y: mousePos.y * 14,
+              x: mousePos.x * 12,
+              y: mousePos.y * 10,
             }}
             transition={{ type: "spring", stiffness: 65, damping: 20 }}
-            className="absolute right-1/4 -bottom-8 w-24 sm:w-36 h-36 sm:h-52 drop-shadow-2xl hidden md:block"
+            className="absolute right-1/4 -bottom-6 w-24 sm:w-36 h-32 sm:h-52 drop-shadow-2xl hidden md:block"
           >
             <SerumArtwork />
           </motion.div>
@@ -136,29 +136,32 @@ export default function Hero() {
 
         {/* Main Headline from PDF */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="max-w-3xl mx-auto mt-4 space-y-3"
+          className="max-w-3xl mx-auto mt-2 sm:mt-4 px-2 space-y-2 sm:space-y-3"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-wide text-zinc-100">
-            เครื่องสำอางระดับลักชัวรี · ขายส่ง · พรีออเดอร์
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-semibold tracking-normal sm:tracking-wide text-zinc-100 leading-snug">
+            เครื่องสำอางระดับลักชัวรี <span className="hidden sm:inline">·</span>{" "}
+            <span className="block sm:inline text-zinc-300 sm:text-zinc-100">
+              ขายส่ง · พรีออเดอร์
+            </span>
           </h2>
-          <p className="text-base sm:text-lg text-zinc-400 font-light tracking-wider">
+          <p className="text-sm sm:text-lg text-zinc-400 font-light tracking-wide sm:tracking-wider">
             ความงามที่ส่งมอบเหนือระดับ
           </p>
         </motion.div>
 
         {/* Dual Primary CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center gap-4 mt-8 w-full sm:w-auto"
+          className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 mt-6 sm:mt-8 w-full max-w-xs sm:max-w-none"
         >
           <button
             onClick={() => scrollTo("products")}
-            className="btn-chrome light-sweep px-8 py-3.5 rounded-full text-sm font-medium w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer shadow-chrome-glow"
+            className="btn-chrome light-sweep px-8 py-3.5 rounded-full text-xs sm:text-sm font-medium w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer shadow-chrome-glow"
           >
             <ShoppingBag className="w-4 h-4" />
             <span>เลือกซื้อสินค้า</span>
@@ -166,7 +169,7 @@ export default function Hero() {
 
           <button
             onClick={() => scrollTo("preorder")}
-            className="btn-glass px-8 py-3.5 rounded-full text-sm font-medium w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10"
+            className="btn-glass px-8 py-3.5 rounded-full text-xs sm:text-sm font-medium w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10"
           >
             <Truck className="w-4 h-4 text-zinc-300" />
             <span>สั่งพรีออเดอร์</span>
@@ -178,19 +181,19 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="grid grid-cols-3 gap-4 sm:gap-12 mt-14 pt-8 border-t border-white/10 text-center max-w-2xl"
+          className="grid grid-cols-3 gap-2 sm:gap-12 mt-10 sm:mt-14 pt-6 sm:pt-8 border-t border-white/10 text-center max-w-2xl w-full"
         >
-          <div className="space-y-1">
-            <p className="text-lg sm:text-xl font-semibold text-white font-display">100%</p>
-            <p className="text-[11px] sm:text-xs text-zinc-400">จดแจ้ง อย. ทุกรายการ</p>
+          <div className="space-y-0.5 sm:space-y-1">
+            <p className="text-base sm:text-xl font-semibold text-white font-display">100%</p>
+            <p className="text-[10px] sm:text-xs text-zinc-400">จดแจ้ง อย. ทุกรายการ</p>
           </div>
-          <div className="space-y-1 border-x border-white/10 px-2 sm:px-6">
-            <p className="text-lg sm:text-xl font-semibold text-white font-display">LPI</p>
-            <p className="text-[11px] sm:text-xs text-zinc-400">นำเข้าศุลกากรถูกต้อง</p>
+          <div className="space-y-0.5 sm:space-y-1 border-x border-white/10 px-1 sm:px-6">
+            <p className="text-base sm:text-xl font-semibold text-white font-display">LPI</p>
+            <p className="text-[10px] sm:text-xs text-zinc-400">นำเข้าศุลกากรถูกต้อง</p>
           </div>
-          <div className="space-y-1">
-            <p className="text-lg sm:text-xl font-semibold text-white font-display">B2B</p>
-            <p className="text-[11px] sm:text-xs text-zinc-400">ราคาส่งเพื่อธุรกิจ</p>
+          <div className="space-y-0.5 sm:space-y-1">
+            <p className="text-base sm:text-xl font-semibold text-white font-display">B2B</p>
+            <p className="text-[10px] sm:text-xs text-zinc-400">ราคาส่งเพื่อธุรกิจ</p>
           </div>
         </motion.div>
 

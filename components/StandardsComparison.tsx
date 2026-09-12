@@ -41,12 +41,12 @@ export default function StandardsComparison() {
           </p>
         </div>
 
-        {/* Side-by-Side Comparison Container */}
-        <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black/40 backdrop-blur-xl">
+        {/* Desktop Side-by-Side Comparison Container */}
+        <div className="hidden md:block max-w-5xl mx-auto rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black/40 backdrop-blur-xl">
           {/* Header Split Bar */}
-          <div className="grid grid-cols-1 md:grid-cols-2 border-b border-white/15">
+          <div className="grid grid-cols-2 border-b border-white/15">
             {/* Gray Market Header */}
-            <div className="p-6 bg-red-950/20 border-b md:border-b-0 md:border-r border-white/15 flex items-center justify-between">
+            <div className="p-6 bg-red-950/20 border-r border-white/15 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
                   <AlertTriangle className="w-4 h-4" />
@@ -88,10 +88,10 @@ export default function StandardsComparison() {
             <div
               onMouseEnter={() => setHoveredIndex(0)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className="grid grid-cols-1 md:grid-cols-2 transition-colors duration-200"
+              className="grid grid-cols-2 transition-colors duration-200"
             >
               {/* Gray Market */}
-              <div className="p-6 sm:p-8 bg-black/30 border-b md:border-b-0 md:border-r border-white/10 flex items-start gap-4">
+              <div className="p-8 bg-black/30 border-r border-white/10 flex items-start gap-4">
                 <div className="p-3 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-500 shrink-0 mt-0.5">
                   <Factory className="w-5 h-5" />
                 </div>
@@ -109,7 +109,7 @@ export default function StandardsComparison() {
               </div>
 
               {/* NOIRE */}
-              <div className="p-6 sm:p-8 bg-white/[0.02] flex items-start gap-4 group hover:bg-white/[0.04] transition-colors">
+              <div className="p-8 bg-white/[0.02] flex items-start gap-4 group hover:bg-white/[0.04] transition-colors">
                 <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0 mt-0.5">
                   <ShieldCheck className="w-5 h-5" />
                 </div>
@@ -134,10 +134,10 @@ export default function StandardsComparison() {
             <div
               onMouseEnter={() => setHoveredIndex(1)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className="grid grid-cols-1 md:grid-cols-2 transition-colors duration-200"
+              className="grid grid-cols-2 transition-colors duration-200"
             >
               {/* Gray Market */}
-              <div className="p-6 sm:p-8 bg-black/30 border-b md:border-b-0 md:border-r border-white/10 flex items-start gap-4">
+              <div className="p-8 bg-black/30 border-r border-white/10 flex items-start gap-4">
                 <div className="p-3 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-500 shrink-0 mt-0.5">
                   <PackageX className="w-5 h-5" />
                 </div>
@@ -155,7 +155,7 @@ export default function StandardsComparison() {
               </div>
 
               {/* NOIRE */}
-              <div className="p-6 sm:p-8 bg-white/[0.02] flex items-start gap-4 group hover:bg-white/[0.04] transition-colors">
+              <div className="p-8 bg-white/[0.02] flex items-start gap-4 group hover:bg-white/[0.04] transition-colors">
                 <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0 mt-0.5">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
@@ -180,10 +180,10 @@ export default function StandardsComparison() {
             <div
               onMouseEnter={() => setHoveredIndex(2)}
               onMouseLeave={() => setHoveredIndex(null)}
-              className="grid grid-cols-1 md:grid-cols-2 transition-colors duration-200"
+              className="grid grid-cols-2 transition-colors duration-200"
             >
               {/* Gray Market */}
-              <div className="p-6 sm:p-8 bg-black/30 border-b md:border-b-0 md:border-r border-white/10 flex items-start gap-4">
+              <div className="p-8 bg-black/30 border-r border-white/10 flex items-start gap-4">
                 <div className="p-3 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-500 shrink-0 mt-0.5">
                   <Gavel className="w-5 h-5" />
                 </div>
@@ -201,7 +201,7 @@ export default function StandardsComparison() {
               </div>
 
               {/* NOIRE */}
-              <div className="p-6 sm:p-8 bg-white/[0.02] flex items-start gap-4 group hover:bg-white/[0.04] transition-colors">
+              <div className="p-8 bg-white/[0.02] flex items-start gap-4 group hover:bg-white/[0.04] transition-colors">
                 <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shrink-0 mt-0.5">
                   <Scale className="w-5 h-5" />
                 </div>
@@ -220,6 +220,90 @@ export default function StandardsComparison() {
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Stacked Criteria View */}
+        <div className="md:hidden space-y-5">
+          {/* Criterion 1 */}
+          <div className="card-glass rounded-2xl p-5 border border-white/10 space-y-4">
+            <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase bg-white/5 px-2.5 py-0.5 rounded border border-white/10">
+              เกณฑ์ 01: มาตรฐานการจัดหา
+            </span>
+
+            {/* NOIRE Card */}
+            <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
+              <div className="flex items-center gap-2 text-emerald-400 mb-1.5">
+                <ShieldCheck className="w-4 h-4" />
+                <span className="text-xs font-bold font-display">มาตรฐาน NOIRE</span>
+              </div>
+              <h4 className="text-sm font-semibold text-white mb-1">ยืนยันผ่านฐานข้อมูล อย.</h4>
+              <p className="text-xs text-zinc-300">THFDA Data Catalog: GMP Cosmetic มีแหล่งกำเนิดโรงงานระดับสากล</p>
+            </div>
+
+            {/* Gray Market Card */}
+            <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/15">
+              <div className="flex items-center gap-2 text-red-400 mb-1.5">
+                <AlertTriangle className="w-4 h-4" />
+                <span className="text-xs font-semibold">ตลาดหิ้วทั่วไป (Gray Market)</span>
+              </div>
+              <h4 className="text-xs font-semibold text-red-300 mb-0.5">โรงงานที่ไม่สามารถยืนยันได้</h4>
+              <p className="text-[11px] text-zinc-400">ไม่ทราบแหล่งผลิตจริง เสี่ยงสินค้าปลอมหรือตกสเปก</p>
+            </div>
+          </div>
+
+          {/* Criterion 2 */}
+          <div className="card-glass rounded-2xl p-5 border border-white/10 space-y-4">
+            <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase bg-white/5 px-2.5 py-0.5 rounded border border-white/10">
+              เกณฑ์ 02: ความถูกต้องในการนำเข้า
+            </span>
+
+            {/* NOIRE Card */}
+            <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
+              <div className="flex items-center gap-2 text-emerald-400 mb-1.5">
+                <CheckCircle2 className="w-4 h-4" />
+                <span className="text-xs font-bold font-display">มาตรฐาน NOIRE</span>
+              </div>
+              <h4 className="text-sm font-semibold text-white mb-1">ถูกต้อง 100% ผ่านระบบ LPI และศุลกากร</h4>
+              <p className="text-xs text-zinc-300">มีใบขนสินค้าและใบเสร็จภาษีถูกต้องทุกชิปเมนต์</p>
+            </div>
+
+            {/* Gray Market Card */}
+            <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/15">
+              <div className="flex items-center gap-2 text-red-400 mb-1.5">
+                <PackageX className="w-4 h-4" />
+                <span className="text-xs font-semibold">ตลาดหิ้วทั่วไป (Gray Market)</span>
+              </div>
+              <h4 className="text-xs font-semibold text-red-300 mb-0.5">ลักลอบนำเข้า / เสี่ยงต่อการถูกยึดสินค้า</h4>
+              <p className="text-[11px] text-zinc-400">หลบเลี่ยงภาษี เสี่ยงถูกอายัดหรือยึดทำลาย</p>
+            </div>
+          </div>
+
+          {/* Criterion 3 */}
+          <div className="card-glass rounded-2xl p-5 border border-white/10 space-y-4">
+            <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase bg-white/5 px-2.5 py-0.5 rounded border border-white/10">
+              เกณฑ์ 03: ความเสี่ยงของร้านค้าปลีก
+            </span>
+
+            {/* NOIRE Card */}
+            <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
+              <div className="flex items-center gap-2 text-emerald-400 mb-1.5">
+                <Scale className="w-4 h-4" />
+                <span className="text-xs font-bold font-display">มาตรฐาน NOIRE</span>
+              </div>
+              <h4 className="text-sm font-semibold text-white mb-1">ไร้ความเสี่ยง ได้รับความคุ้มครองตาม พ.ร.บ. ปี 2565</h4>
+              <p className="text-xs text-zinc-300">ดำเนินธุรกิจได้อย่างสบายใจ มีเอกสารตัวจริงคุ้มครอง 100%</p>
+            </div>
+
+            {/* Gray Market Card */}
+            <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/15">
+              <div className="flex items-center gap-2 text-red-400 mb-1.5">
+                <Gavel className="w-4 h-4" />
+                <span className="text-xs font-semibold">ตลาดหิ้วทั่วไป (Gray Market)</span>
+              </div>
+              <h4 className="text-xs font-semibold text-red-300 mb-0.5">รับความรับผิดชอบทางกฎหมายระดับสูง</h4>
+              <p className="text-[11px] text-zinc-400">ผู้จำหน่ายต้องรับผิดชอบโทษทางอาญาและค่าปรับ</p>
             </div>
           </div>
         </div>

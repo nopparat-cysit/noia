@@ -116,22 +116,22 @@ export default function LogisticsArchitecture() {
             </svg>
           </div>
 
-          {/* Desktop Flow Layout */}
+          {/* Flow Layout */}
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             {/* 1. Left Node: ผู้ผลิตต่างประเทศ */}
             <div className="lg:col-span-3 flex flex-col items-center text-center">
               <button
                 onClick={() => setActiveNode("producer")}
-                className={`w-full p-6 rounded-2xl transition-all cursor-pointer ${
+                className={`w-full p-5 sm:p-6 rounded-2xl transition-all cursor-pointer ${
                   activeNode === "producer"
                     ? "bg-white/15 border-2 border-white shadow-chrome-glow"
                     : "bg-black/50 border border-white/10 hover:border-white/30"
                 }`}
               >
-                <div className="w-12 h-12 rounded-full bg-white/10 mx-auto flex items-center justify-center mb-3">
-                  <Factory className="w-6 h-6 text-white" />
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 mx-auto flex items-center justify-center mb-2.5">
+                  <Factory className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-white mb-1">
+                <h3 className="text-base sm:text-lg font-bold text-white mb-0.5">
                   ผู้ผลิตต่างประเทศ
                 </h3>
                 <p className="text-xs text-zinc-400">GMP Cosmetic Certified</p>
@@ -140,13 +140,13 @@ export default function LogisticsArchitecture() {
               {/* Sub-node 1 (Top Left in PDF): การจดแจ้งกับกลุ่มควบคุมเครื่องสำอาง */}
               <button
                 onClick={() => setActiveNode("fdaCheck")}
-                className={`w-full mt-4 p-4 rounded-xl text-left transition-all cursor-pointer ${
+                className={`w-full mt-3 sm:mt-4 p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer ${
                   activeNode === "fdaCheck"
                     ? "bg-white/15 border-white border"
                     : "bg-black/40 border border-white/10 hover:border-white/20"
                 }`}
               >
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-0.5">
                   <ClipboardCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span className="text-xs font-semibold text-white">
                     การจดแจ้งกับกลุ่มควบคุมเครื่องสำอาง
@@ -158,13 +158,13 @@ export default function LogisticsArchitecture() {
               {/* Sub-node 2 (Bottom Left in PDF): ยื่นแบบฟอร์ม F-I10-1 */}
               <button
                 onClick={() => setActiveNode("f101")}
-                className={`w-full mt-3 p-4 rounded-xl text-left transition-all cursor-pointer ${
+                className={`w-full mt-2.5 sm:mt-3 p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer ${
                   activeNode === "f101"
                     ? "bg-white/15 border-white border"
                     : "bg-black/40 border border-white/10 hover:border-white/20"
                 }`}
               >
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-0.5">
                   <FileText className="w-4 h-4 text-zinc-300 shrink-0" />
                   <span className="text-xs font-semibold text-white">
                     ยื่นแบบฟอร์ม F-I10-1
@@ -174,11 +174,16 @@ export default function LogisticsArchitecture() {
               </button>
             </div>
 
+            {/* Downward arrow on mobile between Producer and Hub */}
+            <div className="lg:hidden flex justify-center my-1 text-zinc-500">
+              <ArrowRight className="w-5 h-5 rotate-90 animate-bounce" />
+            </div>
+
             {/* 2. Center Node: ศูนย์กลางโลจิสติกส์ NOIRE (Shield) */}
-            <div className="lg:col-span-6 flex flex-col items-center justify-center text-center my-6 lg:my-0">
+            <div className="lg:col-span-6 flex flex-col items-center justify-center text-center my-4 lg:my-0">
               <button
                 onClick={() => setActiveNode("hub")}
-                className={`relative p-8 rounded-3xl transition-all cursor-pointer group flex flex-col items-center ${
+                className={`relative w-full sm:w-auto p-6 sm:p-8 rounded-3xl transition-all cursor-pointer group flex flex-col items-center ${
                   activeNode === "hub"
                     ? "bg-white/[0.08] border-2 border-white shadow-chrome-glow-lg"
                     : "bg-black/60 border border-white/20 hover:border-white/40"
@@ -188,34 +193,39 @@ export default function LogisticsArchitecture() {
                 <div className="absolute inset-0 bg-radial-spotlight opacity-75 pointer-events-none" />
 
                 <div className="relative z-10 transform transition-transform duration-500 group-hover:scale-105">
-                  <CentralLogisticsShield className="w-36 h-40" />
+                  <CentralLogisticsShield className="w-28 h-32 sm:w-36 sm:h-40" />
                 </div>
 
-                <div className="relative z-10 mt-4">
+                <div className="relative z-10 mt-3 sm:mt-4">
                   <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
                     CENTRAL COMPLIANCE GATEWAY
                   </span>
-                  <p className="text-xs text-zinc-300 mt-2 max-w-xs">
+                  <p className="text-xs text-zinc-300 mt-2 max-w-xs mx-auto">
                     ประสานงานด่านอาหารและยา และกรมศุลกากรแบบเบ็ดเสร็จ
                   </p>
                 </div>
               </button>
             </div>
 
+            {/* Downward arrow on mobile between Hub and Retailer */}
+            <div className="lg:hidden flex justify-center my-1 text-zinc-500">
+              <ArrowRight className="w-5 h-5 rotate-90 animate-bounce" />
+            </div>
+
             {/* 3. Right Node: ร้านค้าปลีกในไทย */}
             <div className="lg:col-span-3 flex flex-col items-center text-center">
               <button
                 onClick={() => setActiveNode("retailer")}
-                className={`w-full p-6 rounded-2xl transition-all cursor-pointer ${
+                className={`w-full p-5 sm:p-6 rounded-2xl transition-all cursor-pointer ${
                   activeNode === "retailer"
                     ? "bg-white/15 border-2 border-white shadow-chrome-glow"
                     : "bg-black/50 border border-white/10 hover:border-white/30"
                 }`}
               >
-                <div className="w-12 h-12 rounded-full bg-white/10 mx-auto flex items-center justify-center mb-3">
-                  <Store className="w-6 h-6 text-white" />
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 mx-auto flex items-center justify-center mb-2.5">
+                  <Store className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-white mb-1">
+                <h3 className="text-base sm:text-lg font-bold text-white mb-0.5">
                   ร้านค้าปลีกในไทย
                 </h3>
                 <p className="text-xs text-zinc-400">พร้อมจำหน่าย ถูกต้องตามกฎหมาย</p>
@@ -224,13 +234,13 @@ export default function LogisticsArchitecture() {
               {/* Sub-node 3 (Top Right in PDF): การยื่นขอ LPI */}
               <button
                 onClick={() => setActiveNode("lpi")}
-                className={`w-full mt-4 p-4 rounded-xl text-left transition-all cursor-pointer ${
+                className={`w-full mt-3 sm:mt-4 p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer ${
                   activeNode === "lpi"
                     ? "bg-white/15 border-white border"
                     : "bg-black/40 border border-white/10 hover:border-white/20"
                 }`}
               >
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-0.5">
                   <FileCheck className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span className="text-xs font-semibold text-white">
                     การยื่นขอ LPI
@@ -242,13 +252,13 @@ export default function LogisticsArchitecture() {
               {/* Sub-node 4 (Bottom Right in PDF): เคลียร์พิธีการด่านศุลกากร */}
               <button
                 onClick={() => setActiveNode("customsClearance")}
-                className={`w-full mt-3 p-4 rounded-xl text-left transition-all cursor-pointer ${
+                className={`w-full mt-2.5 sm:mt-3 p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer ${
                   activeNode === "customsClearance"
                     ? "bg-white/15 border-white border"
                     : "bg-black/40 border border-white/10 hover:border-white/20"
                 }`}
               >
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-0.5">
                   <Building className="w-4 h-4 text-zinc-300 shrink-0" />
                   <span className="text-xs font-semibold text-white">
                     เคลียร์พิธีการด่านศุลกากร

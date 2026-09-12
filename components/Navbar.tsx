@@ -148,42 +148,64 @@ export default function Navbar({ onOpenPartnerModal }: { onOpenPartnerModal: () 
       {/* Mobile Menu Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 top-[60px] z-40 bg-[#070709]/95 backdrop-blur-2xl border-b border-white/10 p-6 md:hidden shadow-2xl"
-          >
-            <div className="flex flex-col gap-3">
-              {NAV_ITEMS.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => handleNavClick(item.href)}
-                  className="text-left py-2.5 px-4 rounded-lg text-sm text-zinc-300 hover:text-white hover:bg-white/5 transition-colors flex items-center justify-between"
-                >
-                  <span>{item.name}</span>
-                  <ArrowUpRight className="w-4 h-4 text-zinc-500" />
-                </button>
-              ))}
+          <>
+            {/* Dark overlay backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 top-[60px] z-30 bg-black/80 backdrop-blur-sm md:hidden"
+            />
 
-              <div className="pt-4 mt-2 border-t border-white/10 flex flex-col gap-3">
-                <div className="flex items-center gap-2 text-xs text-zinc-400">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  <span>รับประกันนำเข้าถูกต้องตาม พ.ร.บ. และ อย. 100%</span>
+            <motion.div
+              initial={{ opacity: 0, y: -15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="fixed inset-x-0 top-[60px] z-40 bg-[#070709]/98 backdrop-blur-2xl border-b border-white/15 p-5 md:hidden shadow-2xl max-h-[calc(100vh-70px)] overflow-y-auto"
+            >
+              <div className="flex flex-col gap-1.5">
+                {NAV_ITEMS.map((item) => {
+                  const targetId = item.href.replace("#", "");
+                  const isActive = activeSection === targetId;
+
+                  return (
+                    <button
+                      key={item.name}
+                      onClick={() => handleNavClick(item.href)}
+                      className={`text-left py-3 px-4 rounded-xl text-sm transition-all flex items-center justify-between cursor-pointer ${
+                        isActive
+                          ? "bg-white/15 text-white font-medium border border-white/20"
+                          : "text-zinc-300 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      <span className="tracking-wide">{item.name}</span>
+                      <ArrowUpRight className="w-4 h-4 text-zinc-500" />
+                    </button>
+                  );
+                })}
+
+                <div className="pt-4 mt-2 border-t border-white/10 flex flex-col gap-3">
+                  <div className="flex items-center gap-2 px-2 py-1 text-xs text-zinc-400">
+                    <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>นำเข้าถูกต้องตาม พ.ร.บ. และ อย. 100%</span>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenPartnerModal();
+                    }}
+                    className="btn-chrome light-sweep w-full py-3.5 rounded-full text-xs font-semibold text-center shadow-chrome-glow cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>ขอใบเสนอราคาส่ง B2B</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenPartnerModal();
-                  }}
-                  className="btn-chrome w-full py-3 rounded-xl text-sm font-medium text-center shadow-lg"
-                >
-                  ขอใบเสนอราคาส่ง B2B
-                </button>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

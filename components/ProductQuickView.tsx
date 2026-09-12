@@ -77,32 +77,32 @@ export default function ProductQuickView({ product, onClose, onAddToCart }: Quic
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 20 }}
           transition={{ type: "spring", duration: 0.5, bounce: 0 }}
-          className="relative z-10 w-full max-w-4xl bg-[#0b0c0f] border border-white/20 rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.95)] max-h-[90vh] flex flex-col md:flex-row"
+          className="relative z-10 w-full max-w-4xl bg-[#0b0c0f] border border-white/20 rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.95)] max-h-[92vh] flex flex-col md:flex-row my-auto"
         >
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/50 border border-white/10 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-black/60 border border-white/15 text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Left: Product Artwork Visual Stage */}
-          <div className="md:w-1/2 bg-gradient-to-b from-white/[0.04] to-black/60 p-8 flex flex-col items-center justify-center relative border-b md:border-b-0 md:border-r border-white/10">
+          <div className="md:w-1/2 bg-gradient-to-b from-white/[0.04] to-black/60 p-6 sm:p-8 flex flex-col items-center justify-center relative border-b md:border-b-0 md:border-r border-white/10 shrink-0">
             {/* Ambient glow */}
             <div className="absolute inset-0 bg-radial-spotlight opacity-70" />
 
-            <div className="relative z-10 w-full max-w-[280px] drop-shadow-2xl">
+            <div className="relative z-10 w-full max-w-[200px] sm:max-w-[280px] drop-shadow-2xl">
               {renderArtwork(product.id)}
             </div>
 
-            <div className="mt-4 flex items-center gap-3">
-              <span className="px-3 py-1 rounded-full text-[11px] font-medium tracking-wider bg-white/10 text-white border border-white/15">
+            <div className="mt-2 sm:mt-4 flex items-center gap-2 sm:gap-3">
+              <span className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-medium tracking-wider bg-white/10 text-white border border-white/15">
                 {product.status}
               </span>
               {product.badge && (
-                <span className="px-3 py-1 rounded-full text-[11px] font-medium tracking-wider bg-zinc-800 text-zinc-200 border border-white/10">
+                <span className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-medium tracking-wider bg-zinc-800 text-zinc-200 border border-white/10">
                   {product.badge}
                 </span>
               )}
@@ -110,7 +110,7 @@ export default function ProductQuickView({ product, onClose, onAddToCart }: Quic
           </div>
 
           {/* Right: Specifications, B2B Pricing & Quantity */}
-          <div className="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto">
+          <div className="md:w-1/2 p-5 sm:p-8 flex flex-col justify-between overflow-y-auto">
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-mono uppercase tracking-widest text-zinc-400">

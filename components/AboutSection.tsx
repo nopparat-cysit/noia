@@ -76,26 +76,47 @@ export default function AboutSection() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs text-zinc-400 mb-4 tracking-[0.2em] uppercase">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-20">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[11px] sm:text-xs text-zinc-400 mb-3 sm:mb-4 tracking-[0.2em] uppercase">
             <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
             <span>Pillars of Excellence</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-6">
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-3 sm:mb-6">
             เกี่ยวกับ <span className="font-display tracking-[0.2em] text-chrome">NOIRE</span>
           </h2>
 
-          <p className="text-base sm:text-lg text-zinc-300 font-light leading-relaxed">
+          <p className="text-sm sm:text-lg text-zinc-300 font-light leading-relaxed">
             ศูนย์รวมเครื่องสำอางระดับพรีเมียมสำหรับการซื้อขาย
             บริการจำหน่ายแบบขายส่งและพรีออเดอร์อย่างเป็นระบบ
           </p>
         </div>
 
+        {/* Mobile Pillar Switcher (Segmented Pill Bar) */}
+        <div className="lg:hidden flex rounded-2xl bg-black/60 border border-white/10 p-1.5 mb-6">
+          {PILLARS.map((pillar, index) => {
+            const isActive = activeTab === index;
+            return (
+              <button
+                key={pillar.number}
+                onClick={() => setActiveTab(index)}
+                className={`flex-1 py-2.5 px-2 rounded-xl text-center transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-white text-black font-semibold shadow-chrome-glow"
+                    : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                <span className="font-display text-xs font-bold mr-1">{pillar.number}</span>
+                <span className="text-xs font-medium">{pillar.title}</span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* Interactive Storytelling Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Left Column: Interactive Pillar Navigator */}
-          <div className="lg:col-span-5 flex flex-col gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
+          {/* Left Column: Interactive Pillar Navigator (Desktop Only) */}
+          <div className="hidden lg:flex lg:col-span-5 flex-col gap-4">
             {PILLARS.map((pillar, index) => {
               const isActive = activeTab === index;
 
@@ -163,62 +184,62 @@ export default function AboutSection() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={activePillar.number}
-                initial={{ opacity: 0, x: 20 }}
+                initial={{ opacity: 0, x: 15 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.45, ease: "easeInOut" }}
-                className="card-glass rounded-3xl p-8 sm:p-12 relative overflow-hidden border border-white/20 shadow-2xl"
+                exit={{ opacity: 0, x: -15 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="card-glass rounded-3xl p-6 sm:p-12 relative overflow-hidden border border-white/20 shadow-2xl"
               >
                 {/* Background oversized pillar number watermark */}
                 <div
                   aria-hidden="true"
-                  className="absolute -right-6 -bottom-10 font-display text-[14rem] font-bold text-white/[0.03] select-none pointer-events-none"
+                  className="absolute -right-4 -bottom-6 sm:-right-6 sm:-bottom-10 font-display text-[8rem] sm:text-[14rem] font-bold text-white/[0.03] select-none pointer-events-none"
                 >
                   {activePillar.number}
                 </div>
 
                 <div className="relative z-10">
-                  <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                    <span className="text-[11px] font-mono tracking-widest text-zinc-400 uppercase bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-4 sm:mb-6">
+                    <span className="text-[10px] sm:text-[11px] font-mono tracking-widest text-zinc-400 uppercase bg-white/5 px-2.5 py-1 rounded-full border border-white/10">
                       {activePillar.badge}
                     </span>
-                    <div className="flex items-center gap-2 text-xs text-emerald-400">
+                    <div className="flex items-center gap-1.5 text-xs text-emerald-400">
                       <ShieldCheck className="w-4 h-4" />
                       <span>NOIRE GUARANTEED</span>
                     </div>
                   </div>
 
-                  <h3 className="text-3xl sm:text-4xl font-bold text-white tracking-wide mb-4">
+                  <h3 className="text-2xl sm:text-4xl font-bold text-white tracking-wide mb-3 sm:mb-4">
                     {activePillar.title}
                   </h3>
 
-                  <p className="text-base sm:text-lg text-zinc-300 leading-relaxed font-light mb-8">
+                  <p className="text-sm sm:text-lg text-zinc-300 leading-relaxed font-light mb-6 sm:mb-8">
                     {activePillar.detailedText}
                   </p>
 
                   {/* Highlights checklist */}
-                  <div className="space-y-3 mb-8">
+                  <div className="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8">
                     {activePillar.highlightPoints.map((point, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <CheckCircle2 className="w-4 h-4 text-zinc-300 shrink-0" />
-                        <span className="text-sm text-zinc-300">{point}</span>
+                      <div key={idx} className="flex items-center gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span className="text-xs sm:text-sm text-zinc-300">{point}</span>
                       </div>
                     ))}
                   </div>
 
                   {/* Metric Display Card */}
-                  <div className="p-4 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-between">
+                  <div className="p-4 rounded-2xl bg-black/50 border border-white/10 flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs text-zinc-400">{activePillar.metricLabel}</p>
-                      <p className="text-2xl sm:text-3xl font-bold font-display text-white mt-0.5">
+                      <p className="text-[11px] sm:text-xs text-zinc-400">{activePillar.metricLabel}</p>
+                      <p className="text-xl sm:text-3xl font-bold font-display text-white mt-0.5">
                         {activePillar.metric}
                       </p>
                     </div>
                     <a
                       href="#wholesale"
-                      className="btn-glass px-4 py-2 rounded-xl text-xs flex items-center gap-2 hover:bg-white/10"
+                      className="btn-glass px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 hover:bg-white/10"
                     >
-                      <span>สำรวจข้อเสนอ B2B</span>
+                      <span>ข้อเสนอ B2B</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </a>
                   </div>
