@@ -368,7 +368,7 @@ export function ChromeMedallion({ year = "๒๕๕๘", className = "w-28 h-28"
           <text x="0" y="26" textAnchor="middle" fill="#ffffff" fontFamily="sans-serif" fontSize="13" fontWeight="bold" letterSpacing="1">100%</text>
         </g>
       ) : (
-        <text x="80" y="90" textAnchor="middle" fill={`url(#med-chrome-${year})`} fontFamily="var(--font-prompt), sans-serif" fontSize="28" fontWeight="bold" letterSpacing="1">
+        <text x="80" y="90" textAnchor="middle" fill={`url(#med-chrome-${year})`} fontFamily="var(--font-anuphan), sans-serif" fontSize="28" fontWeight="bold" letterSpacing="1">
           {year}
         </text>
       )}
@@ -403,7 +403,7 @@ export function CentralLogisticsShield({ className = "w-32 h-32" }: { className?
       <path d="M100 28 L162 53 C162 115 137 162 100 188 C63 162 38 115 38 53 Z" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
 
       {/* Core Emblem Text & Icon */}
-      <text x="100" y="98" textAnchor="middle" fill="#a1a1aa" fontFamily="var(--font-prompt), sans-serif" fontSize="9" letterSpacing="2">ศูนย์กลางโลจิสติกส์</text>
+      <text x="100" y="98" textAnchor="middle" fill="#a1a1aa" fontFamily="var(--font-anuphan), sans-serif" fontSize="9" letterSpacing="2">ศูนย์กลางโลจิสติกส์</text>
       <text x="100" y="125" textAnchor="middle" fill="#ffffff" fontFamily="var(--font-cinzel), serif" fontSize="20" fontWeight="bold" letterSpacing="4">NOIRE</text>
 
       {/* Pulse Dot */}

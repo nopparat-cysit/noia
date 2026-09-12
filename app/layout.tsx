@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Prompt, Cinzel } from "next/font/google";
+import { Anuphan, Cinzel, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
-const prompt = Prompt({
+const anuphan = Anuphan({
   subsets: ["latin", "thai"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-prompt",
+  weight: ["200", "300", "400", "500", "600", "700"],
+  variable: "--font-anuphan",
   display: "swap",
 });
 
@@ -13,6 +13,14 @@ const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "900"],
   variable: "--font-cinzel",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
@@ -44,7 +52,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th" className={`${prompt.variable} ${cinzel.variable} scroll-smooth dark`}>
+    <html
+      lang="th"
+      className={`${anuphan.variable} ${cinzel.variable} ${cormorant.variable} scroll-smooth dark`}
+    >
       <body className="min-h-screen bg-[#050507] text-[#ededed] font-sans antialiased selection:bg-white/20 selection:text-white">
         {children}
       </body>

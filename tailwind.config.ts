@@ -33,9 +33,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["var(--font-cinzel)", "var(--font-prompt)", "serif"],
-        sans: ["var(--font-prompt)", "system-ui", "sans-serif"],
-        thai: ["var(--font-prompt)", "system-ui", "sans-serif"],
+        display: ["var(--font-cinzel)", "var(--font-cormorant)", "serif"],
+        serif: ["var(--font-cormorant)", "serif"],
+        sans: ["var(--font-anuphan)", "system-ui", "sans-serif"],
+        thai: ["var(--font-anuphan)", "system-ui", "sans-serif"],
       },
       backgroundImage: {
         "radial-spotlight": "radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0) 70%)",
