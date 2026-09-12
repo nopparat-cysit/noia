@@ -1,0 +1,112 @@
+"use client";
+
+import React, { useState } from "react";
+import { ArrowUp, ShieldCheck } from "lucide-react";
+
+export default function Footer() {
+  const [modalType, setModalType] = useState<"privacy" | "terms" | null>(null);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <footer className="relative bg-[#030304] border-t border-white/10 pt-16 pb-12 px-4 sm:px-6 lg:px-8 text-zinc-400">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-12 border-b border-white/10">
+          {/* Brand & Subtitle */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <span className="font-display text-2xl sm:text-3xl font-bold tracking-[0.3em] text-white">
+              NOIRE
+            </span>
+            <p className="text-xs text-zinc-400 tracking-wider mt-1">
+              LUXURY COSMETICS HUB · WHOLESALE & PREORDER
+            </p>
+            <p className="text-xs text-zinc-500 font-light mt-2 max-w-sm">
+              ศูนย์รวมเครื่องสำอางระดับพรีเมียม นำเข้าและจัดจำหน่ายถูกต้องตามกฎหมาย 100%
+            </p>
+          </div>
+
+          {/* Quick Nav Anchors */}
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs">
+            <a href="#hero" className="hover:text-white transition-colors">
+              หน้าแรก
+            </a>
+            <a href="#about" className="hover:text-white transition-colors">
+              เกี่ยวกับเรา
+            </a>
+            <a href="#products" className="hover:text-white transition-colors">
+              ร้านค้า
+            </a>
+            <a href="#wholesale" className="hover:text-white transition-colors">
+              ขายส่ง
+            </a>
+            <a href="#preorder" className="hover:text-white transition-colors">
+              พรีออเดอร์
+            </a>
+            <a href="#compliance" className="hover:text-white transition-colors">
+              มาตรฐาน อย.
+            </a>
+            <a href="#contact" className="hover:text-white transition-colors">
+              ติดต่อเรา
+            </a>
+          </div>
+
+          {/* Back to top */}
+          <button
+            onClick={scrollToTop}
+            className="p-3 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            aria-label="Back to top"
+          >
+            <ArrowUp className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Legal Disclaimer & Copyright matching PDF Page 9 */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+          <p className="text-center sm:text-left">
+            © Copyright NOIRE Luxury Cosmetics. สงวนลิขสิทธิ์ตามกฎหมาย
+          </p>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setModalType("privacy")}
+              className="hover:text-zinc-300 transition-colors underline-offset-4 hover:underline cursor-pointer"
+            >
+              นโยบายความเป็นส่วนตัว
+            </button>
+            <span>·</span>
+            <button
+              onClick={() => setModalType("terms")}
+              className="hover:text-zinc-300 transition-colors underline-offset-4 hover:underline cursor-pointer"
+            >
+              เงื่อนไขการค้า
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal for Privacy / Terms */}
+      {modalType && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-[#0b0c0f] border border-white/20 rounded-2xl p-6 sm:p-8 max-w-lg w-full text-zinc-300 shadow-2xl relative">
+            <h3 className="text-lg font-bold text-white mb-3">
+              {modalType === "privacy" ? "นโยบายความเป็นส่วนตัว (Privacy Policy)" : "เงื่อนไขการค้า (Commercial Terms)"}
+            </h3>
+            <p className="text-xs text-zinc-400 leading-relaxed mb-6 font-light">
+              {modalType === "privacy"
+                ? "NOIRE Luxury Cosmetics Hub ให้ความสำคัญสูงสุดกับความปลอดภัยของข้อมูลพาร์ทเนอร์ธุรกิจ ข้อมูลการขอใบเสนอราคา ข้อมูลการสั่งซื้อ และเอกสารทางบัญชีจะได้รับการเก็บรักษาและเข้ารหัสตามมาตรฐานความปลอดภัย ไม่มีการเปิดเผยแก่บุคคลที่สามโดยไม่ได้รับความยินยอม"
+                : "การสั่งซื้อแบบขายส่ง (Wholesale) และพรีออเดอร์ (Preorder) ทุกรายการอยู่ภายใต้ข้อกำหนดการนำเข้าตาม พ.ร.บ. เครื่องสำอาง พ.ศ. 2558 และฉบับปรับปรุง พ.ศ. 2565 โดยสินค้าทุกชิ้นจะผ่านพิธีการศุลกากรและตรวจสอบใบอนุญาต LPI อย่างถูกต้องครบถ้วน"}
+            </p>
+            <button
+              onClick={() => setModalType(null)}
+              className="btn-chrome light-sweep w-full py-2.5 rounded-xl text-xs font-medium"
+            >
+              ปิดหน้าต่าง
+            </button>
+          </div>
+        </div>
+      )}
+    </footer>
+  );
+}
