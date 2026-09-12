@@ -34,7 +34,7 @@ export default function ComplianceSection() {
         </div>
 
         {/* 3 Pillars Editorial Glass Plaques */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-8">
           {COMPLIANCE_DATA.map((item, idx) => (
             <motion.div
               key={item.id}
@@ -43,39 +43,39 @@ export default function ComplianceSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.15 }}
               onClick={() => setSelectedItem(item)}
-              className="card-glass card-glass-hover rounded-3xl p-8 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer"
+              className="card-glass card-glass-hover rounded-3xl p-6 md:p-5 lg:p-8 flex flex-col items-center text-center relative overflow-hidden group cursor-pointer"
             >
               {/* Background ambient lighting */}
               <div className="absolute inset-0 bg-radial-spotlight opacity-40 group-hover:opacity-70 transition-opacity" />
 
               {/* Chrome Medallion */}
-              <div className="relative z-10 my-4 transform transition-transform duration-500 group-hover:scale-105">
-                <ChromeMedallion year={item.badgeYear} className="w-28 h-28 drop-shadow-2xl" />
+              <div className="relative z-10 my-3 sm:my-4 transform transition-transform duration-500 group-hover:scale-105">
+                <ChromeMedallion year={item.badgeYear} className="w-24 h-24 lg:w-28 lg:h-28 drop-shadow-2xl" />
               </div>
 
               {/* Content */}
-              <div className="relative z-10 mt-6 flex-1 flex flex-col justify-between">
+              <div className="relative z-10 mt-4 sm:mt-6 flex-1 flex flex-col justify-between w-full">
                 <div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-wide mb-3">
+                  <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white tracking-wide mb-2 sm:mb-3">
                     {item.title}
                   </h3>
 
-                  <p className="text-sm text-zinc-300 font-normal leading-relaxed mb-4">
+                  <p className="text-xs sm:text-sm text-zinc-300 font-normal leading-relaxed mb-3 sm:mb-4">
                     {item.subtitle}
                   </p>
 
-                  <p className="text-xs text-zinc-400 font-light leading-relaxed mb-6">
+                  <p className="text-[11px] sm:text-xs text-zinc-400 font-light leading-relaxed mb-4 sm:mb-6">
                     {item.detail}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between text-left">
+                <div className="pt-3 sm:pt-4 border-t border-white/10 flex items-center justify-between text-left">
                   <div>
-                    <span className="text-[10px] text-zinc-500 block uppercase tracking-wider">หน่วยงานกำกับดูแล</span>
-                    <span className="text-xs font-medium text-zinc-300">{item.authority}</span>
+                    <span className="text-[9px] sm:text-[10px] text-zinc-500 block uppercase tracking-wider">หน่วยงานกำกับดูแล</span>
+                    <span className="text-[11px] sm:text-xs font-medium text-zinc-300">{item.authority}</span>
                   </div>
-                  <div className="w-7 h-7 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-                    <CheckCircle2 className="w-4 h-4" />
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                    <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
                 </div>
               </div>

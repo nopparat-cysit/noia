@@ -63,24 +63,24 @@ export default function PreorderSection() {
           </p>
         </div>
 
-        {/* Desktop: Liquid Chrome Progressive Circuit Timeline */}
-        <div className="hidden lg:block mb-12">
+        {/* Desktop & Tablet: Liquid Chrome Progressive Circuit Timeline */}
+        <div className="hidden md:block mb-12">
           {/* Progress Node Bar */}
-          <div className="relative mb-12">
+          <div className="relative mb-10 sm:mb-12">
             {/* Background connecting track */}
-            <div className="absolute top-1/2 left-8 right-8 h-1 -translate-y-1/2 bg-white/10 rounded-full" />
+            <div className="absolute top-1/2 left-6 right-6 h-1 -translate-y-1/2 bg-white/10 rounded-full" />
 
             {/* Active liquid chrome fill track */}
             <motion.div
-              className="absolute top-1/2 left-8 h-1 -translate-y-1/2 bg-gradient-to-r from-white via-zinc-200 to-zinc-500 rounded-full shadow-chrome-glow"
+              className="absolute top-1/2 left-6 h-1 -translate-y-1/2 bg-gradient-to-r from-white via-zinc-200 to-zinc-500 rounded-full shadow-chrome-glow"
               animate={{
-                width: `${(activeStepIndex / (PREORDER_STEPS.length - 1)) * 92}%`,
+                width: `${(activeStepIndex / (PREORDER_STEPS.length - 1)) * 94}%`,
               }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
             />
 
             {/* Step Circular Nodes */}
-            <div className="relative z-10 flex justify-between items-center px-4">
+            <div className="relative z-10 flex justify-between items-center px-2 sm:px-4">
               {PREORDER_STEPS.map((step, idx) => {
                 const isActive = activeStepIndex === idx;
                 const isPassed = activeStepIndex > idx;
@@ -93,7 +93,7 @@ export default function PreorderSection() {
                   >
                     {/* Circle Node */}
                     <div
-                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 border relative ${
+                      className={`w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center transition-all duration-300 border relative ${
                         isActive
                           ? "bg-white text-black border-white shadow-chrome-glow-lg scale-110"
                           : isPassed
@@ -102,9 +102,9 @@ export default function PreorderSection() {
                       }`}
                     >
                       {isPassed ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                        <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
                       ) : (
-                        <span className="font-display text-xs font-bold tracking-wider">
+                        <span className="font-display text-[11px] sm:text-xs font-bold tracking-wider">
                           {step.stepNumber}
                         </span>
                       )}
@@ -117,7 +117,7 @@ export default function PreorderSection() {
 
                     {/* Step Title Label */}
                     <span
-                      className={`mt-3 text-xs tracking-wider transition-colors max-w-[100px] text-center ${
+                      className={`mt-2.5 sm:mt-3 text-[11px] sm:text-xs tracking-wider transition-colors max-w-[85px] sm:max-w-[100px] text-center ${
                         isActive ? "text-white font-medium" : "text-zinc-500 group-hover:text-zinc-300"
                       }`}
                     >
@@ -137,40 +137,40 @@ export default function PreorderSection() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.35 }}
-              className="card-glass rounded-3xl p-8 lg:p-12 border border-white/20 shadow-2xl relative overflow-hidden"
+              className="card-glass rounded-3xl p-6 sm:p-8 lg:p-12 border border-white/20 shadow-2xl relative overflow-hidden"
             >
-              <div className="grid grid-cols-12 gap-8 items-center">
+              <div className="grid grid-cols-12 gap-6 lg:gap-8 items-center">
                 {/* Left: Step Big Number & Icon */}
-                <div className="col-span-4 flex flex-col items-start border-r border-white/10 pr-8">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 bg-white/5 px-2.5 py-1 rounded border border-white/10">
+                <div className="col-span-12 md:col-span-4 flex flex-col items-start md:border-r border-white/10 md:pr-6 lg:pr-8 border-b md:border-b-0 pb-4 md:pb-0">
+                  <div className="flex items-center gap-2.5 mb-2.5">
+                    <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-zinc-400 bg-white/5 px-2 py-0.5 rounded border border-white/10">
                       STEP {activeStep.stepNumber} OF 06
                     </span>
-                    <span className="text-xs text-emerald-400 flex items-center gap-1">
+                    <span className="text-[11px] sm:text-xs text-emerald-400 flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
                       <span>{activeStep.eta}</span>
                     </span>
                   </div>
 
-                  <h3 className="text-3xl font-bold text-white tracking-wide mb-4">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-wide mb-3">
                     {activeStep.title}
                   </h3>
 
-                  <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 text-white">
+                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 text-white">
                     {getStepIcon(activeStepIndex)}
                   </div>
                 </div>
 
                 {/* Right: Detailed Process & Guarantees */}
-                <div className="col-span-8 space-y-4">
-                  <p className="text-lg text-zinc-200 leading-relaxed font-light">
+                <div className="col-span-12 md:col-span-8 space-y-3.5">
+                  <p className="text-base sm:text-lg text-zinc-200 leading-relaxed font-light">
                     {activeStep.description}
                   </p>
 
-                  <div className="p-4 rounded-2xl bg-black/40 border border-white/10 flex items-start gap-3">
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-white/10 flex items-start gap-3">
                     <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-1">
+                      <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-0.5">
                         ข้อกำหนดและมาตรฐานการดำเนินงาน
                       </h4>
                       <p className="text-xs text-zinc-400 leading-relaxed">
@@ -180,11 +180,11 @@ export default function PreorderSection() {
                   </div>
 
                   {/* Step Navigation Controls */}
-                  <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                  <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-white/10">
                     <button
                       onClick={() => setActiveStepIndex(Math.max(0, activeStepIndex - 1))}
                       disabled={activeStepIndex === 0}
-                      className="px-4 py-2 rounded-full text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:hover:text-zinc-400 cursor-pointer"
+                      className="px-3.5 py-1.5 rounded-full text-xs text-zinc-400 hover:text-white disabled:opacity-30 disabled:hover:text-zinc-400 cursor-pointer"
                     >
                       ← ขั้นตอนก่อนหน้า
                     </button>
@@ -196,7 +196,7 @@ export default function PreorderSection() {
                         )
                       }
                       disabled={activeStepIndex === PREORDER_STEPS.length - 1}
-                      className="btn-chrome light-sweep px-5 py-2 rounded-full text-xs font-medium flex items-center gap-1.5 cursor-pointer"
+                      className="btn-chrome light-sweep px-4 sm:px-5 py-2 rounded-full text-xs font-medium flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>ขั้นตอนถัดไป</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -208,8 +208,8 @@ export default function PreorderSection() {
           </AnimatePresence>
         </div>
 
-        {/* Mobile: Clean Vertical Timeline */}
-        <div className="lg:hidden space-y-4">
+        {/* Mobile Only: Clean Vertical Timeline */}
+        <div className="md:hidden space-y-4">
           {PREORDER_STEPS.map((step, idx) => (
             <div
               key={step.stepNumber}

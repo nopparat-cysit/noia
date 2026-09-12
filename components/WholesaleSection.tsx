@@ -108,80 +108,80 @@ export default function WholesaleSection({
               {activeTier.tag}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 lg:gap-12 items-center relative z-10">
               {/* Left Column: Tier Specs & Benefits */}
-              <div className="lg:col-span-7 flex flex-col justify-between">
+              <div className="md:col-span-7 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2.5 rounded-xl bg-white/10 border border-white/15">
+                    <div className="p-2.5 rounded-xl bg-white/10 border border-white/15 shrink-0">
                       {getTierIcon(activeTier.id)}
                     </div>
                     <div>
-                      <span className="text-xs font-mono uppercase tracking-widest text-zinc-400">
+                      <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-zinc-400">
                         ระดับคำสั่งซื้อ B2B
                       </span>
-                      <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-wide">
+                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-wide">
                         {activeTier.tag} — {activeTier.title}
                       </h3>
                     </div>
                   </div>
 
-                  <p className="text-sm sm:text-base text-zinc-300 font-light leading-relaxed mb-6">
+                  <p className="text-xs sm:text-sm lg:text-base text-zinc-300 font-light leading-relaxed mb-5 sm:mb-6">
                     <strong className="text-white font-medium">เหมาะสำหรับ: </strong>
                     {activeTier.targetUser}
                   </p>
 
                   {/* MOQ & Discount Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                    <div className="p-4 rounded-2xl bg-black/40 border border-white/10">
-                      <p className="text-xs text-zinc-400 mb-1">ยอดสั่งซื้อขั้นต่ำ (MOQ)</p>
-                      <p className="text-lg sm:text-xl font-semibold text-white">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+                    <div className="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-white/10">
+                      <p className="text-[11px] sm:text-xs text-zinc-400 mb-1">ยอดสั่งซื้อขั้นต่ำ (MOQ)</p>
+                      <p className="text-base sm:text-lg lg:text-xl font-semibold text-white">
                         {activeTier.moq}
                       </p>
                     </div>
 
-                    <div className="p-4 rounded-2xl bg-black/40 border border-white/10">
-                      <p className="text-xs text-zinc-400 mb-1">ผลประโยชน์ราคาส่ง</p>
-                      <p className="text-lg sm:text-xl font-semibold text-emerald-400">
+                    <div className="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-white/10">
+                      <p className="text-[11px] sm:text-xs text-zinc-400 mb-1">ผลประโยชน์ราคาส่ง</p>
+                      <p className="text-base sm:text-lg lg:text-xl font-semibold text-emerald-400">
                         {activeTier.discountRange}
                       </p>
                     </div>
                   </div>
 
                   {/* Feature Checklist */}
-                  <div className="space-y-3 mb-8">
-                    <p className="text-xs uppercase tracking-wider text-zinc-500 font-medium">
+                  <div className="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8">
+                    <p className="text-[11px] sm:text-xs uppercase tracking-wider text-zinc-500 font-medium">
                       สิทธิประโยชน์ในระดับนี้
                     </p>
                     {activeTier.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <div className="w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-                          <Check className="w-3 h-3 text-emerald-400" />
+                      <div key={idx} className="flex items-center gap-2.5 sm:gap-3">
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                          <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-400" />
                         </div>
-                        <span className="text-sm text-zinc-300">{feature}</span>
+                        <span className="text-xs sm:text-sm text-zinc-300">{feature}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Direct CTA */}
-                <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-white/10">
+                <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 pt-4 border-t border-white/10">
                   <button
                     onClick={() => onOpenQuoteModal(activeTier.id)}
-                    className="btn-chrome light-sweep px-8 py-4 rounded-full text-sm font-semibold flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer shadow-chrome-glow"
+                    className="btn-chrome light-sweep px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer shadow-chrome-glow"
                   >
                     <span>ขอใบเสนอราคาส่ง ({activeTier.tag})</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </button>
 
-                  <span className="text-xs text-zinc-400 text-center sm:text-left">
+                  <span className="text-[11px] sm:text-xs text-zinc-400 text-center sm:text-left">
                     เจ้าหน้าที่ Key Account ให้บริการตอบกลับภายใน 24 ชม.
                   </span>
                 </div>
               </div>
 
               {/* Right Column: Dynamic Architectural Box Tower Visual */}
-              <div className="lg:col-span-5 flex flex-col items-center justify-center">
+              <div className="md:col-span-5 flex flex-col items-center justify-center mt-6 md:mt-0">
                 <div className="relative w-full max-w-sm h-80 rounded-2xl p-6 bg-gradient-to-b from-white/[0.05] via-transparent to-black/60 border border-white/10 flex items-center justify-center">
                   <div className="absolute inset-0 bg-radial-spotlight opacity-50" />
                   

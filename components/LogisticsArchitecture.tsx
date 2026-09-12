@@ -117,73 +117,68 @@ export default function LogisticsArchitecture() {
           </div>
 
           {/* Flow Layout */}
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-4 lg:gap-6 items-center">
             {/* 1. Left Node: ผู้ผลิตต่างประเทศ */}
-            <div className="lg:col-span-3 flex flex-col items-center text-center">
+            <div className="md:col-span-3 flex flex-col items-center text-center">
               <button
                 onClick={() => setActiveNode("producer")}
-                className={`w-full p-5 sm:p-6 rounded-2xl transition-all cursor-pointer ${
+                className={`w-full p-4 sm:p-5 lg:p-6 rounded-2xl transition-all cursor-pointer ${
                   activeNode === "producer"
                     ? "bg-white/15 border-2 border-white shadow-chrome-glow"
                     : "bg-black/50 border border-white/10 hover:border-white/30"
                 }`}
               >
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 mx-auto flex items-center justify-center mb-2.5">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-full bg-white/10 mx-auto flex items-center justify-center mb-2">
                   <Factory className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-white mb-0.5">
+                <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-0.5">
                   ผู้ผลิตต่างประเทศ
                 </h3>
-                <p className="text-xs text-zinc-400">GMP Cosmetic Certified</p>
+                <p className="text-[11px] sm:text-xs text-zinc-400">GMP Cosmetic Certified</p>
               </button>
 
               {/* Sub-node 1 (Top Left in PDF): การจดแจ้งกับกลุ่มควบคุมเครื่องสำอาง */}
               <button
                 onClick={() => setActiveNode("fdaCheck")}
-                className={`w-full mt-3 sm:mt-4 p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer ${
+                className={`w-full mt-2.5 sm:mt-3 lg:mt-4 p-3 sm:p-3.5 lg:p-4 rounded-xl text-left transition-all cursor-pointer ${
                   activeNode === "fdaCheck"
                     ? "bg-white/15 border-white border"
                     : "bg-black/40 border border-white/10 hover:border-white/20"
                 }`}
               >
-                <div className="flex items-center gap-2 mb-0.5">
-                  <ClipboardCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span className="text-xs font-semibold text-white">
-                    การจดแจ้งกับกลุ่มควบคุมเครื่องสำอาง
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+                  <ClipboardCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-semibold text-white line-clamp-1">
+                    การจดแจ้ง อย.
                   </span>
                 </div>
-                <p className="text-[11px] text-zinc-400 pl-6">(ตรวจสอบส่วนผสม)</p>
+                <p className="text-[10px] sm:text-[11px] text-zinc-400 pl-5 sm:pl-6">(ตรวจสอบส่วนผสม)</p>
               </button>
 
               {/* Sub-node 2 (Bottom Left in PDF): ยื่นแบบฟอร์ม F-I10-1 */}
               <button
                 onClick={() => setActiveNode("f101")}
-                className={`w-full mt-2.5 sm:mt-3 p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer ${
+                className={`w-full mt-2 sm:mt-2.5 lg:mt-3 p-3 sm:p-3.5 lg:p-4 rounded-xl text-left transition-all cursor-pointer ${
                   activeNode === "f101"
                     ? "bg-white/15 border-white border"
                     : "bg-black/40 border border-white/10 hover:border-white/20"
                 }`}
               >
-                <div className="flex items-center gap-2 mb-0.5">
-                  <FileText className="w-4 h-4 text-zinc-300 shrink-0" />
-                  <span className="text-xs font-semibold text-white">
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+                  <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-300 shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-semibold text-white line-clamp-1">
                     ยื่นแบบฟอร์ม F-I10-1
                   </span>
                 </div>
-                <p className="text-[11px] text-zinc-400 pl-6">สำหรับวัตถุดิบ Cosmetic Grade</p>
+                <p className="text-[10px] sm:text-[11px] text-zinc-400 pl-5 sm:pl-6">Cosmetic Grade</p>
               </button>
             </div>
 
-            {/* Downward arrow on mobile between Producer and Hub */}
-            <div className="lg:hidden flex justify-center my-1 text-zinc-500">
-              <ArrowRight className="w-5 h-5 rotate-90 animate-bounce" />
-            </div>
-
             {/* 2. Center Node: ศูนย์กลางโลจิสติกส์ NOIRE (Shield) */}
-            <div className="lg:col-span-6 flex flex-col items-center justify-center text-center my-4 lg:my-0">
+            <div className="md:col-span-6 flex flex-col items-center justify-center text-center my-4 md:my-0">
               <button
                 onClick={() => setActiveNode("hub")}
-                className={`relative w-full sm:w-auto p-6 sm:p-8 rounded-3xl transition-all cursor-pointer group flex flex-col items-center ${
+                className={`relative w-full sm:w-auto p-5 sm:p-6 lg:p-8 rounded-3xl transition-all cursor-pointer group flex flex-col items-center ${
                   activeNode === "hub"
                     ? "bg-white/[0.08] border-2 border-white shadow-chrome-glow-lg"
                     : "bg-black/60 border border-white/20 hover:border-white/40"
@@ -193,79 +188,74 @@ export default function LogisticsArchitecture() {
                 <div className="absolute inset-0 bg-radial-spotlight opacity-75 pointer-events-none" />
 
                 <div className="relative z-10 transform transition-transform duration-500 group-hover:scale-105">
-                  <CentralLogisticsShield className="w-28 h-32 sm:w-36 sm:h-40" />
+                  <CentralLogisticsShield className="w-24 h-28 sm:w-28 sm:h-32 lg:w-36 lg:h-40" />
                 </div>
 
-                <div className="relative z-10 mt-3 sm:mt-4">
-                  <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                <div className="relative z-10 mt-2 sm:mt-3 lg:mt-4">
+                  <span className="text-[9px] sm:text-[10px] font-mono tracking-widest text-emerald-400 uppercase bg-emerald-500/10 px-2 sm:px-2.5 py-0.5 rounded-full border border-emerald-500/20">
                     CENTRAL COMPLIANCE GATEWAY
                   </span>
-                  <p className="text-xs text-zinc-300 mt-2 max-w-xs mx-auto">
-                    ประสานงานด่านอาหารและยา และกรมศุลกากรแบบเบ็ดเสร็จ
+                  <p className="text-[11px] sm:text-xs text-zinc-300 mt-1.5 max-w-xs mx-auto">
+                    ประสานงานด่านอาหารและยา และศุลกากรแบบเบ็ดเสร็จ
                   </p>
                 </div>
               </button>
             </div>
 
-            {/* Downward arrow on mobile between Hub and Retailer */}
-            <div className="lg:hidden flex justify-center my-1 text-zinc-500">
-              <ArrowRight className="w-5 h-5 rotate-90 animate-bounce" />
-            </div>
-
             {/* 3. Right Node: ร้านค้าปลีกในไทย */}
-            <div className="lg:col-span-3 flex flex-col items-center text-center">
+            <div className="md:col-span-3 flex flex-col items-center text-center">
               <button
                 onClick={() => setActiveNode("retailer")}
-                className={`w-full p-5 sm:p-6 rounded-2xl transition-all cursor-pointer ${
+                className={`w-full p-4 sm:p-5 lg:p-6 rounded-2xl transition-all cursor-pointer ${
                   activeNode === "retailer"
                     ? "bg-white/15 border-2 border-white shadow-chrome-glow"
                     : "bg-black/50 border border-white/10 hover:border-white/30"
                 }`}
               >
-                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/10 mx-auto flex items-center justify-center mb-2.5">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 rounded-full bg-white/10 mx-auto flex items-center justify-center mb-2">
                   <Store className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-white mb-0.5">
+                <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-0.5">
                   ร้านค้าปลีกในไทย
                 </h3>
-                <p className="text-xs text-zinc-400">พร้อมจำหน่าย ถูกต้องตามกฎหมาย</p>
+                <p className="text-[11px] sm:text-xs text-zinc-400">พร้อมจำหน่าย ถูกต้องตามกฎหมาย</p>
               </button>
 
               {/* Sub-node 3 (Top Right in PDF): การยื่นขอ LPI */}
               <button
                 onClick={() => setActiveNode("lpi")}
-                className={`w-full mt-3 sm:mt-4 p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer ${
+                className={`w-full mt-2.5 sm:mt-3 lg:mt-4 p-3 sm:p-3.5 lg:p-4 rounded-xl text-left transition-all cursor-pointer ${
                   activeNode === "lpi"
                     ? "bg-white/15 border-white border"
                     : "bg-black/40 border border-white/10 hover:border-white/20"
                 }`}
               >
-                <div className="flex items-center gap-2 mb-0.5">
-                  <FileCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span className="text-xs font-semibold text-white">
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+                  <FileCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-semibold text-white line-clamp-1">
                     การยื่นขอ LPI
                   </span>
                 </div>
-                <p className="text-[11px] text-zinc-400 pl-6">(License per Invoice) ทุกชิปเมนต์</p>
+                <p className="text-[10px] sm:text-[11px] text-zinc-400 pl-5 sm:pl-6">ทุกชิปเมนต์</p>
               </button>
 
               {/* Sub-node 4 (Bottom Right in PDF): เคลียร์พิธีการด่านศุลกากร */}
               <button
                 onClick={() => setActiveNode("customsClearance")}
-                className={`w-full mt-2.5 sm:mt-3 p-3.5 sm:p-4 rounded-xl text-left transition-all cursor-pointer ${
+                className={`w-full mt-2 sm:mt-2.5 lg:mt-3 p-3 sm:p-3.5 lg:p-4 rounded-xl text-left transition-all cursor-pointer ${
                   activeNode === "customsClearance"
                     ? "bg-white/15 border-white border"
                     : "bg-black/40 border border-white/10 hover:border-white/20"
                 }`}
               >
-                <div className="flex items-center gap-2 mb-0.5">
-                  <Building className="w-4 h-4 text-zinc-300 shrink-0" />
-                  <span className="text-xs font-semibold text-white">
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5">
+                  <Building className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-300 shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-semibold text-white line-clamp-1">
                     เคลียร์พิธีการด่านศุลกากร
                   </span>
                 </div>
-                <p className="text-[11px] text-zinc-400 pl-6">
-                  และด่านอาหารและยา (พร้อมหนังสือมอบอำนาจ)
+                <p className="text-[10px] sm:text-[11px] text-zinc-400 pl-5 sm:pl-6">
+                  และด่านอาหารและยา
                 </p>
               </button>
             </div>

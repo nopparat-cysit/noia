@@ -84,10 +84,10 @@ export default function Navbar({ onOpenPartnerModal }: { onOpenPartnerModal: () 
             </span>
           </a>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop & iPad Landscape Navigation Links */}
           <nav
             aria-label="Main Navigation"
-            className={`hidden md:flex items-center gap-1 rounded-full px-4 py-1.5 transition-all duration-300 ${
+            className={`hidden lg:flex items-center gap-1 rounded-full px-4 py-1.5 transition-all duration-300 ${
               isScrolled
                 ? "bg-white/[0.04] border border-white/10 shadow-inner"
                 : "bg-black/30 backdrop-blur-md border border-white/5"
@@ -118,26 +118,26 @@ export default function Navbar({ onOpenPartnerModal }: { onOpenPartnerModal: () 
             })}
           </nav>
 
-          {/* Right Action: B2B Quote / Partner button */}
-          <div className="hidden lg:flex items-center gap-3">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-300">
+          {/* Right Action: B2B Quote / Partner button (Desktop & Tablet) */}
+          <div className="hidden sm:flex items-center gap-2.5 lg:gap-3">
+            <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-300">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>อย. 100%</span>
             </div>
 
             <button
               onClick={onOpenPartnerModal}
-              className="btn-chrome light-sweep px-4 py-1.5 rounded-full text-xs flex items-center gap-1.5 cursor-pointer"
+              className="btn-chrome light-sweep px-3.5 sm:px-4 py-1.5 rounded-full text-xs flex items-center gap-1.5 cursor-pointer"
             >
               <span>ขอใบเสนอราคาส่ง</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile & iPad Portrait Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 border border-white/10"
+            className="lg:hidden p-2.5 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 border border-white/10 ml-2 cursor-pointer"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
