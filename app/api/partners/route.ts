@@ -117,6 +117,8 @@ export async function POST(request: Request) {
       category: (p.category || "Official Partner").trim(),
       description: (p.description || "").trim(),
       websiteUrl: (p.websiteUrl || "#").trim(),
+      imageUrl: (p.imageUrl || p.logoUrl || "").trim() || undefined,
+      logoUrl: (p.logoUrl || p.imageUrl || "").trim() || undefined,
       statusBadge: (p.statusBadge || "Verified Partner").trim(),
       partnerType: (p.partnerType || "Authorized Gateway").trim(),
     }));

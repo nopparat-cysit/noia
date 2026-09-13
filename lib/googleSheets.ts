@@ -5,6 +5,7 @@ export interface PartnerItem {
   description: string;
   websiteUrl: string;
   logoUrl?: string;
+  imageUrl?: string;
   statusBadge: string;
   partnerType: string;
 }
