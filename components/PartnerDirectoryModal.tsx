@@ -129,13 +129,63 @@ export default function PartnerDirectoryModal({
     });
   };
 
-  // Upload image to public/uploads/partners/
+  // Compress image client-side to ensure it works on Vercel & serverless without EROFS
+  const compressClientImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (readerEvent) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_SIZE = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_SIZE) {
+              height = Math.round((height * MAX_SIZE) / width);
+              width = MAX_SIZE;
+            }
+          } else {
+            if (height > MAX_SIZE) {
+              width = Math.round((width * MAX_SIZE) / height);
+              height = MAX_SIZE;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL("image/webp", 0.85);
+          resolve(dataUrl);
+        };
+        img.onerror = reject;
+        img.src = readerEvent.target?.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Upload image: processes client-side first, then syncs to server
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setIsUploading(true);
     try {
+      // 1. Instant client-side compression (guarantees zero EROFS error on Vercel)
+      try {
+        const dataUrl = await compressClientImage(file);
+        handleFieldChange("imageUrl", dataUrl);
+        handleFieldChange("logoUrl", dataUrl);
+      } catch (cErr) {
+        console.warn("Client-side compression fallback:", cErr);
+      }
+
+      // 2. Also attempt upload to API
       const formData = new FormData();
       formData.append("file", file);
 
@@ -148,12 +198,10 @@ export default function PartnerDirectoryModal({
       if (json.success && json.url) {
         handleFieldChange("imageUrl", json.url);
         handleFieldChange("logoUrl", json.url);
-      } else {
-        alert(json.error || "เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
       }
     } catch (err) {
-      console.error("Upload error:", err);
-      alert("ไม่สามารถเชื่อมต่อระบบอัปโหลดรูปภาพได้");
+      console.error("Upload handler caught error:", err);
+      // Client image is already active, so do not block the user with alerts
     } finally {
       setIsUploading(false);
     }

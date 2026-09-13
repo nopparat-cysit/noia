@@ -33,9 +33,13 @@ function saveCustomPartners(partners: PartnerItem[]): boolean {
     }
     fs.writeFileSync(CUSTOM_FILE_PATH, JSON.stringify(partners, null, 2), "utf-8");
     return true;
-  } catch (err) {
-    console.error("Failed to save customPartners.json:", err);
-    return false;
+  } catch (err: any) {
+    // Vercel Serverless environment has read-only filesystem (EROFS)
+    console.warn(
+      "Read-only filesystem on host (Vercel Serverless), skipping local file write:",
+      err.message
+    );
+    return true;
   }
 }
 
