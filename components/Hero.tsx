@@ -142,10 +142,7 @@ export default function Hero() {
           className="max-w-3xl mx-auto mt-2 sm:mt-4 px-2 space-y-2 sm:space-y-3"
         >
           <h2 className="text-xl sm:text-3xl md:text-4xl font-semibold tracking-normal sm:tracking-wide text-zinc-100 leading-snug">
-            เครื่องสำอางระดับลักชัวรี <span className="hidden sm:inline">·</span>{" "}
-            <span className="block sm:inline text-zinc-300 sm:text-zinc-100">
-              ขายส่ง · พรีออเดอร์
-            </span>
+            เครื่องสำอางระดับลักชัวรี่: ขายส่ง • พรีออเดอร์
           </h2>
           <p className="text-sm sm:text-lg text-zinc-400 font-light tracking-wide sm:tracking-wider">
             ความงามที่ส่งมอบเหนือระดับ

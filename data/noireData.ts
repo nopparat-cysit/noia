@@ -70,7 +70,7 @@ export const NOIRE_PRODUCTS: ProductItem[] = [
     categoryLabel: "ใบหน้า",
     badge: "NOIRE EXCLUSIVE",
     status: "พร้อมส่ง",
-    retailPrice: 2500,
+    retailPrice: 1950,
     wholesalePrice: 1800,
     description: "รองพื้นเนื้อลิควิดสัมผัสบางเบาดั่งใยไหม มอบงานผิวเรียบเนียนระดับไฮเอนด์ ผสานอนุภาคเมทัลลิกรีเฟล็กต์ช่วยกระจายแสงอย่างเป็นธรรมชาติ",
     specs: {
@@ -90,7 +90,7 @@ export const NOIRE_PRODUCTS: ProductItem[] = [
     categoryLabel: "ริมฝีปาก",
     badge: "NOIRE EXCLUSIVE",
     status: "พร้อมส่ง",
-    retailPrice: 2500,
+    retailPrice: 1950,
     wholesalePrice: 1800,
     description: "ลิปสติกเคสแม่เหล็กสีดำด้านสลักตรา NOIRE เนื้อสัมผัสกำมะหยี่นุ่มละมุน ผสานไมโครโครเมียมพิกเมนต์ คมชัดติดทนนาน 12 ชั่วโมง",
     specs: {
@@ -110,7 +110,7 @@ export const NOIRE_PRODUCTS: ProductItem[] = [
     categoryLabel: "ดวงตา",
     badge: "NOIRE EXCLUSIVE",
     status: "พร้อมส่ง",
-    retailPrice: 2500,
+    retailPrice: 1950,
     wholesalePrice: 1800,
     description: "พาเลตต์อายแชโดว์ 9 เฉดสีระดับกูตูร์ ไล่เฉดจากชาร์โคลแมตต์ ซิลเวอร์โครมประกายระยิบระยับ จนถึงสีแชมเปญเมทัลลิก พิกเมนต์แน่นไม่ตกร่อง",
     specs: {
@@ -130,7 +130,7 @@ export const NOIRE_PRODUCTS: ProductItem[] = [
     categoryLabel: "เมคอัพ",
     badge: "NOIRE EXCLUSIVE",
     status: "พรีออเดอร์",
-    retailPrice: 2500,
+    retailPrice: 1950,
     wholesalePrice: 1800,
     description: "แป้งอัดแข็งสูตรพรีเมียมในตลับโครเมียมทรงกลมหรูหรา ล็อคเมคอัพให้เนียนผ่อง ควบคุมความมันได้ยาวนานโดยไม่ทำให้ผิวแห้งกร้าน",
     specs: {
@@ -252,8 +252,8 @@ export const PREORDER_STEPS: PreorderStep[] = [
   },
   {
     stepNumber: "02",
-    title: "แจ้งจำนวนที่ต้องการ",
-    description: "ระบุปริมาณสินค้าตามระดับคำสั่งซื้อ (Small / Wholesale / Bulk) เพื่อให้ระบบคำนวณส่วนลดที่ดีที่สุด",
+    title: "เช็คสินค้าที่ต้องการ",
+    description: "ระบุรายการและปริมาณสินค้าตามระดับคำสั่งซื้อ เพื่อให้ทีมงานเช็คสต็อกและคำนวณส่วนลดที่ดีที่สุด",
     eta: "ภายใน 15 นาที",
     detail: "ระบบประเมินโควตาราคาส่งและระยะเวลารอบการผลิตอย่างแม่นยำ",
   },
@@ -280,7 +280,7 @@ export const PREORDER_STEPS: PreorderStep[] = [
   },
   {
     stepNumber: "06",
-    title: "จัดส่งถึงคุณอย่างปลอดภัย",
+    title: "จัดส่งถึงคุณ อย่างปลอดภัย",
     description: "ตรวจสอบคุณภาพสินค้า QC รอบสุดท้าย บรรจุหีบห่ออย่างแน่นหนา และส่งตรงถึงหน้าร้านหรือคลังของคุณ",
     eta: "1 - 2 วันในประเทศ",
     detail: "ระบบขนส่งควบคุมคุณภาพ พร้อมเลข Tracking ตรวจสอบสถานะได้ตลอด 24 ชม.",

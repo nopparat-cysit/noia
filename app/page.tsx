@@ -11,6 +11,7 @@ import PreorderSection from "@/components/PreorderSection";
 import ComplianceSection from "@/components/ComplianceSection";
 import LogisticsArchitecture from "@/components/LogisticsArchitecture";
 import StandardsComparison from "@/components/StandardsComparison";
+import SocialContactSection from "@/components/SocialContactSection";
 import ContactPartner from "@/components/ContactPartner";
 import Footer from "@/components/Footer";
 import PartnerModal from "@/components/PartnerModal";
@@ -79,34 +80,35 @@ export default function HomePage() {
         onOpenPartnerDirectoryModal={() => handleOpenPartnerDirectory("view")}
       />
 
-      {/* 01 — HERO */}
+      {/* 01 — HERO (Slide 1) */}
       <Hero />
 
-      {/* 02 — ABOUT NOIRE */}
+      {/* 02 — ABOUT NOIRE (Slide 2) */}
       <AboutSection />
 
-      {/* 03 — PRODUCT COLLECTION */}
+      {/* 03 — PRODUCT COLLECTION (Slide 3 & 5) */}
       <ProductCollection onAddToCart={handleAddToCart} />
 
-      {/* 04 — WHOLESALE / BUSINESS */}
+      {/* 04 — WHOLESALE / BUSINESS (Slide 4) */}
       <WholesaleSection onOpenQuoteModal={(tierId) => handleOpenPartnerModal(tierId)} />
 
       {/* B2B PROMOTION & PROFIT CALCULATOR */}
       <PromotionCalculator onOpenQuoteModal={(tierId) => handleOpenPartnerModal(tierId)} />
 
-      {/* 05 — PREORDER PROCESS */}
+      {/* 05 — PREORDER PROCESS (Slide 6) */}
       <PreorderSection />
 
-      {/* 06 — TRUST / COMPLIANCE */}
-      <ComplianceSection />
+      {/* 06 — OFFICIAL SOCIAL CHANNELS (Slide 7: ช่องทางติดต่อ*) */}
+      <SocialContactSection />
 
-      {/* 07 — IMPORT / LOGISTICS ARCHITECTURE */}
-      <LogisticsArchitecture />
-
-      {/* 08 — NOIRE STANDARD */}
+      {/* 07 — NOIRE STANDARD (Slide 8: มาตรฐาน NOIRE*) */}
       <StandardsComparison />
 
-      {/* 09 — CONTACT / PARTNER */}
+      {/* 08 — TRUST / COMPLIANCE & LOGISTICS */}
+      <ComplianceSection />
+      <LogisticsArchitecture />
+
+      {/* 09 — CONTACT / PARTNER DIRECTORY (Slide 9: พาร์ทเนอร์ธุรกิจ) */}
       <ContactPartner
         onOpenPartnerModal={() => handleOpenPartnerModal()}
         onOpenPartnerDirectoryModal={(tab) => handleOpenPartnerDirectory(tab || "view")}

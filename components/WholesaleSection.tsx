@@ -43,11 +43,11 @@ export default function WholesaleSection({
             <span>B2B Commercial Solutions</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-4">
-            ความงามราคาส่ง เพื่อธุรกิจที่เติบโต
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-4 leading-tight">
+            โปรโมชั่นความงามราคาส่ง เพื่อธุรกิจที่เติบโต
           </h2>
 
-          <p className="text-lg sm:text-xl text-zinc-400 font-light">
+          <p className="text-lg sm:text-xl text-zinc-300 font-light">
             ปริมาณที่คุ้มกว่า ในราคาที่ดีกว่า
           </p>
         </div>

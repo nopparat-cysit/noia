@@ -14,10 +14,9 @@ const NAV_ITEMS: NavItem[] = [
   { id: "hero", name: "หน้าแรก", href: "#hero" },
   { id: "products", name: "ร้านค้า", href: "#products" },
   { id: "wholesale", name: "ขายส่ง", href: "#wholesale" },
-  { id: "promotions", name: "โปรโมชั่น", href: "#promotions" },
   { id: "preorder", name: "พรีออเดอร์", href: "#preorder" },
-  { id: "compliance", name: "มาตรฐาน อย.", href: "#compliance" },
   { id: "partner", name: "พาร์ทเนอร์", href: "#partner" },
+  { id: "promotions", name: "โปรโมชั่น", href: "#promotions" },
   { id: "contact", name: "ติดต่อเรา", href: "#contact" },
 ];
 

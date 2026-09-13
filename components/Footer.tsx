@@ -47,19 +47,50 @@ export default function Footer() {
             <a href="#compliance" className="hover:text-white transition-colors">
               มาตรฐาน อย.
             </a>
-            <a href="#contact" className="hover:text-white transition-colors">
-              ติดต่อเรา
+            <a href="#partner-showcase" className="hover:text-white transition-colors">
+              พาร์ทเนอร์
+            </a>
+            <a href="#social-channels" className="hover:text-white transition-colors">
+              ช่องทางติดต่อ
             </a>
           </div>
 
-          {/* Back to top */}
-          <button
-            onClick={scrollToTop}
-            className="p-3 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
-            aria-label="Back to top"
-          >
-            <ArrowUp className="w-4 h-4" />
-          </button>
+          {/* Social Channels & Back to Top */}
+          <div className="flex items-center gap-3">
+            <a
+              href="https://www.facebook.com/61594309081557/?http_ref=eyJ0cyI6MTc4OTI3MTY4MjAwMCwiciI6IiJ9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-xs text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5"
+            >
+              <span>Facebook</span>
+            </a>
+            <a
+              href="https://www.instagram.com/wxthoutqey?stkn=NGdkNHh3cW0wNDFy&utm_source=qr"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-xs text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5"
+            >
+              <span>Instagram</span>
+            </a>
+            <a
+              href="https://line.me/ti/p/lvo2Esqts9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-xs text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5"
+            >
+              <span>LINE</span>
+            </a>
+
+            {/* Back to top */}
+            <button
+              onClick={scrollToTop}
+              className="p-3 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              aria-label="Back to top"
+            >
+              <ArrowUp className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* Legal Disclaimer & Copyright matching PDF Page 9 */}
