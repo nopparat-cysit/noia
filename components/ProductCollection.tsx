@@ -191,14 +191,17 @@ export default function ProductCollection({
                           "linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(8, 8, 12, 0.9) 100%)",
                       }}
                     >
-                      {/* Left: Product Artwork Container with Badge */}
-                      <div className="w-full sm:w-44 h-48 sm:h-44 rounded-2xl bg-gradient-to-b from-white/[0.03] to-black/60 border border-white/10 flex items-center justify-center relative shrink-0 overflow-hidden group-hover:border-white/25 transition-colors">
+                      {/* Left: Product Artwork Container with Badge & Illuminated Pedestal */}
+                      <div className="w-full sm:w-44 h-48 sm:h-44 rounded-2xl bg-gradient-to-b from-white/[0.05] via-black/40 to-black/80 border border-white/10 flex flex-col items-center justify-center relative shrink-0 overflow-hidden group-hover:border-white/30 transition-all shadow-inner">
+                        {/* Ambient Spotlight */}
+                        <div className="absolute inset-0 bg-radial-spotlight opacity-60 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
                         {/* Status Badge in top-left */}
                         <div className="absolute top-2.5 left-2.5 z-10">
                           <span
                             className={`text-[10px] tracking-wider px-2.5 py-0.5 rounded-full font-medium ${
                               product.status === "พร้อมส่ง"
-                                ? "bg-white/90 text-black font-semibold shadow-sm"
+                                ? "bg-white text-black font-semibold shadow-sm"
                                 : "bg-cyan-500/20 text-cyan-200 border border-cyan-500/30"
                             }`}
                           >
@@ -206,9 +209,13 @@ export default function ProductCollection({
                           </span>
                         </div>
 
-                        {/* Subtle draped dark satin texture & artwork */}
-                        <div className="relative z-0 w-32 h-36 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-500">
-                          {renderProductArtwork(product.id)}
+                        {/* Product Artwork Model with Pedestal Reflection */}
+                        <div className="relative z-10 w-32 h-34 flex flex-col items-center justify-center transform group-hover:scale-105 transition-transform duration-500 pt-2">
+                          <div className="w-full h-28 flex items-center justify-center drop-shadow-[0_8px_20px_rgba(0,0,0,0.85)]">
+                            {renderProductArtwork(product.id)}
+                          </div>
+                          {/* Illuminated Chrome Pedestal (Stops Model from Sinking) */}
+                          <div className="w-24 h-1.5 rounded-full bg-gradient-to-r from-transparent via-white/50 to-transparent blur-[1px] mt-0.5" />
                         </div>
                       </div>
 
