@@ -11,6 +11,7 @@ import {
   Copy,
   Check,
   Sparkles,
+  Globe,
 } from "lucide-react";
 import ChromeRibbonOrnament from "./visuals/ChromeRibbonOrnament";
 
@@ -18,8 +19,10 @@ import FdaVerificationTool from "./FdaVerificationTool";
 
 export default function ContactPartner({
   onOpenPartnerModal,
+  onOpenPartnerDirectoryModal,
 }: {
   onOpenPartnerModal: () => void;
+  onOpenPartnerDirectoryModal?: () => void;
 }) {
   const [copied, setCopied] = useState(false);
   const email = "wholesale@noire-cosmetics.com";
@@ -140,7 +143,7 @@ export default function ContactPartner({
               </div>
             </div>
 
-            <div className="relative z-10 pt-4 border-t border-white/10">
+            <div className="relative z-10 pt-4 border-t border-white/10 flex flex-col gap-2.5">
               <button
                 onClick={onOpenPartnerModal}
                 className="btn-chrome light-sweep w-full py-3.5 px-4 rounded-full text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-chrome-glow"
@@ -148,6 +151,17 @@ export default function ContactPartner({
                 <span>ร่วมเป็นพาร์ทเนอร์กับ NOIRE</span>
                 <ArrowUpRight className="w-4 h-4" />
               </button>
+
+              {onOpenPartnerDirectoryModal && (
+                <button
+                  onClick={onOpenPartnerDirectoryModal}
+                  className="btn-glass w-full py-2.5 px-4 rounded-full text-xs font-medium flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors"
+                >
+                  <Globe className="w-3.5 h-3.5 text-zinc-300" />
+                  <span>เข้าชมเว็บไซต์พันธมิตรทางการ (2 เว็บไซต์)</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
+                </button>
+              )}
             </div>
           </div>
         </div>

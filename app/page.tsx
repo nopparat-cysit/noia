@@ -14,6 +14,7 @@ import StandardsComparison from "@/components/StandardsComparison";
 import ContactPartner from "@/components/ContactPartner";
 import Footer from "@/components/Footer";
 import PartnerModal from "@/components/PartnerModal";
+import PartnerDirectoryModal from "@/components/PartnerDirectoryModal";
 import CartDrawer, { CartItem } from "@/components/CartDrawer";
 import LiquidChromeBackground from "@/components/visuals/LiquidChromeBackground";
 import { ProductItem } from "@/data/noireData";
@@ -21,6 +22,7 @@ import { ShoppingBag } from "lucide-react";
 
 export default function HomePage() {
   const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
+  const [isPartnerDirectoryOpen, setIsPartnerDirectoryOpen] = useState(false);
   const [partnerDefaultTier, setPartnerDefaultTier] = useState<string>("wholesale");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -66,7 +68,10 @@ export default function HomePage() {
       <LiquidChromeBackground />
 
       {/* Sticky Luxury Navbar */}
-      <Navbar onOpenPartnerModal={() => handleOpenPartnerModal()} />
+      <Navbar
+        onOpenPartnerModal={() => handleOpenPartnerModal()}
+        onOpenPartnerDirectoryModal={() => setIsPartnerDirectoryOpen(true)}
+      />
 
       {/* 01 — HERO */}
       <Hero />
@@ -96,7 +101,10 @@ export default function HomePage() {
       <StandardsComparison />
 
       {/* 09 — CONTACT / PARTNER */}
-      <ContactPartner onOpenPartnerModal={() => handleOpenPartnerModal()} />
+      <ContactPartner
+        onOpenPartnerModal={() => handleOpenPartnerModal()}
+        onOpenPartnerDirectoryModal={() => setIsPartnerDirectoryOpen(true)}
+      />
 
       {/* FOOTER */}
       <Footer />
@@ -135,6 +143,12 @@ export default function HomePage() {
         isOpen={isPartnerModalOpen}
         onClose={() => setIsPartnerModalOpen(false)}
         defaultTier={partnerDefaultTier}
+      />
+
+      {/* B2B Partner Directory Modal (Powered by Google Sheet DB) */}
+      <PartnerDirectoryModal
+        isOpen={isPartnerDirectoryOpen}
+        onClose={() => setIsPartnerDirectoryOpen(false)}
       />
     </main>
   );

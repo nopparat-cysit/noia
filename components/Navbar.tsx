@@ -21,7 +21,13 @@ const NAV_ITEMS: NavItem[] = [
   { id: "contact", name: "ติดต่อเรา", href: "#contact" },
 ];
 
-export default function Navbar({ onOpenPartnerModal }: { onOpenPartnerModal: () => void }) {
+export default function Navbar({
+  onOpenPartnerModal,
+  onOpenPartnerDirectoryModal,
+}: {
+  onOpenPartnerModal: () => void;
+  onOpenPartnerDirectoryModal?: () => void;
+}) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -73,6 +79,12 @@ export default function Navbar({ onOpenPartnerModal }: { onOpenPartnerModal: () 
 
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
+    if (href === "#partner") {
+      if (onOpenPartnerDirectoryModal) {
+        onOpenPartnerDirectoryModal();
+        return;
+      }
+    }
     const targetId = href.replace("#", "");
     const targetEl = document.getElementById(targetId);
     if (targetEl) {
