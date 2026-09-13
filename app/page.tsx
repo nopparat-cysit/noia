@@ -6,9 +6,7 @@ import Hero from "@/components/Hero";
 import AboutSection from "@/components/AboutSection";
 import ProductCollection from "@/components/ProductCollection";
 import WholesaleSection from "@/components/WholesaleSection";
-import PromotionCalculator from "@/components/PromotionCalculator";
 import PreorderSection from "@/components/PreorderSection";
-import ComplianceSection from "@/components/ComplianceSection";
 import LogisticsArchitecture from "@/components/LogisticsArchitecture";
 import StandardsComparison from "@/components/StandardsComparison";
 import SocialContactSection from "@/components/SocialContactSection";
@@ -81,9 +79,6 @@ export default function HomePage() {
       {/* 04 — WHOLESALE / BUSINESS (Slide 4) */}
       <WholesaleSection />
 
-      {/* B2B PROMOTION & PROFIT CALCULATOR */}
-      <PromotionCalculator />
-
       {/* 05 — PREORDER PROCESS (Slide 6) */}
       <PreorderSection />
 
@@ -93,14 +88,11 @@ export default function HomePage() {
       {/* 07 — NOIRE STANDARD (Slide 8: มาตรฐาน NOIRE*) */}
       <StandardsComparison />
 
-      {/* 08 — TRUST / COMPLIANCE & LOGISTICS */}
-      <ComplianceSection />
+      {/* 08 — TRUST / LOGISTICS */}
       <LogisticsArchitecture />
 
-      {/* 09 — CONTACT / PARTNER DIRECTORY (Slide 9: พาร์ทเนอร์ธุรกิจ) */}
-      <ContactPartner
-        onOpenPartnerDirectoryModal={(tab) => handleOpenPartnerDirectory(tab || "view")}
-      />
+      {/* 09 — PARTNER DIRECTORY (Slide 9: พาร์ทเนอร์ธุรกิจ) */}
+      <ContactPartner />
 
       {/* FOOTER */}
       <Footer />

@@ -15,9 +15,9 @@ const NAV_ITEMS: NavItem[] = [
   { id: "products", name: "ร้านค้า", href: "#products" },
   { id: "wholesale", name: "ขายส่ง", href: "#wholesale" },
   { id: "preorder", name: "พรีออเดอร์", href: "#preorder" },
+  { id: "standards", name: "มาตรฐาน NOIRE", href: "#standards" },
   { id: "partner", name: "พาร์ทเนอร์", href: "#partner" },
-  { id: "promotions", name: "โปรโมชั่น", href: "#promotions" },
-  { id: "contact", name: "ติดต่อเรา", href: "#contact" },
+  { id: "social-channels", name: "ติดต่อเรา", href: "#social-channels" },
 ];
 
 export default function Navbar({
@@ -44,9 +44,9 @@ export default function Navbar({
             "products",
             "wholesale",
             "preorder",
+            "standards",
             "partner",
-            "promotions",
-            "contact",
+            "social-channels",
           ];
 
           const scrollPosition = window.scrollY + 120;

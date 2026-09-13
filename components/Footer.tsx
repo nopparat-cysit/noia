@@ -44,8 +44,8 @@ export default function Footer() {
             <a href="#preorder" className="hover:text-white transition-colors">
               พรีออเดอร์
             </a>
-            <a href="#compliance" className="hover:text-white transition-colors">
-              มาตรฐาน อย.
+            <a href="#standards" className="hover:text-white transition-colors">
+              มาตรฐาน NOIRE
             </a>
             <a href="#partner-showcase" className="hover:text-white transition-colors">
               พาร์ทเนอร์
