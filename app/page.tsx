@@ -14,7 +14,6 @@ import StandardsComparison from "@/components/StandardsComparison";
 import SocialContactSection from "@/components/SocialContactSection";
 import ContactPartner from "@/components/ContactPartner";
 import Footer from "@/components/Footer";
-import PartnerModal from "@/components/PartnerModal";
 import PartnerDirectoryModal from "@/components/PartnerDirectoryModal";
 import CartDrawer, { CartItem } from "@/components/CartDrawer";
 import LiquidChromeBackground from "@/components/visuals/LiquidChromeBackground";
@@ -22,23 +21,14 @@ import { ProductItem } from "@/data/noireData";
 import { ShoppingBag } from "lucide-react";
 
 export default function HomePage() {
-  const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
   const [isPartnerDirectoryOpen, setIsPartnerDirectoryOpen] = useState(false);
   const [partnerDirectoryTab, setPartnerDirectoryTab] = useState<"view" | "edit">("view");
-  const [partnerDefaultTier, setPartnerDefaultTier] = useState<string>("wholesale");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const handleOpenPartnerDirectory = (tab: "view" | "edit" = "view") => {
     setPartnerDirectoryTab(tab);
     setIsPartnerDirectoryOpen(true);
-  };
-
-  const handleOpenPartnerModal = (tierId?: string) => {
-    if (tierId) {
-      setPartnerDefaultTier(tierId);
-    }
-    setIsPartnerModalOpen(true);
   };
 
   const handleAddToCart = (product: ProductItem, quantity: number) => {
@@ -76,7 +66,6 @@ export default function HomePage() {
 
       {/* Sticky Luxury Navbar */}
       <Navbar
-        onOpenPartnerModal={() => handleOpenPartnerModal()}
         onOpenPartnerDirectoryModal={() => handleOpenPartnerDirectory("view")}
       />
 
@@ -90,10 +79,10 @@ export default function HomePage() {
       <ProductCollection onAddToCart={handleAddToCart} />
 
       {/* 04 — WHOLESALE / BUSINESS (Slide 4) */}
-      <WholesaleSection onOpenQuoteModal={(tierId) => handleOpenPartnerModal(tierId)} />
+      <WholesaleSection />
 
       {/* B2B PROMOTION & PROFIT CALCULATOR */}
-      <PromotionCalculator onOpenQuoteModal={(tierId) => handleOpenPartnerModal(tierId)} />
+      <PromotionCalculator />
 
       {/* 05 — PREORDER PROCESS (Slide 6) */}
       <PreorderSection />
@@ -110,7 +99,6 @@ export default function HomePage() {
 
       {/* 09 — CONTACT / PARTNER DIRECTORY (Slide 9: พาร์ทเนอร์ธุรกิจ) */}
       <ContactPartner
-        onOpenPartnerModal={() => handleOpenPartnerModal()}
         onOpenPartnerDirectoryModal={(tab) => handleOpenPartnerDirectory(tab || "view")}
       />
 
@@ -143,17 +131,14 @@ export default function HomePage() {
         items={cartItems}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
-        onCheckout={() => handleOpenPartnerModal()}
+        onCheckout={() => {
+          if (typeof window !== "undefined") {
+            window.open("https://line.me/ti/p/lvo2Esqts9", "_blank");
+          }
+        }}
       />
 
-      {/* B2B Partner Application Modal */}
-      <PartnerModal
-        isOpen={isPartnerModalOpen}
-        onClose={() => setIsPartnerModalOpen(false)}
-        defaultTier={partnerDefaultTier}
-      />
-
-      {/* B2B Partner Directory & Custom Editor Modal */}
+      {/* B2B Partner Directory Modal (View Only) */}
       <PartnerDirectoryModal
         isOpen={isPartnerDirectoryOpen}
         onClose={() => setIsPartnerDirectoryOpen(false)}

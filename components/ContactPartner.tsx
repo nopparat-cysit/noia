@@ -24,7 +24,7 @@ export default function ContactPartner({
   onOpenPartnerModal,
   onOpenPartnerDirectoryModal,
 }: {
-  onOpenPartnerModal: () => void;
+  onOpenPartnerModal?: () => void;
   onOpenPartnerDirectoryModal?: (tab?: "view" | "edit") => void;
 }) {
   const [copied, setCopied] = useState(false);
@@ -185,7 +185,7 @@ export default function ContactPartner({
 
             <div className="relative z-10 pt-4 border-t border-white/10 flex flex-col gap-2.5">
               <button
-                onClick={onOpenPartnerModal}
+                type="button"
                 className="btn-chrome light-sweep w-full py-3.5 px-4 rounded-full text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer shadow-chrome-glow"
               >
                 <span>ร่วมเป็นพาร์ทเนอร์กับ NOIRE</span>

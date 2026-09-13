@@ -10,12 +10,23 @@ import { FoundationArtwork, SerumArtwork, CushionArtwork } from "./visuals/Produ
 export default function WholesaleSection({
   onOpenQuoteModal,
 }: {
-  onOpenQuoteModal: (tierId?: string) => void;
+  onOpenQuoteModal?: (tierId?: string) => void;
 }) {
   const [activeTierId, setActiveTierId] = useState<string>("wholesale");
 
   const activeTier =
     WHOLESALE_TIERS.find((t) => t.id === activeTierId) || WHOLESALE_TIERS[1];
+
+  const handleAction = () => {
+    if (onOpenQuoteModal) {
+      onOpenQuoteModal(activeTier.id);
+    } else {
+      const el = document.getElementById("social-channels");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   const getTierIcon = (id: string) => {
     switch (id) {
@@ -167,7 +178,7 @@ export default function WholesaleSection({
                 {/* Direct CTA */}
                 <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 pt-4 border-t border-white/10">
                   <button
-                    onClick={() => onOpenQuoteModal(activeTier.id)}
+                    onClick={handleAction}
                     className="btn-chrome light-sweep px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer shadow-chrome-glow"
                   >
                     <span>ขอใบเสนอราคาส่ง ({activeTier.tag})</span>

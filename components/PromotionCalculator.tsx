@@ -15,12 +15,23 @@ import {
 import ChromeRibbonOrnament from "./visuals/ChromeRibbonOrnament";
 
 interface PromotionCalculatorProps {
-  onOpenQuoteModal: (tierId?: string) => void;
+  onOpenQuoteModal?: (tierId?: string) => void;
 }
 
 export default function PromotionCalculator({ onOpenQuoteModal }: PromotionCalculatorProps) {
   const [quantity, setQuantity] = useState<number>(60);
   const [selectedProductType, setSelectedProductType] = useState<string>("mixed");
+
+  const handleAction = () => {
+    if (onOpenQuoteModal) {
+      onOpenQuoteModal(tierInfo.tierId);
+    } else {
+      const el = document.getElementById("social-channels");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   // Product base retail price average based on selection
   const avgRetailPrice = useMemo(() => {
@@ -246,7 +257,7 @@ export default function PromotionCalculator({ onOpenQuoteModal }: PromotionCalcu
               {/* Action Button */}
               <div className="pt-2">
                 <button
-                  onClick={() => onOpenQuoteModal(tierInfo.tierId)}
+                  onClick={handleAction}
                   className="btn-chrome light-sweep w-full py-4 rounded-full text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 shadow-chrome-glow cursor-pointer"
                 >
                   <span>นำแผนกำไรนี้ไปขอใบเสนอราคา</span>

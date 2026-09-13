@@ -24,7 +24,7 @@ export default function Navbar({
   onOpenPartnerModal,
   onOpenPartnerDirectoryModal,
 }: {
-  onOpenPartnerModal: () => void;
+  onOpenPartnerModal?: () => void;
   onOpenPartnerDirectoryModal?: () => void;
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,28 +43,24 @@ export default function Navbar({
             "hero",
             "products",
             "wholesale",
-            "promotions",
             "preorder",
-            "compliance",
             "partner",
+            "promotions",
             "contact",
           ];
 
-          const scrollPosition = window.scrollY + 240;
-          let currentSection = "hero";
-
-          for (const id of navSectionIds) {
-            const el = document.getElementById(id);
+          const scrollPosition = window.scrollY + 120;
+          for (const sectionId of navSectionIds) {
+            const el = document.getElementById(sectionId);
             if (el) {
-              const rect = el.getBoundingClientRect();
-              const elementAbsoluteTop = rect.top + window.scrollY;
-              if (scrollPosition >= elementAbsoluteTop - 20) {
-                currentSection = id;
+              const top = el.offsetTop;
+              const height = el.offsetHeight;
+              if (scrollPosition >= top && scrollPosition < top + height) {
+                setActiveSection(sectionId);
+                break;
               }
             }
           }
-
-          setActiveSection((prev) => (prev !== currentSection ? currentSection : prev));
           ticking = false;
         });
         ticking = true;
@@ -72,31 +68,24 @@ export default function Navbar({
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // run initially
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleNavClick = (href: string) => {
     setMobileMenuOpen(false);
-    if (href === "#partner") {
-      if (onOpenPartnerDirectoryModal) {
-        onOpenPartnerDirectoryModal();
-        return;
-      }
-    }
     const targetId = href.replace("#", "");
-    const targetEl = document.getElementById(targetId);
-    if (targetEl) {
-      targetEl.scrollIntoView({ behavior: "smooth" });
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 inset-x-0 z-40 transition-all duration-500 ${
           isScrolled
-            ? "py-3 bg-[#050507]/80 backdrop-blur-xl border-b border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)]"
+            ? "py-3 bg-black/75 backdrop-blur-xl border-b border-white/10 shadow-2xl"
             : "py-6 bg-transparent"
         }`}
       >
@@ -143,7 +132,7 @@ export default function Navbar({
                     <motion.span
                       layoutId="activeNavIndicator"
                       className="absolute inset-0 rounded-full bg-white/10 border border-white/20 shadow-sm"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
                     />
                   )}
                   <span className="relative z-10">{item.name}</span>
@@ -159,13 +148,13 @@ export default function Navbar({
               <span>อย. 100%</span>
             </div>
 
-            <button
-              onClick={onOpenPartnerModal}
+            <a
+              href="#wholesale"
               className="btn-chrome light-sweep px-3.5 sm:px-4 py-1.5 rounded-full text-xs flex items-center gap-1.5 cursor-pointer"
             >
               <span>ขอใบเสนอราคาส่ง</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
-            </button>
+            </a>
           </div>
 
           {/* Mobile & iPad Portrait Menu Button */}
@@ -229,7 +218,8 @@ export default function Navbar({
                   <button
                     onClick={() => {
                       setMobileMenuOpen(false);
-                      onOpenPartnerModal();
+                      const el = document.getElementById("wholesale");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
                     }}
                     className="btn-chrome light-sweep w-full py-3.5 rounded-full text-xs font-semibold text-center shadow-chrome-glow cursor-pointer flex items-center justify-center gap-2"
                   >
