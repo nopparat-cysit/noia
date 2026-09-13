@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server";
-import { fetchPartnersFromGoogleSheet, DEFAULT_PARTNERS } from "@/lib/googleSheets";
+import { fetchPartnersFromGoogleSheet } from "@/lib/googleSheets";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const sheetParam = searchParams.get("sheetUrl") || process.env.GOOGLE_SHEETS_PARTNERS_URL;
+  const sheetParam = searchParams.get("sheetUrl") || undefined;
 
-  const partners = await fetchPartnersFromGoogleSheet(sheetParam || undefined);
+  const result = await fetchPartnersFromGoogleSheet(sheetParam);
 
   return NextResponse.json({
     success: true,
-    source: sheetParam ? "google_sheet" : "default_database",
-    count: partners.length,
-    data: partners,
+    source: result.source,
+    sheetUrl: result.sheetUrl,
+    hasCustomRows: result.hasCustomRows,
+    message: result.message,
+    count: result.partners.length,
+    data: result.partners,
   });
 }

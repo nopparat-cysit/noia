@@ -9,7 +9,10 @@ export interface PartnerItem {
   partnerType: string;
 }
 
-// Default 2 Partner Websites (Fallback data if Google Sheet is not yet configured)
+export const DEFAULT_GOOGLE_SHEET_URL =
+  "https://docs.google.com/spreadsheets/d/1Ovfyx_npnC3COwX7TkLpBJ2OPc56kTqPUH9Bipn2qDY/edit?usp=sharing";
+
+// Default 2 Partner Websites (Fallback data if Google Sheet is empty or loading)
 export const DEFAULT_PARTNERS: PartnerItem[] = [
   {
     id: "partner-1",
@@ -33,65 +36,201 @@ export const DEFAULT_PARTNERS: PartnerItem[] = [
   },
 ];
 
+export interface FetchPartnersResult {
+  partners: PartnerItem[];
+  source: "google_sheet" | "fallback_default";
+  sheetUrl: string;
+  hasCustomRows: boolean;
+  message?: string;
+}
+
 /**
- * Fetch partners from a public Google Sheet (published as CSV or via gviz)
- * Sheet format columns expected:
- * id, name, category, description, websiteUrl, statusBadge, partnerType
+ * Robust fetcher that connects to any public Google Sheet link.
+ * Supports auto-detection of column headers in both Thai and English.
  */
-export async function fetchPartnersFromGoogleSheet(sheetUrlOrId?: string): Promise<PartnerItem[]> {
-  if (!sheetUrlOrId) {
-    return DEFAULT_PARTNERS;
+export async function fetchPartnersFromGoogleSheet(
+  sheetUrlOrId?: string
+): Promise<FetchPartnersResult> {
+  const targetUrl =
+    sheetUrlOrId ||
+    process.env.GOOGLE_SHEETS_PARTNERS_URL ||
+    DEFAULT_GOOGLE_SHEET_URL;
+
+  let csvExportUrl = targetUrl;
+  const match = targetUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  const sheetId = match ? match[1] : targetUrl;
+
+  if (sheetId && !sheetId.startsWith("http")) {
+    csvExportUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
   }
 
   try {
-    let fetchUrl = sheetUrlOrId;
-    // If user provided a raw Sheet ID, construct the Google CSV export URL
-    if (!sheetUrlOrId.startsWith("http")) {
-      fetchUrl = `https://docs.google.com/spreadsheets/d/${sheetUrlOrId}/gviz/tq?tqx=out:csv`;
-    } else if (sheetUrlOrId.includes("docs.google.com/spreadsheets") && !sheetUrlOrId.includes("out:csv")) {
-      // Extract sheet ID from standard Google Sheets share link
-      const match = sheetUrlOrId.match(/\/d\/([a-zA-Z0-9-_]+)/);
-      if (match && match[1]) {
-        fetchUrl = `https://docs.google.com/spreadsheets/d/${match[1]}/gviz/tq?tqx=out:csv`;
-      }
-    }
+    const response = await fetch(csvExportUrl, {
+      next: { revalidate: 30 },
+      cache: "no-store",
+    });
 
-    const response = await fetch(fetchUrl, { next: { revalidate: 60 } });
     if (!response.ok) {
-      console.warn("Could not fetch Google Sheet, using fallback data.");
-      return DEFAULT_PARTNERS;
+      console.warn(`[GoogleSheets] HTTP ${response.status} fetching sheet, using fallback.`);
+      return {
+        partners: DEFAULT_PARTNERS,
+        source: "fallback_default",
+        sheetUrl: targetUrl,
+        hasCustomRows: false,
+        message: "ไม่สามารถเข้าถึง Google Sheet ได้ ชั่วคราวใช้ข้อมูลสำรอง",
+      };
     }
 
     const csvText = await response.text();
-    const rows = parseCSV(csvText);
+    const rows = parseCSV(csvText).filter((row) => row.some((cell) => cell.trim().length > 0));
 
-    if (rows.length < 2) {
-      return DEFAULT_PARTNERS;
+    // If sheet has no rows or only 0 bytes
+    if (rows.length === 0) {
+      return {
+        partners: DEFAULT_PARTNERS,
+        source: "google_sheet",
+        sheetUrl: targetUrl,
+        hasCustomRows: false,
+        message: "เชื่อมต่อ Google Sheet สำเร็จ แต่ยังไม่มีข้อมูลใน Sheet (กำลังแสดงข้อมูลตัวอย่าง 2 เว็บไซต์)",
+      };
     }
 
-    // Skip header row
-    const dataRows = rows.slice(1);
-    const parsedPartners: PartnerItem[] = dataRows
-      .filter((row) => row.length >= 5 && row[1]) // must have name and website
-      .map((row, idx) => ({
-        id: row[0] || `partner-${idx + 1}`,
-        name: row[1] || `Partner ${idx + 1}`,
-        category: row[2] || "Business Partner",
-        description: row[3] || "พันธมิตรธุรกิจร่วมกับ NOIRE Luxury Cosmetics Hub",
-        websiteUrl: row[4] ? formatUrl(row[4]) : "#",
-        statusBadge: row[5] || "Official Partner",
-        partnerType: row[6] || "Authorized Partner",
-      }));
+    // Determine header mapping
+    const headerRow = rows[0].map((h) => h.toLowerCase().trim());
+    let nameIdx = -1;
+    let urlIdx = -1;
+    let catIdx = -1;
+    let descIdx = -1;
+    let badgeIdx = -1;
+    let typeIdx = -1;
 
-    return parsedPartners.length > 0 ? parsedPartners : DEFAULT_PARTNERS;
+    headerRow.forEach((col, idx) => {
+      if (col.includes("name") || col.includes("ชื่อ") || col.includes("แบรนด์") || col.includes("partner")) {
+        if (nameIdx === -1) nameIdx = idx;
+      } else if (
+        col.includes("url") ||
+        col.includes("link") ||
+        col.includes("web") ||
+        col.includes("เว็บ") ||
+        col.includes("ลิงก์") ||
+        col.includes("ลิ้งค์")
+      ) {
+        if (urlIdx === -1) urlIdx = idx;
+      } else if (col.includes("cat") || col.includes("หมวด") || col.includes("ประเภทงาน")) {
+        if (catIdx === -1) catIdx = idx;
+      } else if (col.includes("desc") || col.includes("รายละ") || col.includes("คำอธิบาย") || col.includes("detail")) {
+        if (descIdx === -1) descIdx = idx;
+      } else if (col.includes("badge") || col.includes("status") || col.includes("สถานะ")) {
+        if (badgeIdx === -1) badgeIdx = idx;
+      } else if (col.includes("type") || col.includes("ประเภท") || col.includes("รูปแบบ")) {
+        if (typeIdx === -1) typeIdx = idx;
+      }
+    });
+
+    const isFirstRowHeader = nameIdx !== -1 || urlIdx !== -1 || catIdx !== -1;
+    const dataRows = isFirstRowHeader ? rows.slice(1) : rows;
+
+    if (dataRows.length === 0) {
+      return {
+        partners: DEFAULT_PARTNERS,
+        source: "google_sheet",
+        sheetUrl: targetUrl,
+        hasCustomRows: false,
+        message: "พบหัวตารางใน Google Sheet แต่ยังไม่มีแถวข้อมูล (กำลังแสดงข้อมูลตัวอย่าง 2 เว็บไซต์)",
+      };
+    }
+
+    const parsedPartners: PartnerItem[] = [];
+
+    dataRows.forEach((row, i) => {
+      // Find URL if not strictly mapped
+      let websiteUrl = "";
+      if (urlIdx !== -1 && row[urlIdx]) {
+        websiteUrl = row[urlIdx];
+      } else {
+        const foundUrl = row.find((cell) => isPotentialUrl(cell));
+        if (foundUrl) websiteUrl = foundUrl;
+      }
+
+      // Find Name
+      let name = "";
+      if (nameIdx !== -1 && row[nameIdx]) {
+        name = row[nameIdx];
+      } else {
+        const candidate = row.find((cell) => cell.trim() && cell !== websiteUrl);
+        if (candidate) name = candidate;
+      }
+
+      if (!name && !websiteUrl) return; // skip completely blank row
+
+      const category =
+        (catIdx !== -1 && row[catIdx]) ||
+        row.find((cell) => cell !== name && cell !== websiteUrl && cell.length < 40) ||
+        "Official Partner";
+
+      const description =
+        (descIdx !== -1 && row[descIdx]) ||
+        row.find((cell) => cell !== name && cell !== websiteUrl && cell !== category && cell.length > 20) ||
+        "พันธมิตรธุรกิจร่วมกับ NOIRE Luxury Cosmetics Hub";
+
+      const statusBadge = (badgeIdx !== -1 && row[badgeIdx]) || "Verified Partner";
+      const partnerType = (typeIdx !== -1 && row[typeIdx]) || "Authorized Gateway";
+
+      parsedPartners.push({
+        id: `partner-${i + 1}`,
+        name: name || `Partner ${i + 1}`,
+        category,
+        description,
+        websiteUrl: formatUrl(websiteUrl || "https://porta.fda.moph.go.th/"),
+        statusBadge,
+        partnerType,
+      });
+    });
+
+    if (parsedPartners.length === 0) {
+      return {
+        partners: DEFAULT_PARTNERS,
+        source: "google_sheet",
+        sheetUrl: targetUrl,
+        hasCustomRows: false,
+        message: "ไม่สามารถแปลงแถวข้อมูลใน Sheet ได้ จึงแสดงข้อมูลตัวอย่าง 2 เว็บไซต์",
+      };
+    }
+
+    return {
+      partners: parsedPartners,
+      source: "google_sheet",
+      sheetUrl: targetUrl,
+      hasCustomRows: true,
+    };
   } catch (error) {
-    console.error("Error fetching Google Sheet partners:", error);
-    return DEFAULT_PARTNERS;
+    console.error("[GoogleSheets] Error fetching partners:", error);
+    return {
+      partners: DEFAULT_PARTNERS,
+      source: "fallback_default",
+      sheetUrl: targetUrl,
+      hasCustomRows: false,
+    };
   }
+}
+
+function isPotentialUrl(str: string): boolean {
+  const s = str.trim().toLowerCase();
+  return (
+    s.startsWith("http://") ||
+    s.startsWith("https://") ||
+    s.startsWith("www.") ||
+    s.includes(".com") ||
+    s.includes(".co.th") ||
+    s.includes(".go.th") ||
+    s.includes(".org") ||
+    s.includes(".net")
+  );
 }
 
 function formatUrl(url: string): string {
   const trimmed = url.trim();
+  if (!trimmed || trimmed === "#") return "#";
   if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
     return trimmed;
   }
@@ -101,7 +240,6 @@ function formatUrl(url: string): string {
 function parseCSV(text: string): string[][] {
   const lines = text.split(/\r?\n/);
   return lines.map((line) => {
-    // Basic CSV cell parsing handling quotes
     const cells: string[] = [];
     let current = "";
     let inQuotes = false;
