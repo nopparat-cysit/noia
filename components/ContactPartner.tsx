@@ -12,6 +12,7 @@ import {
   Check,
   Sparkles,
   Globe,
+  Edit3,
 } from "lucide-react";
 import ChromeRibbonOrnament from "./visuals/ChromeRibbonOrnament";
 
@@ -22,7 +23,7 @@ export default function ContactPartner({
   onOpenPartnerDirectoryModal,
 }: {
   onOpenPartnerModal: () => void;
-  onOpenPartnerDirectoryModal?: () => void;
+  onOpenPartnerDirectoryModal?: (tab?: "view" | "edit") => void;
 }) {
   const [copied, setCopied] = useState(false);
   const email = "wholesale@noire-cosmetics.com";
@@ -153,14 +154,24 @@ export default function ContactPartner({
               </button>
 
               {onOpenPartnerDirectoryModal && (
-                <button
-                  onClick={onOpenPartnerDirectoryModal}
-                  className="btn-glass w-full py-2.5 px-4 rounded-full text-xs font-medium flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors"
-                >
-                  <Globe className="w-3.5 h-3.5 text-zinc-300" />
-                  <span>เข้าชมเว็บไซต์พันธมิตรทางการ (2 เว็บไซต์)</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
-                </button>
+                <div className="flex flex-col gap-1.5">
+                  <button
+                    onClick={() => onOpenPartnerDirectoryModal("view")}
+                    className="btn-glass w-full py-2.5 px-4 rounded-full text-xs font-medium flex items-center justify-center gap-2 cursor-pointer hover:bg-white/10 transition-colors"
+                  >
+                    <Globe className="w-3.5 h-3.5 text-zinc-300" />
+                    <span>เข้าชมเว็บไซต์พันธมิตรทางการ (2 เว็บไซต์)</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
+                  </button>
+
+                  <button
+                    onClick={() => onOpenPartnerDirectoryModal("edit")}
+                    className="text-[11px] text-zinc-400 hover:text-white flex items-center justify-center gap-1.5 py-1 transition-colors cursor-pointer"
+                  >
+                    <Edit3 className="w-3 h-3 text-zinc-400" />
+                    <span>ปรับแต่งข้อมูลพาร์ทเนอร์บนเว็บ (Custom Editor)</span>
+                  </button>
+                </div>
               )}
             </div>
           </div>

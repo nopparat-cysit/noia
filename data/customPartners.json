@@ -1,0 +1,20 @@
+[
+  {
+    "id": "partner-1",
+    "name": "NOIRE Global Logistics & Sourcing Network",
+    "category": "Official Logistics & Import Gateway",
+    "description": "ศูนย์กลางเครือข่ายโลจิสติกส์และการนำเข้าเครื่องสำอางระดับสากล บริหารจัดการพิธีการศุลกากรและตรวจสอบใบอนุญาต LPI ประจำภูมิภาค",
+    "websiteUrl": "https://porta.fda.moph.go.th/",
+    "statusBadge": "Verified Official Partner",
+    "partnerType": "Logistics & Compliance"
+  },
+  {
+    "id": "partner-2",
+    "name": "Couture Cosmetics Retail Alliance",
+    "category": "Premier Retail & Clinic Distribution Network",
+    "description": "พันธมิตรเครือข่ายร้านค้าปลีก คลินิกความงาม และศูนย์ความงามระดับไฮเอนด์ทั่วประเทศ จัดจำหน่ายเครื่องสำอางแบรนด์ NOIRE ภายใต้มาตรฐาน อย. 100%",
+    "websiteUrl": "https://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/FRM_SEARCH_CMT.aspx",
+    "statusBadge": "Authorized Distributor",
+    "partnerType": "B2B Retail Platform"
+  }
+]

@@ -23,9 +23,15 @@ import { ShoppingBag } from "lucide-react";
 export default function HomePage() {
   const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false);
   const [isPartnerDirectoryOpen, setIsPartnerDirectoryOpen] = useState(false);
+  const [partnerDirectoryTab, setPartnerDirectoryTab] = useState<"view" | "edit">("view");
   const [partnerDefaultTier, setPartnerDefaultTier] = useState<string>("wholesale");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  const handleOpenPartnerDirectory = (tab: "view" | "edit" = "view") => {
+    setPartnerDirectoryTab(tab);
+    setIsPartnerDirectoryOpen(true);
+  };
 
   const handleOpenPartnerModal = (tierId?: string) => {
     if (tierId) {
@@ -70,7 +76,7 @@ export default function HomePage() {
       {/* Sticky Luxury Navbar */}
       <Navbar
         onOpenPartnerModal={() => handleOpenPartnerModal()}
-        onOpenPartnerDirectoryModal={() => setIsPartnerDirectoryOpen(true)}
+        onOpenPartnerDirectoryModal={() => handleOpenPartnerDirectory("view")}
       />
 
       {/* 01 — HERO */}
@@ -103,7 +109,7 @@ export default function HomePage() {
       {/* 09 — CONTACT / PARTNER */}
       <ContactPartner
         onOpenPartnerModal={() => handleOpenPartnerModal()}
-        onOpenPartnerDirectoryModal={() => setIsPartnerDirectoryOpen(true)}
+        onOpenPartnerDirectoryModal={(tab) => handleOpenPartnerDirectory(tab || "view")}
       />
 
       {/* FOOTER */}
@@ -145,10 +151,11 @@ export default function HomePage() {
         defaultTier={partnerDefaultTier}
       />
 
-      {/* B2B Partner Directory Modal (Powered by Google Sheet DB) */}
+      {/* B2B Partner Directory & Custom Editor Modal */}
       <PartnerDirectoryModal
         isOpen={isPartnerDirectoryOpen}
         onClose={() => setIsPartnerDirectoryOpen(false)}
+        initialTab={partnerDirectoryTab}
       />
     </main>
   );
