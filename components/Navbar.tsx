@@ -5,18 +5,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight, ShieldCheck } from "lucide-react";
 
 interface NavItem {
+  id: string;
   name: string;
   href: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { name: "หน้าแรก", href: "#hero" },
-  { name: "ร้านค้า", href: "#products" },
-  { name: "ขายส่ง", href: "#wholesale" },
-  { name: "พรีออเดอร์", href: "#preorder" },
-  { name: "พาร์ทเนอร์", href: "#partner" },
-  { name: "โปรโมชั่น", href: "#wholesale" },
-  { name: "ติดต่อเรา", href: "#contact" },
+  { id: "hero", name: "หน้าแรก", href: "#hero" },
+  { id: "products", name: "ร้านค้า", href: "#products" },
+  { id: "wholesale", name: "ขายส่ง", href: "#wholesale" },
+  { id: "promotions", name: "โปรโมชั่น", href: "#promotions" },
+  { id: "preorder", name: "พรีออเดอร์", href: "#preorder" },
+  { id: "compliance", name: "มาตรฐาน อย.", href: "#compliance" },
+  { id: "partner", name: "พาร์ทเนอร์", href: "#partner" },
+  { id: "contact", name: "ติดต่อเรา", href: "#contact" },
 ];
 
 export default function Navbar({ onOpenPartnerModal }: { onOpenPartnerModal: () => void }) {
@@ -25,26 +27,47 @@ export default function Navbar({ onOpenPartnerModal }: { onOpenPartnerModal: () 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 40);
 
-      const sections = ["hero", "about", "products", "wholesale", "preorder", "compliance", "logistics", "standards", "partner", "contact"];
-      const scrollPos = window.scrollY + 200;
+          const navSectionIds = [
+            "hero",
+            "products",
+            "wholesale",
+            "promotions",
+            "preorder",
+            "compliance",
+            "partner",
+            "contact",
+          ];
 
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveSection(sectionId);
-            break;
+          const scrollPosition = window.scrollY + 240;
+          let currentSection = "hero";
+
+          for (const id of navSectionIds) {
+            const el = document.getElementById(id);
+            if (el) {
+              const rect = el.getBoundingClientRect();
+              const elementAbsoluteTop = rect.top + window.scrollY;
+              if (scrollPosition >= elementAbsoluteTop - 20) {
+                currentSection = id;
+              }
+            }
           }
-        }
+
+          setActiveSection((prev) => (prev !== currentSection ? currentSection : prev));
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // run initially
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -155,7 +178,7 @@ export default function Navbar({ onOpenPartnerModal }: { onOpenPartnerModal: () 
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 top-[60px] z-30 bg-black/80 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 top-[60px] z-30 bg-black/80 backdrop-blur-sm lg:hidden"
             />
 
             <motion.div
@@ -163,7 +186,7 @@ export default function Navbar({ onOpenPartnerModal }: { onOpenPartnerModal: () 
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="fixed inset-x-0 top-[60px] z-40 bg-[#070709]/98 backdrop-blur-2xl border-b border-white/15 p-5 md:hidden shadow-2xl max-h-[calc(100vh-70px)] overflow-y-auto"
+              className="fixed inset-x-0 top-[60px] z-40 bg-[#070709]/98 backdrop-blur-2xl border-b border-white/15 p-5 lg:hidden shadow-2xl max-h-[calc(100vh-70px)] overflow-y-auto"
             >
               <div className="flex flex-col gap-1.5">
                 {NAV_ITEMS.map((item) => {

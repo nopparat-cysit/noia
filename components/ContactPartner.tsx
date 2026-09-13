@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import ChromeRibbonOrnament from "./visuals/ChromeRibbonOrnament";
 
+import FdaVerificationTool from "./FdaVerificationTool";
+
 export default function ContactPartner({
   onOpenPartnerModal,
 }: {
@@ -35,7 +37,7 @@ export default function ContactPartner({
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
+        <div className="text-center max-w-4xl mx-auto mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs text-zinc-400 mb-4 tracking-[0.2em] uppercase">
             <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
             <span>Official Gateways</span>
@@ -48,6 +50,11 @@ export default function ContactPartner({
           <p className="text-base sm:text-lg text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed">
             เชื่อมต่อกับ NOIRE โดยตรงเพื่อการตรวจสอบข้อมูลทางกฎหมาย หรือเริ่มต้นความร่วมมือทางธุรกิจ
           </p>
+        </div>
+
+        {/* Interactive Live FDA Inspection Tool */}
+        <div className="max-w-5xl mx-auto mb-10">
+          <FdaVerificationTool />
         </div>
 
         {/* 2 Main Portals from PDF */}
@@ -90,7 +97,7 @@ export default function ContactPartner({
           </div>
 
           {/* Portal 2: Business Partner Contact */}
-          <div className="card-glass rounded-3xl p-8 sm:p-10 flex flex-col justify-between border border-white/20 shadow-2xl relative overflow-hidden group">
+          <div id="partner" className="card-glass rounded-3xl p-8 sm:p-10 flex flex-col justify-between border border-white/20 shadow-2xl relative overflow-hidden group scroll-mt-28">
             <div className="absolute inset-0 bg-radial-spotlight opacity-40 group-hover:opacity-60 transition-opacity" />
 
             <div className="relative z-10">

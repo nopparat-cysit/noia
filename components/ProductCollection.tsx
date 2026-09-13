@@ -24,6 +24,7 @@ export default function ProductCollection({
   const [statusFilter, setStatusFilter] = useState<"all" | "พร้อมส่ง" | "พรีออเดอร์">("all");
   const [quickViewProduct, setQuickViewProduct] = useState<ProductItem | null>(null);
   const [addedItemIds, setAddedItemIds] = useState<Record<string, boolean>>({});
+  const [activeShades, setActiveShades] = useState<Record<string, number>>({});
 
   const filteredProducts = useMemo(() => {
     return NOIRE_PRODUCTS.filter((product) => {
@@ -178,9 +179,38 @@ export default function ProductCollection({
                     <h3 className="text-base font-semibold text-white group-hover:text-zinc-100 transition-colors line-clamp-1 mb-1">
                       {product.name}
                     </h3>
-                    <p className="text-xs text-zinc-400 font-light mb-4 line-clamp-2">
+                    <p className="text-xs text-zinc-400 font-light mb-2.5 line-clamp-2">
                       {product.description}
                     </p>
+
+                    {/* Interactive Shade Swatches */}
+                    {product.shades && product.shades.length > 0 && (
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-[10px] text-zinc-500 font-mono">เฉดสี:</span>
+                        <div className="flex items-center gap-1.5">
+                          {product.shades.map((shade, sIdx) => {
+                            const isShadeActive = (activeShades[product.id] || 0) === sIdx;
+                            return (
+                              <button
+                                key={shade}
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setActiveShades((prev) => ({ ...prev, [product.id]: sIdx }));
+                                }}
+                                style={{ backgroundColor: shade }}
+                                className={`w-3.5 h-3.5 rounded-full border border-black/40 transition-all cursor-pointer ${
+                                  isShadeActive
+                                    ? "ring-2 ring-white scale-125 shadow-sm"
+                                    : "opacity-70 hover:opacity-100"
+                                }`}
+                                title={`เฉดสีที่ ${sIdx + 1}`}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Dual Pricing Grid from PDF */}
                     <div className="flex items-baseline justify-between mb-4">

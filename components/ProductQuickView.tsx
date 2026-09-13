@@ -21,6 +21,7 @@ interface QuickViewProps {
 
 export default function ProductQuickView({ product, onClose, onAddToCart }: QuickViewProps) {
   const [quantity, setQuantity] = useState(product ? product.specs.moq : 12);
+  const [selectedShade, setSelectedShade] = useState(0);
   const [added, setAdded] = useState(false);
 
   if (!product) return null;
@@ -126,9 +127,36 @@ export default function ProductQuickView({ product, onClose, onAddToCart }: Quic
                 {product.name}
               </h3>
 
-              <p className="text-sm text-zinc-300 font-light leading-relaxed mb-6">
+              <p className="text-sm text-zinc-300 font-light leading-relaxed mb-4">
                 {product.description}
               </p>
+
+              {/* Interactive Shade Selector */}
+              {product.shades && product.shades.length > 0 && (
+                <div className="p-3.5 rounded-2xl bg-black/50 border border-white/10 mb-5">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-zinc-400">เลือกเฉดสี / โทนที่ต้องการ:</span>
+                    <span className="text-xs font-mono text-zinc-300">
+                      เฉดที่ {selectedShade + 1} จาก {product.shades.length}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {product.shades.map((shade, idx) => (
+                      <button
+                        key={shade}
+                        type="button"
+                        onClick={() => setSelectedShade(idx)}
+                        style={{ backgroundColor: shade }}
+                        className={`w-7 h-7 rounded-full border border-black/50 transition-all cursor-pointer ${
+                          selectedShade === idx
+                            ? "ring-2 ring-white scale-110 shadow-lg"
+                            : "opacity-70 hover:opacity-100 hover:scale-105"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* B2B Margin Comparison Grid */}
               <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-black/40 border border-white/10 mb-6">

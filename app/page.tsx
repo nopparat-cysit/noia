@@ -6,6 +6,7 @@ import Hero from "@/components/Hero";
 import AboutSection from "@/components/AboutSection";
 import ProductCollection from "@/components/ProductCollection";
 import WholesaleSection from "@/components/WholesaleSection";
+import PromotionCalculator from "@/components/PromotionCalculator";
 import PreorderSection from "@/components/PreorderSection";
 import ComplianceSection from "@/components/ComplianceSection";
 import LogisticsArchitecture from "@/components/LogisticsArchitecture";
@@ -78,6 +79,9 @@ export default function HomePage() {
 
       {/* 04 — WHOLESALE / BUSINESS */}
       <WholesaleSection onOpenQuoteModal={(tierId) => handleOpenPartnerModal(tierId)} />
+
+      {/* B2B PROMOTION & PROFIT CALCULATOR */}
+      <PromotionCalculator onOpenQuoteModal={(tierId) => handleOpenPartnerModal(tierId)} />
 
       {/* 05 — PREORDER PROCESS */}
       <PreorderSection />
