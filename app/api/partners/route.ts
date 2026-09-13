@@ -153,11 +153,20 @@ export async function POST(request: Request) {
           redirect: "follow",
         });
 
-        if (scriptRes.ok || scriptRes.status === 200 || scriptRes.redirected) {
-          sheetSyncResult = "synced_to_google_sheet";
-        } else if (scriptRes.status === 401) {
+        const resText = await scriptRes.text();
+        const isUnauthorized =
+          scriptRes.status === 401 ||
+          scriptRes.url.includes("accounts.google.com") ||
+          resText.includes("ServiceLogin") ||
+          resText.includes("Sign in - Google Accounts");
+
+        if (isUnauthorized) {
+          console.warn("[GoogleAppsScript] Received 401 / Google Login redirect. Who has access must be set to Anyone.");
           sheetSyncResult = "unauthorized";
+        } else if (scriptRes.ok || scriptRes.status === 200 || resText.includes('"success"')) {
+          sheetSyncResult = "synced_to_google_sheet";
         } else {
+          console.warn("[GoogleAppsScript] Sync returned non-ok status:", scriptRes.status, resText);
           sheetSyncResult = "sync_failed";
         }
       } catch (syncErr) {

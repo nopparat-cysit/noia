@@ -13,6 +13,7 @@ import {
   Settings,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
   FileSpreadsheet,
   Copy,
   Check,
@@ -46,7 +47,9 @@ export default function PartnerDirectoryModal({
 }: PartnerDirectoryModalProps) {
   const [activeTab, setActiveTab] = useState<"view" | "edit">(initialTab);
   const [partners, setPartners] = useState<PartnerItem[]>(DEFAULT_PARTNERS);
-  const [editingPartners, setEditingPartners] = useState<PartnerItem[]>(DEFAULT_PARTNERS);
+  const [editingPartners, setEditingPartners] = useState<PartnerItem[]>(
+    JSON.parse(JSON.stringify(DEFAULT_PARTNERS))
+  );
   const [selectedPartnerIndex, setSelectedPartnerIndex] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +64,7 @@ export default function PartnerDirectoryModal({
   const [appsScriptUrl, setAppsScriptUrl] = useState(DEFAULT_APPS_SCRIPT_URL);
   const [sheetSyncStatus, setSheetSyncStatus] = useState<string | null>(null);
   const [copiedTemplate, setCopiedTemplate] = useState(false);
+  const [copiedScriptCode, setCopiedScriptCode] = useState(false);
   const [hasCustomRows, setHasCustomRows] = useState(false);
 
   // Load partners from API (handles custom file, Google Sheet, or defaults)
@@ -76,6 +80,29 @@ export default function PartnerDirectoryModal({
       const json = await res.json();
 
       if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        // If forceSource is NOT explicitly "sheet", protect locally saved custom edits
+        const cached = typeof window !== "undefined" ? localStorage.getItem("noire_custom_partners") : null;
+        if (cached && forceSource !== "sheet") {
+          try {
+            const parsed = JSON.parse(cached);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setPartners(parsed);
+              setEditingPartners(JSON.parse(JSON.stringify(parsed)));
+              setDataSource("web_custom");
+              setHasCustomRows(true);
+              if (json.sheetUrl) setActiveSheetUrl(json.sheetUrl);
+              return;
+            }
+          } catch {
+            // ignore parse error
+          }
+        }
+
+        // If forceSource === "sheet", user deliberately refreshed from Google Sheet
+        if (forceSource === "sheet") {
+          localStorage.setItem("noire_custom_partners", JSON.stringify(json.data));
+        }
+
         setPartners(json.data);
         setEditingPartners(JSON.parse(JSON.stringify(json.data)));
         setDataSource(json.source || "web_custom");
@@ -214,6 +241,7 @@ export default function PartnerDirectoryModal({
     try {
       // 1. Save to LocalStorage for instant browser persistence
       localStorage.setItem("noire_custom_partners", JSON.stringify(editingPartners));
+      localStorage.setItem("noire_custom_partners_time", Date.now().toString());
       if (appsScriptUrl.trim()) {
         localStorage.setItem("noire_apps_script_url", appsScriptUrl.trim());
       }
@@ -235,8 +263,12 @@ export default function PartnerDirectoryModal({
         setSaveSuccess(true);
         if (json.sheetSync === "synced_to_google_sheet") {
           setSheetSyncStatus("synced");
+        } else if (json.sheetSync === "unauthorized") {
+          setSheetSyncStatus("unauthorized");
+        } else {
+          setSheetSyncStatus("saved_local_only");
         }
-        setTimeout(() => setSaveSuccess(false), 4000);
+        setTimeout(() => setSaveSuccess(false), 5000);
       }
     } catch (err) {
       console.error("Error saving custom partners:", err);
@@ -248,8 +280,12 @@ export default function PartnerDirectoryModal({
   // Reset to original defaults
   const handleResetDefaults = () => {
     if (confirm("ต้องการรีเซ็ตข้อมูลพาร์ทเนอร์กลับเป็นค่าเริ่มต้นหรือไม่?")) {
+      localStorage.removeItem("noire_custom_partners");
+      localStorage.removeItem("noire_custom_partners_time");
       setEditingPartners(JSON.parse(JSON.stringify(DEFAULT_PARTNERS)));
+      setPartners(DEFAULT_PARTNERS);
       setSelectedPartnerIndex(0);
+      setDataSource("default_database");
     }
   };
 
@@ -284,10 +320,59 @@ export default function PartnerDirectoryModal({
 
   const handleCopyTemplate = () => {
     const template =
-      "ชื่อ\tเว็บไซต์\tหมวดหมู่\tรายละเอียด\tสถานะ\tประเภท\nNOIRE Global Logistics\thttps://porta.fda.moph.go.th/\tLogistics & Import Gateway\tเครือข่ายโลจิสติกส์และการนำเข้าเครื่องสำอางระดับสากล\tVerified Official Partner\tLogistics & Compliance\nCouture Cosmetics Retail Alliance\thttps://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/FRM_SEARCH_CMT.aspx\tPremier Retail & Clinic Distribution\tศูนย์รวมร้านค้าปลีก เคาน์เตอร์แบรนด์ และคลินิกความงามชั้นนำ\tAuthorized Distributor\tB2B Retail Platform";
+      "ชื่อ\tเว็บไซต์\tหมวดหมู่\tรายละเอียด\tสถานะ\tประเภท\tรูปภาพ\nNOIRE Global Logistics\thttps://porta.fda.moph.go.th/\tLogistics & Import Gateway\tเครือข่ายโลจิสติกส์และการนำเข้าเครื่องสำอางระดับสากล\tVerified Official Partner\tLogistics & Compliance\t\nCouture Cosmetics Retail Alliance\thttps://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/FRM_SEARCH_CMT.aspx\tPremier Retail & Clinic Distribution\tศูนย์รวมร้านค้าปลีก เคาน์เตอร์แบรนด์ และคลินิกความงามชั้นนำ\tAuthorized Distributor\tB2B Retail Platform\t";
     navigator.clipboard.writeText(template);
     setCopiedTemplate(true);
     setTimeout(() => setCopiedTemplate(false), 2000);
+  };
+
+  const handleCopyScriptCode = () => {
+    const code = `function doPost(e) {
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet() || SpreadsheetApp.openById("1Ovfyx_npnC3COwX7TkLpBJ2OPc56kTqPUH9Bipn2qDY");
+    var sheet = ss.getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    var partners = data.partners || [];
+
+    // ล้างข้อมูลเดิมแถวที่ 2 เป็นต้นไป (คงหัวตารางไว้)
+    var lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
+    }
+
+    // ถ้ายังไม่มีแถวหัวข้อ ให้สร้างแถวหัวข้อ
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["ชื่อ", "เว็บไซต์", "หมวดหมู่", "รายละเอียด", "สถานะ", "ประเภท", "รูปภาพ"]);
+    }
+
+    // เขียนข้อมูลพาร์ทเนอร์ใหม่ทั้งหมด
+    partners.forEach(function(p) {
+      sheet.appendRow([
+        p.name || "",
+        p.websiteUrl || "",
+        p.category || "",
+        p.description || "",
+        p.statusBadge || "",
+        p.partnerType || "",
+        p.imageUrl || p.logoUrl || ""
+      ]);
+    });
+
+    return ContentService.createTextOutput(JSON.stringify({ status: "success", count: partners.length }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  return ContentService.createTextOutput(JSON.stringify({ status: "ok", message: "NOIRE Google Apps Script is active" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+    navigator.clipboard.writeText(code);
+    setCopiedScriptCode(true);
+    setTimeout(() => setCopiedScriptCode(false), 2000);
   };
 
   const currentEdit = editingPartners[selectedPartnerIndex] || editingPartners[0];
@@ -754,7 +839,9 @@ export default function PartnerDirectoryModal({
                             <span className="text-emerald-300">
                               {sheetSyncStatus === "synced"
                                 ? "บันทึกบนเว็บและอัปเดตลง Google Sheet สำเร็จ!"
-                                : "บันทึกสำเร็จแล้ว!"}
+                                : sheetSyncStatus === "unauthorized"
+                                ? "บันทึกบนเว็บแล้ว (รอปรับสิทธิ์ Google Sheet)"
+                                : "บันทึกข้อมูลสำเร็จแล้ว!"}
                             </span>
                           </>
                         ) : (
@@ -774,9 +861,32 @@ export default function PartnerDirectoryModal({
                       </button>
                     </div>
 
+                    {/* Alert when Google Apps Script is 401 Unauthorized */}
+                    {sheetSyncStatus === "unauthorized" && (
+                      <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs space-y-2">
+                        <div className="font-semibold flex items-center gap-2 text-amber-300">
+                          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                          <span>บันทึกบนเว็บสำเร็จแล้ว แต่ Google Sheet ปฏิเสธ (401 Unauthorized)</span>
+                        </div>
+                        <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                          <strong>สาเหตุ:</strong> สิทธิ์การเข้าถึง Web App ใน Google Apps Script ตั้งไว้เป็น <em>&quot;ฉันเท่านั้น (Only myself)&quot;</em> ทำให้ระบบไม่สามารถส่งข้อมูลไปเขียนใน Sheet ได้
+                        </p>
+                        <div className="p-2.5 rounded-lg bg-black/60 border border-amber-500/20 text-[11px] text-zinc-300 leading-relaxed space-y-1">
+                          <strong className="text-amber-300">วิธีแก้ไขใน 30 วินาที:</strong>
+                          <ol className="list-decimal list-inside space-y-0.5 text-[10.5px]">
+                            <li>เปิด Google Sheet &gt; เมนู <strong>ส่วนขยาย (Extensions)</strong> &gt; <strong>Apps Script</strong></li>
+                            <li>กดปุ่มสีน้ำเงิน <strong>การปรับใช้ (Deploy)</strong> &gt; เลือก <strong>จัดการการปรับใช้ (Manage deployments)</strong></li>
+                            <li>กดไอคอน <strong>ดินสอ ✏️</strong> (แก้ไข)</li>
+                            <li>ตรง <strong>ผู้มีสิทธิ์เข้าถึง (Who has access)</strong> ให้เปลี่ยนเป็น <span className="text-amber-300 font-semibold">&quot;ทุกคน (Anyone)&quot;</span></li>
+                            <li>กด <strong>การปรับใช้ (Deploy)</strong> แล้วกลับมากดบันทึกบนเว็บอีกครั้งได้เลยครับ!</li>
+                          </ol>
+                        </div>
+                      </div>
+                    )}
+
                     <p className="text-[10px] text-zinc-400 font-light leading-normal">
-                      💡 เมื่อกด <strong>"บันทึกข้อมูล"</strong> ข้อมูลจะถูกเซฟลงในระบบและเบราว์เซอร์ของคุณทันที
-                      พร้อมเปิดดูผลลัพธ์ในแท็บ <em>"ดูหน้าพาร์ทเนอร์"</em> ได้ทันทีครับ
+                      💡 เมื่อกด <strong>&quot;บันทึกข้อมูล&quot;</strong> ข้อมูลจะถูกเซฟลงในระบบและเบราว์เซอร์ของคุณทันที
+                      พร้อมเปิดดูผลลัพธ์ในแท็บ <em>&quot;ดูหน้าพาร์ทเนอร์&quot;</em> ได้ทันทีครับ
                     </p>
                   </div>
                 </div>
@@ -819,7 +929,7 @@ export default function PartnerDirectoryModal({
                   className="text-[11px] text-zinc-400 hover:text-white flex items-center gap-1 cursor-pointer transition-colors ml-2"
                 >
                   <Settings className="w-3 h-3" />
-                  <span>{showSettings ? "ปิดวิธีใช้งาน" : "วิธีใช้งาน Google Sheet"}</span>
+                  <span>{showSettings ? "ปิดวิธีใช้งาน" : "วิธีตั้งค่า Google Sheet & Apps Script"}</span>
                 </button>
               </div>
             </div>
@@ -831,41 +941,76 @@ export default function PartnerDirectoryModal({
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="p-4 rounded-2xl bg-black/80 border border-white/15 space-y-3"
+                  className="p-4 rounded-2xl bg-black/90 border border-white/15 space-y-3.5 text-xs"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/10">
                     <span className="text-xs font-semibold text-white flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
-                      <span>ตารางตัวอย่างสำหรับใส่ใน Google Sheet</span>
+                      <span>เครื่องมือช่วยตั้งค่า Google Sheet & Two-Way Sync</span>
                     </span>
 
-                    <button
-                      onClick={handleCopyTemplate}
-                      className="text-[10px] text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-md flex items-center gap-1 cursor-pointer"
-                    >
-                      {copiedTemplate ? (
-                        <>
-                          <Check className="w-3 h-3 text-emerald-400" />
-                          <span>คัดลอกตารางตัวอย่างแล้ว!</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3 h-3" />
-                          <span>คัดลอกตารางไปวางใน Sheet</span>
-                        </>
-                      )}
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleCopyTemplate}
+                        className="text-[10px] text-zinc-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-2.5 py-1 rounded-md flex items-center gap-1 cursor-pointer transition-colors"
+                      >
+                        {copiedTemplate ? (
+                          <>
+                            <Check className="w-3 h-3 text-emerald-400" />
+                            <span>คัดลอกตารางแล้ว!</span>
+                          </>
+                        ) : (
+                          <>
+                            <FileSpreadsheet className="w-3 h-3" />
+                            <span>คัดลอกตารางตัวอย่าง</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={handleCopyScriptCode}
+                        className="text-[10px] text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 px-2.5 py-1 rounded-md flex items-center gap-1 cursor-pointer transition-colors font-medium"
+                      >
+                        {copiedScriptCode ? (
+                          <>
+                            <Check className="w-3 h-3 text-emerald-400" />
+                            <span>คัดลอกโค้ด Apps Script แล้ว!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3" />
+                            <span>คัดลอกโค้ด Apps Script (Code.gs)</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
 
-                  <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                    คุณสามารถเลือกได้ว่าจะ <strong>พิมพ์แก้ไขโดยตรงบนหน้าเว็บ (แท็บแก้ไข)</strong> หรือ{" "}
-                    <strong>กรอกข้อมูลใน Google Sheet</strong> แล้วกดปุ่ม <em>"ดึงจาก Google Sheet"</em> ก็ได้เช่นกันครับ
-                  </p>
+                  {/* Step by Step Setup */}
+                  <div className="space-y-2 text-[11px] text-zinc-300 font-light leading-relaxed">
+                    <p>
+                      <strong>💡 การทำงานร่วมกัน 2 ระบบ:</strong>
+                    </p>
+                    <ul className="list-disc list-inside space-y-1 text-zinc-400 pl-1">
+                      <li>
+                        <strong>แก้ไขบนเว็บ:</strong> พิมพ์แก้ชื่อ รูป หรือลิงก์ในแท็บ <em>&quot;แก้ไขบนเว็บ&quot;</em> แล้วกดปุ่ม <strong>&quot;บันทึกข้อมูลลงบนเว็บ&quot;</strong> ข้อมูลจะแสดงผลทันทีและส่งไปอัปเดตลง Google Sheet อัตโนมัติ
+                      </li>
+                      <li>
+                        <strong>แก้ไขใน Google Sheet:</strong> แก้ข้อมูลในตาราง Google Sheet แล้วกดปุ่ม <strong>&quot;ดึงจาก Google Sheet&quot;</strong> เพื่อดึงข้อมูลล่าสุดมาแสดง
+                      </li>
+                    </ul>
+                  </div>
 
-                  <div className="pt-3 border-t border-white/10 space-y-1.5">
-                    <label className="block text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
-                      Google Apps Script Web App URL (สำหรับบันทึกกลับลง Sheet อัตโนมัติ)
-                    </label>
+                  <div className="pt-2 border-t border-white/10 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="block text-[10.5px] font-mono text-zinc-400 uppercase tracking-wider">
+                        Google Apps Script Web App URL (สำหรับเซฟกลับลง Sheet)
+                      </label>
+                      <span className="text-[10px] text-amber-300/90 font-mono">
+                        สิทธิ์ต้องเป็น: Anyone (ทุกคน)
+                      </span>
+                    </div>
+
                     <div className="flex gap-2">
                       <input
                         type="url"
@@ -875,7 +1020,7 @@ export default function PartnerDirectoryModal({
                           setAppsScriptUrl(e.target.value);
                           localStorage.setItem("noire_apps_script_url", e.target.value.trim());
                         }}
-                        className="flex-1 px-3 py-1.5 rounded-lg bg-black/90 border border-white/15 text-[11px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors"
+                        className="flex-1 px-3 py-1.5 rounded-lg bg-black border border-white/15 text-[11px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors"
                       />
                       {appsScriptUrl.trim() && (
                         <span className="text-[10px] text-emerald-400 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-1 shrink-0 font-mono">
@@ -885,7 +1030,7 @@ export default function PartnerDirectoryModal({
                       )}
                     </div>
                     <p className="text-[10px] text-zinc-500">
-                      เมื่อวาง Web App URL ที่ได้จาก Deploy เว็บไซต์จะส่งข้อมูลไปเขียนทับใน Google Sheet ทันทีที่กดบันทึก
+                      เมื่อใส่ Web App URL เว็บไซต์จะส่งข้อมูลไปบันทึกทับใน Google Sheet ทันทีที่กดปุ่มบันทึก
                     </p>
                   </div>
                 </motion.div>
