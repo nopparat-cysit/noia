@@ -99,7 +99,7 @@ export default function PromotionCalculator({ onOpenQuoteModal }: PromotionCalcu
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-4">
-            คำนวณกำไรและ <span className="font-display tracking-[0.2em] text-chrome">โปรโมชั่นราคาส่ง</span>
+            คำนวณกำไรและ <span className="text-chrome">โปรโมชั่นราคาส่ง</span>
           </h2>
 
           <p className="text-base sm:text-lg text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed">
@@ -116,7 +116,7 @@ export default function PromotionCalculator({ onOpenQuoteModal }: PromotionCalcu
               
               {/* Product Category Filter Switcher */}
               <div>
-                <label className="text-xs uppercase tracking-widest text-zinc-400 font-mono block mb-3">
+                <label className="text-xs text-zinc-400 block mb-3 font-medium">
                   เลือกประเภทสินค้าสำหรับการประเมิน:
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -197,7 +197,7 @@ export default function PromotionCalculator({ onOpenQuoteModal }: PromotionCalcu
                 </div>
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400">
+                    <span className="text-[10px] text-zinc-400 font-medium">
                       สิทธิประโยชน์ที่ปลดล็อค:
                     </span>
                     <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${tierInfo.badgeColor}`}>
@@ -240,7 +240,7 @@ export default function PromotionCalculator({ onOpenQuoteModal }: PromotionCalcu
 
                   {/* Net Profit Big Highlight */}
                   <div className="pt-2">
-                    <span className="text-xs text-emerald-400 uppercase tracking-wider font-semibold block mb-1">
+                    <span className="text-xs text-emerald-400 font-semibold block mb-1">
                       กำไรสุทธิที่คุณได้รับ (Net Profit):
                     </span>
                     <p className="text-3xl sm:text-4xl font-black text-white font-display text-chrome-bright">

@@ -71,7 +71,7 @@ export default function ComplianceSection() {
 
                 <div className="pt-3 sm:pt-4 border-t border-white/10 flex items-center justify-between text-left">
                   <div>
-                    <span className="text-[9px] sm:text-[10px] text-zinc-500 block uppercase tracking-wider">หน่วยงานกำกับดูแล</span>
+                    <span className="text-[9px] sm:text-[10px] text-zinc-500 block">หน่วยงานกำกับดูแล</span>
                     <span className="text-[11px] sm:text-xs font-medium text-zinc-300">{item.authority}</span>
                   </div>
                   <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">

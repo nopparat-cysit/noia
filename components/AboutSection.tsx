@@ -38,8 +38,8 @@ export default function AboutSection() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-          <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white mb-4 sm:mb-6 font-display">
-            เกี่ยวกับ <span className="tracking-[0.15em] text-chrome">NOIRE</span>
+          <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white mb-4 sm:mb-6">
+            เกี่ยวกับ <span className="font-display tracking-[0.15em] text-chrome">NOIRE</span>
           </h2>
 
           <div className="space-y-1 sm:space-y-2">

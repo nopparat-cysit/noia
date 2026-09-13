@@ -228,7 +228,7 @@ export default function StandardsComparison() {
         <div className="md:hidden space-y-5">
           {/* Criterion 1 */}
           <div className="card-glass rounded-2xl p-5 border border-white/10 space-y-4">
-            <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase bg-white/5 px-2.5 py-0.5 rounded border border-white/10">
+            <span className="text-[10px] text-zinc-400 font-medium bg-white/5 px-2.5 py-0.5 rounded border border-white/10">
               เกณฑ์ 01: มาตรฐานการจัดหา
             </span>
 
@@ -236,7 +236,7 @@ export default function StandardsComparison() {
             <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
               <div className="flex items-center gap-2 text-emerald-400 mb-1.5">
                 <ShieldCheck className="w-4 h-4" />
-                <span className="text-xs font-bold font-display">มาตรฐาน NOIRE</span>
+                <span className="text-xs font-bold">มาตรฐาน <span className="font-display tracking-wider">NOIRE</span></span>
               </div>
               <h4 className="text-sm font-semibold text-white mb-1">ยืนยันผ่านฐานข้อมูล อย.</h4>
               <p className="text-xs text-zinc-300">THFDA Data Catalog: GMP Cosmetic มีแหล่งกำเนิดโรงงานระดับสากล</p>
@@ -255,7 +255,7 @@ export default function StandardsComparison() {
 
           {/* Criterion 2 */}
           <div className="card-glass rounded-2xl p-5 border border-white/10 space-y-4">
-            <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase bg-white/5 px-2.5 py-0.5 rounded border border-white/10">
+            <span className="text-[10px] text-zinc-400 font-medium bg-white/5 px-2.5 py-0.5 rounded border border-white/10">
               เกณฑ์ 02: ความถูกต้องในการนำเข้า
             </span>
 
@@ -263,7 +263,7 @@ export default function StandardsComparison() {
             <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
               <div className="flex items-center gap-2 text-emerald-400 mb-1.5">
                 <CheckCircle2 className="w-4 h-4" />
-                <span className="text-xs font-bold font-display">มาตรฐาน NOIRE</span>
+                <span className="text-xs font-bold">มาตรฐาน <span className="font-display tracking-wider">NOIRE</span></span>
               </div>
               <h4 className="text-sm font-semibold text-white mb-1">ถูกต้อง 100% ผ่านระบบ LPI และศุลกากร</h4>
               <p className="text-xs text-zinc-300">มีใบขนสินค้าและใบเสร็จภาษีถูกต้องทุกชิปเมนต์</p>
@@ -282,7 +282,7 @@ export default function StandardsComparison() {
 
           {/* Criterion 3 */}
           <div className="card-glass rounded-2xl p-5 border border-white/10 space-y-4">
-            <span className="text-[10px] font-mono tracking-widest text-zinc-400 uppercase bg-white/5 px-2.5 py-0.5 rounded border border-white/10">
+            <span className="text-[10px] text-zinc-400 font-medium bg-white/5 px-2.5 py-0.5 rounded border border-white/10">
               เกณฑ์ 03: ความเสี่ยงของร้านค้าปลีก
             </span>
 
@@ -290,7 +290,7 @@ export default function StandardsComparison() {
             <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
               <div className="flex items-center gap-2 text-emerald-400 mb-1.5">
                 <Scale className="w-4 h-4" />
-                <span className="text-xs font-bold font-display">มาตรฐาน NOIRE</span>
+                <span className="text-xs font-bold">มาตรฐาน <span className="font-display tracking-wider">NOIRE</span></span>
               </div>
               <h4 className="text-sm font-semibold text-white mb-1">ไร้ความเสี่ยง ได้รับความคุ้มครองตาม พ.ร.บ. ปี 2565</h4>
               <p className="text-xs text-zinc-300">ดำเนินธุรกิจได้อย่างสบายใจ มีเอกสารตัวจริงคุ้มครอง 100%</p>

@@ -55,7 +55,7 @@ export default function PreorderSection() {
           </div>
 
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white mb-4">
-            ระบบการสั่งซื้อ <span className="font-display tracking-[0.2em] text-chrome">พรีออเดอร์</span>
+            ระบบการสั่งซื้อ <span className="text-chrome">พรีออเดอร์</span>
           </h2>
 
           <p className="text-lg sm:text-xl text-zinc-400 font-light">
@@ -117,7 +117,7 @@ export default function PreorderSection() {
 
                     {/* Step Title Label */}
                     <span
-                      className={`mt-2.5 sm:mt-3 text-[11px] sm:text-xs tracking-wider transition-colors max-w-[85px] sm:max-w-[100px] text-center ${
+                      className={`mt-2.5 sm:mt-3 text-[11px] sm:text-xs transition-colors max-w-[85px] sm:max-w-[100px] text-center ${
                         isActive ? "text-white font-medium" : "text-zinc-500 group-hover:text-zinc-300"
                       }`}
                     >

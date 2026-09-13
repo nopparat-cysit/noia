@@ -216,7 +216,7 @@ export default function ContactPartner({
                 <Globe className="w-3 h-3 text-zinc-300" />
                 <span>Official Partner Websites</span>
               </div>
-              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white font-display">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
                 พาร์ทเนอร์ธุรกิจ
               </h3>
             </div>

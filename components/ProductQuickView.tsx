@@ -51,26 +51,26 @@ export default function ProductQuickView({ product, onClose, onAddToCart }: Quic
   const renderArtwork = (id: string) => {
     switch (id) {
       case "luminous-silk-foundation":
-        return <FoundationArtwork className="w-full h-64 sm:h-72 object-contain" />;
+        return <FoundationArtwork className="w-full h-48 sm:h-60 md:h-72 object-contain" />;
       case "luminous-silk-lipstick":
-        return <LipstickArtwork className="w-full h-64 sm:h-72 object-contain" />;
+        return <LipstickArtwork className="w-full h-48 sm:h-60 md:h-72 object-contain" />;
       case "luminous-eyeshadow-palette":
-        return <EyeshadowArtwork className="w-full h-64 sm:h-72 object-contain" />;
+        return <EyeshadowArtwork className="w-full h-48 sm:h-60 md:h-72 object-contain" />;
       case "luminous-silk-compact-powder":
-        return <CushionArtwork className="w-full h-64 sm:h-72 object-contain" />;
+        return <CushionArtwork className="w-full h-48 sm:h-60 md:h-72 object-contain" />;
       case "liquid-chrome-cell-serum":
-        return <SerumArtwork className="w-full h-64 sm:h-72 object-contain" />;
+        return <SerumArtwork className="w-full h-48 sm:h-60 md:h-72 object-contain" />;
       case "sculpting-chrome-brush-set":
-        return <BrushArtwork className="w-full h-64 sm:h-72 object-contain" />;
+        return <BrushArtwork className="w-full h-48 sm:h-60 md:h-72 object-contain" />;
       default:
-        return <FoundationArtwork className="w-full h-64 sm:h-72 object-contain" />;
+        return <FoundationArtwork className="w-full h-48 sm:h-60 md:h-72 object-contain" />;
     }
   };
 
   const modalContent = (
     <AnimatePresence>
       {product && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div className="fixed inset-0 z-[100] overflow-y-auto">
           {/* Backdrop with dark blur */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -80,72 +80,73 @@ export default function ProductQuickView({ product, onClose, onAddToCart }: Quic
             className="fixed inset-0 bg-black/85 backdrop-blur-xl transition-all"
           />
 
-          {/* Modal Dialog Body */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 25 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 25 }}
-            transition={{ type: "spring", duration: 0.4, bounce: 0 }}
-            className="relative z-10 w-full max-w-4xl bg-[#090a0d] border border-white/25 rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.98)] max-h-[92vh] flex flex-col md:flex-row my-auto"
-            style={{
-              background: "linear-gradient(180deg, #111218 0%, #060608 100%)",
-            }}
-          >
-            {/* Top Close Button */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 z-30 p-2 rounded-full bg-black/60 hover:bg-black/90 border border-white/20 text-zinc-300 hover:text-white transition-all cursor-pointer shadow-lg backdrop-blur-md"
-              aria-label="Close dialog"
+          {/* Dialog centering wrapper */}
+          <div className="flex min-h-full items-center justify-center p-3 sm:p-6 text-left">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 25 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 25 }}
+              transition={{ type: "spring", duration: 0.4, bounce: 0 }}
+              className="relative z-10 w-full max-w-4xl bg-[#090a0d] border border-white/25 rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.98)] max-h-[92vh] flex flex-col md:flex-row my-auto"
+              style={{
+                background: "linear-gradient(180deg, #111218 0%, #060608 100%)",
+              }}
             >
-              <X className="w-5 h-5" />
-            </button>
+              {/* Top Close Button */}
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 z-30 p-2 rounded-full bg-black/60 hover:bg-black/90 border border-white/20 text-zinc-300 hover:text-white transition-all cursor-pointer shadow-lg backdrop-blur-md"
+                aria-label="Close dialog"
+              >
+                <X className="w-5 h-5" />
+              </button>
 
-            {/* Left: Product Artwork Visual Stage with Illuminated Pedestal */}
-            <div className="md:w-1/2 bg-gradient-to-b from-white/[0.05] via-transparent to-black/80 p-6 sm:p-10 flex flex-col items-center justify-center relative border-b md:border-b-0 md:border-r border-white/10 shrink-0 overflow-hidden">
-              {/* Radial spotlight behind model */}
-              <div className="absolute inset-0 bg-radial-spotlight opacity-90 pointer-events-none" />
+              {/* Left: Product Artwork Visual Stage with Illuminated Pedestal */}
+              <div className="w-full md:w-1/2 bg-gradient-to-b from-white/[0.08] via-zinc-900/30 to-black/90 p-5 sm:p-8 md:p-10 flex flex-col items-center justify-center relative border-b md:border-b-0 md:border-r border-white/10 shrink-0 overflow-hidden">
+                {/* Radial spotlight behind model */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.18)_0%,transparent_70%)] pointer-events-none" />
 
-              {/* Ambient Circular Glow Ring */}
-              <div className="absolute w-64 h-64 rounded-full bg-white/[0.04] blur-2xl pointer-events-none" />
+                {/* Ambient Circular Glow Ring */}
+                <div className="absolute w-56 sm:w-64 h-56 sm:h-64 rounded-full bg-white/[0.06] blur-2xl pointer-events-none" />
 
-              {/* Main 3D Artwork / Visual Model */}
-              <div className="relative z-10 w-full max-w-[190px] sm:max-w-[260px] flex flex-col items-center drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)]">
-                {renderArtwork(product.id)}
+                {/* Main 3D Artwork / Visual Model */}
+                <div className="relative z-10 w-full max-w-[180px] sm:max-w-[220px] md:max-w-[260px] flex flex-col items-center drop-shadow-[0_20px_40px_rgba(0,0,0,0.95)]">
+                  {renderArtwork(product.id)}
 
-                {/* Illuminated Metallic Chrome Pedestal (Solves 'Model จม') */}
-                <div className="w-48 sm:w-56 h-3 rounded-full bg-gradient-to-r from-transparent via-white/40 to-transparent blur-[1.5px] mt-1 shadow-[0_0_20px_rgba(255,255,255,0.4)]" />
-                <div className="w-36 sm:w-44 h-1 rounded-full bg-white/70 blur-[0.5px] -mt-1.5" />
-              </div>
-
-              {/* Badges Under Stage */}
-              <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3 relative z-10">
-                <span className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold tracking-wider bg-white text-black shadow-chrome-glow">
-                  {product.status === "พร้อมส่ง" ? "พร้อมสั่งทันที" : product.status}
-                </span>
-                {product.badge && (
-                  <span className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-medium tracking-wider bg-zinc-800/80 text-zinc-300 border border-white/10 font-mono">
-                    {product.badge}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Right: Specifications, B2B Pricing, Quantity & CTA */}
-            <div className="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto max-h-[60vh] md:max-h-[92vh]">
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-mono uppercase tracking-widest text-zinc-400">
-                    หมวดหมู่: {product.categoryLabel}
-                  </span>
-                  <span className="text-xs text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>อย. ถูกต้อง 100%</span>
-                  </span>
+                  {/* Illuminated Metallic Chrome Pedestal (Solves 'Model จม') */}
+                  <div className="w-44 sm:w-56 h-3 rounded-full bg-gradient-to-r from-transparent via-white/60 to-transparent blur-[1px] mt-1 shadow-[0_0_25px_rgba(255,255,255,0.5)]" />
+                  <div className="w-32 sm:w-44 h-1 rounded-full bg-white/90 blur-[0.5px] -mt-1.5" />
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-wide mb-2 font-display">
-                  {product.name}
-                </h3>
+                {/* Badges Under Stage */}
+                <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3 relative z-10">
+                  <span className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold tracking-wider bg-white text-black shadow-chrome-glow">
+                    {product.status === "พร้อมส่ง" ? "พร้อมสั่งทันที" : product.status}
+                  </span>
+                  {product.badge && (
+                    <span className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-medium tracking-wider bg-zinc-800/80 text-zinc-300 border border-white/10 font-mono">
+                      {product.badge}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Right: Specifications, B2B Pricing, Quantity & CTA */}
+              <div className="w-full md:w-1/2 p-5 sm:p-7 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[55vh] md:max-h-[92vh]">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs text-zinc-400">
+                      หมวดหมู่: <span className="font-mono text-zinc-300 font-medium">{product.categoryLabel}</span>
+                    </span>
+                    <span className="text-xs text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <span>อย. ถูกต้อง 100%</span>
+                    </span>
+                  </div>
+
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-wide mb-2 font-display">
+                    {product.name}
+                  </h3>
 
                 <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed mb-4">
                   {product.description}
@@ -291,6 +292,7 @@ export default function ProductQuickView({ product, onClose, onAddToCart }: Quic
             </div>
           </motion.div>
         </div>
+      </div>
       )}
     </AnimatePresence>
   );
