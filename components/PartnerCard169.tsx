@@ -1,0 +1,130 @@
+"use client";
+
+import React from "react";
+import { ExternalLink, Edit3 } from "lucide-react";
+import { PartnerItem } from "@/lib/googleSheets";
+
+interface PartnerCard169Props {
+  partner: PartnerItem;
+  index: number;
+  isActive?: boolean;
+  onEdit?: () => void;
+  showEditButton?: boolean;
+}
+
+export default function PartnerCard169({
+  partner,
+  index,
+  isActive,
+  onEdit,
+  showEditButton = true,
+}: PartnerCard169Props) {
+  // If partner has "AC" or statusBadge, show badge pill
+  const badgeText = partner.statusBadge || (index === 0 ? "AC" : "");
+  const isRedBorder = isActive || index === 0;
+
+  return (
+    <div
+      className={`relative rounded-3xl p-5 sm:p-7 flex flex-col justify-between transition-all duration-300 group overflow-hidden ${
+        isRedBorder
+          ? "border-2 border-red-500/80 shadow-[0_0_30px_rgba(239,68,68,0.18)]"
+          : "border border-white/20 hover:border-white/40 shadow-2xl"
+      }`}
+      style={{
+        background:
+          "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(10,10,14,0.85) 100%)",
+        backdropFilter: "blur(16px)",
+      }}
+    >
+      {/* Ambient background glow on hover */}
+      <div className="absolute inset-0 bg-radial-spotlight opacity-30 group-hover:opacity-60 transition-opacity pointer-events-none" />
+
+      {/* Top Header: Partner Title & Badge */}
+      <div className="relative z-10 flex items-center justify-between gap-3 mb-3">
+        <h4 className="text-base sm:text-lg md:text-xl font-bold text-white tracking-wide truncate">
+          {partner.name || (index === 0 ? "การเสริมสวยนอกสถานที่" : "ร้านทำเล็บ")}
+        </h4>
+
+        <div className="flex items-center gap-2 shrink-0">
+          {badgeText && (
+            <span
+              className={`px-2.5 py-0.5 rounded text-[11px] font-bold tracking-wider uppercase shadow-md ${
+                badgeText === "AC" || isRedBorder
+                  ? "bg-red-600 text-white"
+                  : "bg-white/15 text-zinc-200 border border-white/20"
+              }`}
+            >
+              {badgeText}
+            </span>
+          )}
+
+          {showEditButton && onEdit && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit();
+              }}
+              className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-400 hover:text-white border border-white/10 transition-colors cursor-pointer"
+              title="แก้ไขข้อมูลพาร์ทเนอร์นี้"
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 16:9 Faceted / Chamfered Image Frame */}
+      <div className="relative z-10 my-2 w-full">
+        <div
+          className="w-full aspect-[16/9] relative overflow-hidden bg-black/60 border border-white/15 shadow-inner flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.015]"
+          style={{
+            clipPath:
+              "polygon(16px 0%, calc(100% - 16px) 0%, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0% calc(100% - 16px), 0% 16px)",
+          }}
+        >
+          {partner.imageUrl || partner.logoUrl ? (
+            <img
+              src={partner.imageUrl || partner.logoUrl}
+              alt={partner.name}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-950 text-zinc-400">
+              <span className="text-xs font-mono">ภาพอัตราส่วน 16:9</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Bottom Area: Metallic Liquid Chrome Bar Button */}
+      <div className="relative z-10 pt-4 flex flex-col items-center gap-2">
+        <a
+          href={partner.websiteUrl || "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full h-11 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-300 hover:brightness-110 active:scale-[0.98] shadow-lg group/btn cursor-pointer relative overflow-hidden border border-white/60"
+          style={{
+            background:
+              "linear-gradient(180deg, #ffffff 0%, #e2e8f0 25%, #94a3b8 55%, #64748b 80%, #475569 100%)",
+            boxShadow:
+              "inset 0 1.5px 2px rgba(255,255,255,0.9), inset 0 -2px 3px rgba(0,0,0,0.35), 0 6px 16px -2px rgba(0,0,0,0.6)",
+          }}
+        >
+          {/* Surface light reflection sheen */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+
+          <div className="flex items-center gap-2 text-zinc-900 font-bold text-xs sm:text-sm tracking-wide">
+            <span>ไปยังเว็บไซต์พาร์ทเนอร์</span>
+            <ExternalLink className="w-3.5 h-3.5 text-zinc-800" />
+          </div>
+        </a>
+
+        {/* Text underneath the chrome bar button */}
+        <span className="text-[11px] text-zinc-400 font-light tracking-wide mt-0.5 flex items-center gap-1 group-hover:text-zinc-300 transition-colors">
+          คลิกเพื่อไปที่เว็บพาร์ทเนอร์ของเรา
+        </span>
+      </div>
+    </div>
+  );
+}

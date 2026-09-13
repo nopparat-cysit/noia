@@ -16,27 +16,36 @@ export const DEFAULT_GOOGLE_SHEET_URL =
 export const DEFAULT_APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycby91G0UtqFlxfvrcrc7rj9u2jY6_8-GXDtY3_vUcsDdb2EDAu0XopraHjh54sKg1oCcyQ/exec";
 
-// Default 2 Partner Websites (Fallback data if Google Sheet is empty or loading)
+import {
+  DEFAULT_GROW_ERA_16_9,
+  DEFAULT_LANDSCAPE_16_9,
+} from "@/data/defaultPartnerImages";
+
+// Default 2 Partner Websites (matching user reference design)
 export const DEFAULT_PARTNERS: PartnerItem[] = [
   {
     id: "partner-1",
-    name: "NOIRE Global Logistics & Sourcing Network",
-    category: "Official Logistics & Import Gateway",
+    name: "การเสริมสวยนอกสถานที่",
+    category: "บริการความงามนอกสถานที่",
     description:
-      "ศูนย์กลางเครือข่ายโลจิสติกส์และการนำเข้าเครื่องสำอางระดับสากล บริหารจัดการพิธีการศุลกากรและตรวจสอบใบอนุญาต LPI ประจำภูมิภาค",
+      "บริการเสริมความงาม ดูแลผิวพรรณ และแต่งหน้าระดับพรีเมียม ดูแลถึงที่โดยทีมช่างผู้เชี่ยวชาญ",
     websiteUrl: "https://porta.fda.moph.go.th/",
-    statusBadge: "Verified Official Partner",
-    partnerType: "Logistics & Compliance",
+    statusBadge: "AC",
+    partnerType: "Beauty Service & Care",
+    imageUrl: DEFAULT_GROW_ERA_16_9,
+    logoUrl: DEFAULT_GROW_ERA_16_9,
   },
   {
     id: "partner-2",
-    name: "Couture Cosmetics Retail Alliance",
-    category: "Premier Retail & Clinic Distribution Network",
+    name: "ร้านทำเล็บ",
+    category: "เนลสปาและทรีตเมนต์",
     description:
-      "พันธมิตรเครือข่ายร้านค้าปลีก คลินิกความงาม และศูนย์ความงามระดับไฮเอนด์ทั่วประเทศ จัดจำหน่ายเครื่องสำอางแบรนด์ NOIRE ภายใต้มาตรฐาน อย. 100%",
+      "ศูนย์บริการสปาเล็บและออกแบบเล็บระดับพรีเมียม ภายใต้มาตรฐานความสะอาดและความปลอดภัยสูงสุด",
     websiteUrl: "https://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/FRM_SEARCH_CMT.aspx",
-    statusBadge: "Authorized Distributor",
-    partnerType: "B2B Retail Platform",
+    statusBadge: "Verified",
+    partnerType: "Nail & Spa Salon",
+    imageUrl: DEFAULT_LANDSCAPE_16_9,
+    logoUrl: DEFAULT_LANDSCAPE_16_9,
   },
 ];
 
