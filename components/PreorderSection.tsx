@@ -48,7 +48,13 @@ export default function PreorderSection() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-3xl mx-auto mb-16 sm:mb-20"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs text-zinc-400 mb-4 tracking-[0.2em] uppercase">
             <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
             <span>Preorder Logistics System</span>
@@ -61,7 +67,7 @@ export default function PreorderSection() {
           <p className="text-lg sm:text-xl text-zinc-400 font-light">
             ความงามของคุณ คือหน้าที่ของเรา
           </p>
-        </div>
+        </motion.div>
 
         {/* Desktop & Tablet: Liquid Chrome Progressive Circuit Timeline */}
         <div className="hidden md:block mb-12">

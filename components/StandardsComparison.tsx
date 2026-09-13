@@ -26,7 +26,13 @@ export default function StandardsComparison() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-4xl mx-auto mb-16 sm:mb-20"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs text-zinc-400 mb-4 tracking-[0.2em] uppercase">
             <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
             <span>Benchmark of Integrity</span>
@@ -39,7 +45,7 @@ export default function StandardsComparison() {
           <p className="text-base sm:text-lg text-zinc-400 font-light max-w-2xl mx-auto leading-relaxed">
             อย่าเสี่ยงธุรกิจค้าปลีกของคุณกับซัพพลายเออร์ที่ไม่ผ่านการตรวจสอบ
           </p>
-        </div>
+        </motion.div>
 
         {/* Desktop Side-by-Side Comparison Container */}
         <div className="hidden md:block max-w-5xl mx-auto rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black/40 backdrop-blur-xl">

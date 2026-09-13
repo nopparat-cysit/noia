@@ -70,7 +70,13 @@ export default function ProductCollection({
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center max-w-3xl mx-auto mb-12 sm:mb-16"
+        >
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs text-zinc-400 mb-4 tracking-[0.2em] uppercase">
             <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
             <span>Editorial Product Catalog</span>
@@ -83,7 +89,7 @@ export default function ProductCollection({
           <p className="text-base sm:text-lg text-zinc-400 font-light">
             ผลิตภัณฑ์ความงามระดับลักชัวรีมาตรฐานสากล พร้อมโครงสร้างราคาส่ง B2B สำหรับพาร์ทเนอร์
           </p>
-        </div>
+        </motion.div>
 
         {/* Mobile Category Horizontal Scroll Bar */}
         <div className="lg:hidden mb-8">

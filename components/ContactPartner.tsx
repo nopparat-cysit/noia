@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Globe } from "lucide-react";
 import ChromeRibbonOrnament from "./visuals/ChromeRibbonOrnament";
 import PartnerCard169 from "./PartnerCard169";
@@ -53,7 +54,13 @@ export default function ContactPartner() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Business Partners 16:9 Showcase Section */}
         <div id="partner-showcase" className="max-w-5xl mx-auto">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-4 border-b border-white/10">
+          <motion.div
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 pb-4 border-b border-white/10"
+          >
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-white/[0.04] border border-white/10 text-[11px] text-zinc-400 mb-2 font-mono uppercase tracking-wider">
                 <Globe className="w-3 h-3 text-zinc-300" />
@@ -63,7 +70,7 @@ export default function ContactPartner() {
                 พาร์ทเนอร์ธุรกิจ
               </h2>
             </div>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             {partners.slice(0, 2).map((partner, idx) => (

@@ -15,6 +15,10 @@ import Footer from "@/components/Footer";
 import PartnerDirectoryModal from "@/components/PartnerDirectoryModal";
 import CartDrawer, { CartItem } from "@/components/CartDrawer";
 import LiquidChromeBackground from "@/components/visuals/LiquidChromeBackground";
+import ScrollProgressBar from "@/components/interactive/ScrollProgressBar";
+import FloatingSectionTracker from "@/components/interactive/FloatingSectionTracker";
+import AmbientLightFollower from "@/components/interactive/AmbientLightFollower";
+import ScrollToTopButton from "@/components/interactive/ScrollToTopButton";
 import { ProductItem } from "@/data/noireData";
 import { ShoppingBag } from "lucide-react";
 
@@ -59,8 +63,17 @@ export default function HomePage() {
 
   return (
     <main className="relative min-h-screen bg-[#050507] text-[#ededed] overflow-x-hidden selection:bg-white/20 selection:text-white">
+      {/* Liquid Chrome Top Scroll Progress Bar */}
+      <ScrollProgressBar />
+
       {/* Dynamic Ambient Liquid Chrome Canvas */}
       <LiquidChromeBackground />
+
+      {/* Interactive Ambient Specular Light Follower */}
+      <AmbientLightFollower />
+
+      {/* Interactive Floating Section Navigator & Pill */}
+      <FloatingSectionTracker />
 
       {/* Sticky Luxury Navbar */}
       <Navbar
@@ -115,6 +128,9 @@ export default function HomePage() {
           </span>
         </button>
       )}
+
+      {/* Floating Interactive Scroll-To-Top Button with Progress Ring */}
+      <ScrollToTopButton hasCartItems={cartItems.length > 0} />
 
       {/* Quotation Cart Drawer */}
       <CartDrawer
