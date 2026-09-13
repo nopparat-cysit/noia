@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowUp, ShieldCheck } from "lucide-react";
+import { ArrowUp, ShieldCheck, Lock } from "lucide-react";
 
 export default function Footer() {
   const [modalType, setModalType] = useState<"privacy" | "terms" | null>(null);
@@ -99,7 +99,7 @@ export default function Footer() {
             © Copyright NOIRE Luxury Cosmetics. สงวนลิขสิทธิ์ตามกฎหมาย
           </p>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center sm:justify-end">
             <button
               onClick={() => setModalType("privacy")}
               className="hover:text-zinc-300 transition-colors underline-offset-4 hover:underline cursor-pointer"
@@ -113,6 +113,15 @@ export default function Footer() {
             >
               เงื่อนไขการค้า
             </button>
+            <span>·</span>
+            <a
+              href="/admin"
+              className="hover:text-white transition-colors flex items-center gap-1 text-zinc-500 hover:text-zinc-300 py-0.5 px-2 rounded-lg bg-white/[0.03] hover:bg-white/10 border border-white/5"
+              title="เข้าสู่ระบบจัดการและตั้งค่าข้อมูล (รหัสผ่าน 12500)"
+            >
+              <Lock className="w-3 h-3 text-zinc-400" />
+              <span>ผู้ดูแลระบบ (Admin)</span>
+            </a>
           </div>
         </div>
       </div>

@@ -202,14 +202,6 @@ export default function ContactPartner({
                     <span>เข้าชมเว็บไซต์พันธมิตรทางการ (2 เว็บไซต์)</span>
                     <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
                   </button>
-
-                  <button
-                    onClick={() => onOpenPartnerDirectoryModal("edit")}
-                    className="text-[11px] text-zinc-400 hover:text-white flex items-center justify-center gap-1.5 py-1 transition-colors cursor-pointer"
-                  >
-                    <Edit3 className="w-3 h-3 text-zinc-400" />
-                    <span>ปรับแต่งข้อมูลพาร์ทเนอร์บนเว็บ (Custom Editor)</span>
-                  </button>
                 </div>
               )}
             </div>
@@ -228,16 +220,6 @@ export default function ContactPartner({
                 พาร์ทเนอร์ธุรกิจ
               </h3>
             </div>
-
-            {onOpenPartnerDirectoryModal && (
-              <button
-                onClick={() => onOpenPartnerDirectoryModal("edit")}
-                className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/15 border border-white/15 text-xs text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer self-start sm:self-auto"
-              >
-                <Edit3 className="w-3.5 h-3.5" />
-                <span>ปรับแต่งข้อมูลพาร์ทเนอร์</span>
-              </button>
-            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
@@ -247,7 +229,7 @@ export default function ContactPartner({
                 partner={partner}
                 index={idx}
                 isActive={idx === 0}
-                onEdit={() => onOpenPartnerDirectoryModal?.("edit")}
+                showEditButton={false}
               />
             ))}
           </div>

@@ -26,6 +26,7 @@ import {
   Link2,
   Upload,
   Image as ImageIcon,
+  Lock,
 } from "lucide-react";
 import {
   PartnerItem,
@@ -431,41 +432,24 @@ function doGet(e) {
                 )}
               </div>
 
-              {/* View / Edit Mode Switcher Tabs */}
+              {/* Admin Portal Link */}
               <div className="flex items-center gap-1 bg-white/[0.05] p-1 rounded-full border border-white/10 text-xs">
-                <button
-                  onClick={() => setActiveTab("view")}
-                  className={`px-3.5 py-1 rounded-full flex items-center gap-1.5 transition-all cursor-pointer ${
-                    activeTab === "view"
-                      ? "bg-white text-black font-semibold shadow"
-                      : "text-zinc-400 hover:text-white"
-                  }`}
+                <a
+                  href="/admin"
+                  className="px-3 py-1 rounded-full flex items-center gap-1.5 transition-all text-xs text-zinc-400 hover:text-white hover:bg-white/10"
+                  title="เข้าสู่ระบบผู้ดูแลเพื่อตั้งค่าและแก้ไขข้อมูล (รหัสผ่าน 12500)"
                 >
-                  <Eye className="w-3.5 h-3.5" />
-                  <span>ดูหน้าพาร์ทเนอร์</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab("edit")}
-                  className={`px-3.5 py-1 rounded-full flex items-center gap-1.5 transition-all cursor-pointer ${
-                    activeTab === "edit"
-                      ? "bg-white text-black font-semibold shadow"
-                      : "text-zinc-400 hover:text-white"
-                  }`}
-                >
-                  <Edit3 className="w-3.5 h-3.5" />
-                  <span>แก้ไขบนเว็บ (Custom UI)</span>
-                </button>
+                  <Lock className="w-3 h-3 text-zinc-400" />
+                  <span>ผู้ดูแลระบบ (Admin)</span>
+                </a>
               </div>
             </div>
 
             <h3 className="text-xl sm:text-2xl font-bold text-white tracking-wide">
-              {activeTab === "view" ? "พันธมิตรธุรกิจและเว็บไซต์พาร์ทเนอร์" : "ปรับแต่งข้อมูลพาร์ทเนอร์บนเว็บ"}
+              พันธมิตรธุรกิจและเว็บไซต์พาร์ทเนอร์
             </h3>
             <p className="text-xs sm:text-sm text-zinc-400 font-light mt-0.5">
-              {activeTab === "view"
-                ? "เลือกเข้าชมเว็บไซต์ทางการของพาร์ทเนอร์ NOIRE หรือกดสลับไปแท็บแก้ไขเพื่อปรับแต่งได้ตามต้องการ"
-                : "แก้ไขชื่อ, ลิงก์ URL, หมวดหมู่ และรายละเอียดได้ทันทีบนหน้าเว็บ พร้อมดูตัวอย่างแบบเรียลไทม์"}
+              เลือกเข้าชมเว็บไซต์ทางการของพาร์ทเนอร์ NOIRE
             </p>
           </div>
 
@@ -479,7 +463,7 @@ function doGet(e) {
                   พาร์ทเนอร์ธุรกิจ
                 </h3>
                 <p className="text-xs text-zinc-400 font-light mt-1">
-                  เข้าชมเว็บไซต์พันธมิตรทางการ หรือกดไอคอนดินสอ ✏️ เพื่อแก้ไขข้อมูลและภาพ 16:9
+                  เข้าชมเว็บไซต์พันธมิตรทางการของ NOIRE
                 </p>
               </div>
 
@@ -496,10 +480,7 @@ function doGet(e) {
                       partner={partner}
                       index={idx}
                       isActive={idx === 0}
-                      onEdit={() => {
-                        setSelectedPartnerIndex(idx);
-                        setActiveTab("edit");
-                      }}
+                      showEditButton={false}
                     />
                   ))}
                 </div>

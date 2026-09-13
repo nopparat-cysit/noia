@@ -17,7 +17,7 @@ export default function PartnerCard169({
   index,
   isActive,
   onEdit,
-  showEditButton = true,
+  showEditButton = false,
 }: PartnerCard169Props) {
   // If partner has "AC" or statusBadge, show badge pill
   const badgeText = partner.statusBadge || (index === 0 ? "AC" : "");
