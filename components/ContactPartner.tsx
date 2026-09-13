@@ -47,7 +47,7 @@ export default function ContactPartner() {
   }, []);
 
   return (
-    <section id="partner" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#050507] overflow-hidden">
+    <section id="partner" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden">
       {/* Background Ribbon */}
       <ChromeRibbonOrnament variant="horizontal" className="top-12 inset-x-0 h-96 opacity-30" />
 

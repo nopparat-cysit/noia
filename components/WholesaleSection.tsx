@@ -42,7 +42,7 @@ export default function WholesaleSection({
   };
 
   return (
-    <section id="wholesale" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-[#070709] overflow-hidden">
+    <section id="wholesale" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden">
       {/* Background Liquid Chrome */}
       <ChromeRibbonOrnament variant="loop" className="bottom-12 inset-x-0 h-96 opacity-25" />
 

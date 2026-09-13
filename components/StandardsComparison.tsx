@@ -20,7 +20,7 @@ export default function StandardsComparison() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section id="standards" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-[#070709] overflow-hidden">
+    <section id="standards" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden">
       {/* Background Ribbon */}
       <ChromeRibbonOrnament variant="diagonal" className="top-10 inset-x-0 h-96 opacity-20" />
 

@@ -54,7 +54,7 @@ export default function SocialContactSection() {
   return (
     <section
       id="social-channels"
-      className="relative py-24 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#050507] overflow-hidden"
+      className="relative py-24 sm:py-28 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden"
     >
       {/* Background Liquid Chrome Accent */}
       <ChromeRibbonOrnament

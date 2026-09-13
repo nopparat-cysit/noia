@@ -80,7 +80,7 @@ export default function LogisticsArchitecture() {
   };
 
   return (
-    <section id="logistics" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-[#050507] overflow-hidden">
+    <section id="logistics" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden">
       {/* Background Ribbon */}
       <ChromeRibbonOrnament variant="horizontal" className="top-1/3 inset-x-0 h-96 opacity-20" />
 

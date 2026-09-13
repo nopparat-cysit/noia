@@ -31,7 +31,7 @@ const ABOUT_CARDS: AboutCardItem[] = [
 
 export default function AboutSection() {
   return (
-    <section id="about" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#050507]">
+    <section id="about" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden bg-transparent">
       {/* Liquid ribbon accents */}
       <ChromeRibbonOrnament variant="horizontal" className="top-1/3 inset-x-0 h-96 opacity-25" />
 

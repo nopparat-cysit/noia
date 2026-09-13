@@ -64,7 +64,7 @@ export default function ProductCollection({
   };
 
   return (
-    <section id="products" className="relative py-24 sm:py-28 px-4 sm:px-6 lg:px-8 bg-[#050507] overflow-hidden">
+    <section id="products" className="relative py-24 sm:py-28 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden">
       {/* Background Ribbon */}
       <ChromeRibbonOrnament variant="horizontal" className="top-10 inset-x-0 h-64 opacity-20" />
 

@@ -42,7 +42,7 @@ export default function PreorderSection() {
   };
 
   return (
-    <section id="preorder" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-[#050507] overflow-hidden">
+    <section id="preorder" className="relative py-28 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden">
       {/* Liquid Chrome Ribbons */}
       <ChromeRibbonOrnament variant="horizontal" className="top-1/4 inset-x-0 h-96 opacity-25" />
 
