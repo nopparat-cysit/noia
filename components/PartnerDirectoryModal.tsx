@@ -28,6 +28,7 @@ import {
   PartnerItem,
   DEFAULT_PARTNERS,
   DEFAULT_GOOGLE_SHEET_URL,
+  DEFAULT_APPS_SCRIPT_URL,
 } from "@/lib/googleSheets";
 
 interface PartnerDirectoryModalProps {
@@ -54,7 +55,7 @@ export default function PartnerDirectoryModal({
   const [showSettings, setShowSettings] = useState(false);
   const [sheetUrl, setSheetUrl] = useState(DEFAULT_GOOGLE_SHEET_URL);
   const [activeSheetUrl, setActiveSheetUrl] = useState(DEFAULT_GOOGLE_SHEET_URL);
-  const [appsScriptUrl, setAppsScriptUrl] = useState("");
+  const [appsScriptUrl, setAppsScriptUrl] = useState(DEFAULT_APPS_SCRIPT_URL);
   const [sheetSyncStatus, setSheetSyncStatus] = useState<string | null>(null);
   const [copiedTemplate, setCopiedTemplate] = useState(false);
   const [hasCustomRows, setHasCustomRows] = useState(false);

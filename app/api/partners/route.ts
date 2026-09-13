@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { fetchPartnersFromGoogleSheet, PartnerItem, DEFAULT_PARTNERS } from "@/lib/googleSheets";
+import {
+  fetchPartnersFromGoogleSheet,
+  PartnerItem,
+  DEFAULT_PARTNERS,
+  DEFAULT_APPS_SCRIPT_URL,
+} from "@/lib/googleSheets";
 import fs from "fs";
 import path from "path";
 
@@ -125,24 +130,42 @@ export async function POST(request: Request) {
       );
     }
 
-    // Two-way sync: If Google Apps Script Web App URL is provided or configured in env
-    const scriptEndpoint = appsScriptUrl || process.env.GOOGLE_APPS_SCRIPT_WEBAPP_URL;
-    let sheetSyncResult = null;
+    // Two-way sync: Forward to Google Apps Script Web App URL
+    const scriptEndpoint =
+      appsScriptUrl ||
+      process.env.GOOGLE_APPS_SCRIPT_WEBAPP_URL ||
+      DEFAULT_APPS_SCRIPT_URL;
+
+    let sheetSyncResult: "synced_to_google_sheet" | "sync_failed" | "unauthorized" | null = null;
 
     if (scriptEndpoint && scriptEndpoint.startsWith("http")) {
       try {
         const scriptRes = await fetch(scriptEndpoint, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({ partners: cleanedPartners }),
+          redirect: "follow",
         });
-        if (scriptRes.ok) {
+
+        if (scriptRes.ok || scriptRes.status === 200 || scriptRes.redirected) {
           sheetSyncResult = "synced_to_google_sheet";
+        } else if (scriptRes.status === 401) {
+          sheetSyncResult = "unauthorized";
+        } else {
+          sheetSyncResult = "sync_failed";
         }
       } catch (syncErr) {
         console.warn("Could not sync to Google Apps Script endpoint:", syncErr);
         sheetSyncResult = "sync_failed";
       }
+    }
+
+    let userMessage = "บันทึกข้อมูลพาร์ทเนอร์บนเว็บสำเร็จแล้ว";
+    if (sheetSyncResult === "synced_to_google_sheet") {
+      userMessage = "บันทึกบนเว็บและอัปเดตลง Google Sheet ของคุณเรียบร้อยแล้ว!";
+    } else if (sheetSyncResult === "unauthorized") {
+      userMessage =
+        "บันทึกบนเว็บสำเร็จแล้ว (Google Apps Script ยังรอการตั้งค่าสิทธิ์เป็น 'Anyone / ทุกคน' เพื่อให้อัปเดตลง Sheet อัตโนมัติ)";
     }
 
     return NextResponse.json({
@@ -152,9 +175,7 @@ export async function POST(request: Request) {
       count: cleanedPartners.length,
       data: cleanedPartners,
       sheetSync: sheetSyncResult,
-      message: sheetSyncResult === "synced_to_google_sheet"
-        ? "บันทึกบนเว็บและอัปเดตลง Google Sheet ของคุณเรียบร้อยแล้ว!"
-        : "บันทึกข้อมูลพาร์ทเนอร์บนเว็บสำเร็จแล้ว",
+      message: userMessage,
     });
   } catch (err: any) {
     return NextResponse.json(

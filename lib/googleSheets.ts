@@ -12,6 +12,9 @@ export interface PartnerItem {
 export const DEFAULT_GOOGLE_SHEET_URL =
   "https://docs.google.com/spreadsheets/d/1Ovfyx_npnC3COwX7TkLpBJ2OPc56kTqPUH9Bipn2qDY/edit?usp=sharing";
 
+export const DEFAULT_APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycby91G0UtqFlxfvrcrc7rj9u2jY6_8-GXDtY3_vUcsDdb2EDAu0XopraHjh54sKg1oCcyQ/exec";
+
 // Default 2 Partner Websites (Fallback data if Google Sheet is empty or loading)
 export const DEFAULT_PARTNERS: PartnerItem[] = [
   {
