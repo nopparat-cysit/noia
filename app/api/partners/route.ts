@@ -97,7 +97,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { partners } = body;
+    const { partners, appsScriptUrl } = body;
 
     if (!Array.isArray(partners) || partners.length === 0) {
       return NextResponse.json(
@@ -116,6 +116,7 @@ export async function POST(request: Request) {
       partnerType: (p.partnerType || "Authorized Gateway").trim(),
     }));
 
+    // Save to local file storage
     const saved = saveCustomPartners(cleanedPartners);
     if (!saved) {
       return NextResponse.json(
@@ -124,13 +125,36 @@ export async function POST(request: Request) {
       );
     }
 
+    // Two-way sync: If Google Apps Script Web App URL is provided or configured in env
+    const scriptEndpoint = appsScriptUrl || process.env.GOOGLE_APPS_SCRIPT_WEBAPP_URL;
+    let sheetSyncResult = null;
+
+    if (scriptEndpoint && scriptEndpoint.startsWith("http")) {
+      try {
+        const scriptRes = await fetch(scriptEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ partners: cleanedPartners }),
+        });
+        if (scriptRes.ok) {
+          sheetSyncResult = "synced_to_google_sheet";
+        }
+      } catch (syncErr) {
+        console.warn("Could not sync to Google Apps Script endpoint:", syncErr);
+        sheetSyncResult = "sync_failed";
+      }
+    }
+
     return NextResponse.json({
       success: true,
       source: "web_custom",
       hasCustomRows: true,
       count: cleanedPartners.length,
       data: cleanedPartners,
-      message: "บันทึกข้อมูลพาร์ทเนอร์บนเว็บสำเร็จแล้ว",
+      sheetSync: sheetSyncResult,
+      message: sheetSyncResult === "synced_to_google_sheet"
+        ? "บันทึกบนเว็บและอัปเดตลง Google Sheet ของคุณเรียบร้อยแล้ว!"
+        : "บันทึกข้อมูลพาร์ทเนอร์บนเว็บสำเร็จแล้ว",
     });
   } catch (err: any) {
     return NextResponse.json(

@@ -66,7 +66,6 @@ export async function fetchPartnersFromGoogleSheet(
 
   try {
     const response = await fetch(csvExportUrl, {
-      next: { revalidate: 30 },
       cache: "no-store",
     });
 

@@ -54,6 +54,8 @@ export default function PartnerDirectoryModal({
   const [showSettings, setShowSettings] = useState(false);
   const [sheetUrl, setSheetUrl] = useState(DEFAULT_GOOGLE_SHEET_URL);
   const [activeSheetUrl, setActiveSheetUrl] = useState(DEFAULT_GOOGLE_SHEET_URL);
+  const [appsScriptUrl, setAppsScriptUrl] = useState("");
+  const [sheetSyncStatus, setSheetSyncStatus] = useState<string | null>(null);
   const [copiedTemplate, setCopiedTemplate] = useState(false);
   const [hasCustomRows, setHasCustomRows] = useState(false);
 
@@ -99,6 +101,12 @@ export default function PartnerDirectoryModal({
           // ignore
         }
       }
+
+      const storedScriptUrl = localStorage.getItem("noire_apps_script_url") || "";
+      if (storedScriptUrl) {
+        setAppsScriptUrl(storedScriptUrl);
+      }
+
       loadPartners();
     }
   }, [isOpen]);
@@ -120,15 +128,22 @@ export default function PartnerDirectoryModal({
   // Save changes to Server and LocalStorage
   const handleSaveCustom = async () => {
     setIsSaving(true);
+    setSheetSyncStatus(null);
     try {
       // 1. Save to LocalStorage for instant browser persistence
       localStorage.setItem("noire_custom_partners", JSON.stringify(editingPartners));
+      if (appsScriptUrl.trim()) {
+        localStorage.setItem("noire_apps_script_url", appsScriptUrl.trim());
+      }
 
-      // 2. Persist to Server via API
+      // 2. Persist to Server via API (and forward to Google Apps Script if URL provided)
       const res = await fetch("/api/partners", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ partners: editingPartners }),
+        body: JSON.stringify({
+          partners: editingPartners,
+          appsScriptUrl: appsScriptUrl.trim() || undefined,
+        }),
       });
       const json = await res.json();
 
@@ -136,7 +151,10 @@ export default function PartnerDirectoryModal({
         setPartners(editingPartners);
         setDataSource("web_custom");
         setSaveSuccess(true);
-        setTimeout(() => setSaveSuccess(false), 3000);
+        if (json.sheetSync === "synced_to_google_sheet") {
+          setSheetSyncStatus("synced");
+        }
+        setTimeout(() => setSaveSuccess(false), 4000);
       }
     } catch (err) {
       console.error("Error saving custom partners:", err);
@@ -560,7 +578,11 @@ export default function PartnerDirectoryModal({
                         ) : saveSuccess ? (
                           <>
                             <Check className="w-3.5 h-3.5 text-emerald-400" />
-                            <span className="text-emerald-300">บันทึกสำเร็จแล้ว!</span>
+                            <span className="text-emerald-300">
+                              {sheetSyncStatus === "synced"
+                                ? "บันทึกบนเว็บและอัปเดตลง Google Sheet สำเร็จ!"
+                                : "บันทึกสำเร็จแล้ว!"}
+                            </span>
                           </>
                         ) : (
                           <>
@@ -666,6 +688,33 @@ export default function PartnerDirectoryModal({
                     คุณสามารถเลือกได้ว่าจะ <strong>พิมพ์แก้ไขโดยตรงบนหน้าเว็บ (แท็บแก้ไข)</strong> หรือ{" "}
                     <strong>กรอกข้อมูลใน Google Sheet</strong> แล้วกดปุ่ม <em>"ดึงจาก Google Sheet"</em> ก็ได้เช่นกันครับ
                   </p>
+
+                  <div className="pt-3 border-t border-white/10 space-y-1.5">
+                    <label className="block text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
+                      Google Apps Script Web App URL (สำหรับบันทึกกลับลง Sheet อัตโนมัติ)
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        placeholder="https://script.google.com/macros/s/.../exec"
+                        value={appsScriptUrl}
+                        onChange={(e) => {
+                          setAppsScriptUrl(e.target.value);
+                          localStorage.setItem("noire_apps_script_url", e.target.value.trim());
+                        }}
+                        className="flex-1 px-3 py-1.5 rounded-lg bg-black/90 border border-white/15 text-[11px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors"
+                      />
+                      {appsScriptUrl.trim() && (
+                        <span className="text-[10px] text-emerald-400 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-1 shrink-0 font-mono">
+                          <CheckCircle2 className="w-3 h-3" />
+                          <span>เชื่อมต่อพร้อมซิงค์</span>
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-zinc-500">
+                      เมื่อวาง Web App URL ที่ได้จาก Deploy เว็บไซต์จะส่งข้อมูลไปเขียนทับใน Google Sheet ทันทีที่กดบันทึก
+                    </p>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
