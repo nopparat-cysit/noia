@@ -33,6 +33,7 @@ import {
   DEFAULT_PARTNERS,
   DEFAULT_GOOGLE_SHEET_URL,
   DEFAULT_APPS_SCRIPT_URL,
+  formatGoogleDriveUrl,
 } from "@/lib/googleSheets";
 import PartnerCard169 from "@/components/PartnerCard169";
 import LiquidChromeBackground from "@/components/visuals/LiquidChromeBackground";
@@ -51,7 +52,6 @@ export default function AdminPage() {
   const [selectedPartnerIndex, setSelectedPartnerIndex] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
 
   // Settings
   const [sheetUrl, setSheetUrl] = useState(DEFAULT_GOOGLE_SHEET_URL);
@@ -244,35 +244,6 @@ export default function AdminPage() {
       alert("บันทึกลงแคชเบราว์เซอร์สำเร็จ แต่เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ");
     } finally {
       setIsSaving(false);
-    }
-  };
-
-  const handleImageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setIsUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("partnerId", partners[selectedPartnerIndex]?.id || "partner");
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const json = await res.json();
-      if (json.success && json.url) {
-        handleUpdateCurrentPartner("imageUrl", json.url);
-        handleUpdateCurrentPartner("logoUrl", json.url);
-      } else {
-        alert("อัปโหลดไม่สำเร็จ: " + (json.error || "กรุณาลองใหม่อีกครั้ง"));
-      }
-    } catch {
-      alert("เกิดข้อผิดพลาดในการอัปโหลดไฟล์รูปภาพ");
-    } finally {
-      setIsUploading(false);
     }
   };
 
@@ -697,47 +668,78 @@ export default function AdminPage() {
                       />
                     </div>
 
-                    {/* 16:9 Image & File Upload */}
+                    {/* 16:9 Image Link Input */}
                     <div>
-                      <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center justify-between mb-2">
                         <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
-                          <ImageIcon className="w-3.5 h-3.5 text-zinc-400" />
-                          <span>รูปภาพแบนเนอร์ (อัตราส่วน 16:9)</span>
+                          <Link2 className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>ลิงก์รูปภาพพาร์ทเนอร์ (Image Link / URL 16:9)</span>
                         </label>
 
-                        <label className="cursor-pointer px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] text-white flex items-center gap-1 transition-colors">
-                          <Upload className="w-3 h-3" />
-                          <span>{isUploading ? "กำลังอัปโหลด..." : "อัปโหลดรูปจากเครื่อง"}</span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageFileUpload}
-                            disabled={isUploading}
-                            className="hidden"
-                          />
-                        </label>
+                        {currentPartner.imageUrl && (
+                          <div className="flex items-center gap-3">
+                            <a
+                              href={currentPartner.imageUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[11px] text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
+                              title="เปิดดูภาพในแท็บใหม่"
+                            >
+                              <span>เปิดดูรูป</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                handleUpdateCurrentPartner("imageUrl", "");
+                                handleUpdateCurrentPartner("logoUrl", "");
+                              }}
+                              className="text-[11px] text-zinc-400 hover:text-rose-400 flex items-center gap-1 transition-colors cursor-pointer"
+                              title="ล้างลิงก์และกลับไปใช้ภาพมาตรฐาน"
+                            >
+                              <Undo2 className="w-3 h-3" />
+                              <span>รีเซ็ตภาพ</span>
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                        <div className="md:col-span-8">
-                          <input
-                            type="text"
-                            value={currentPartner.imageUrl || currentPartner.logoUrl || ""}
-                            onChange={(e) => {
-                              handleUpdateCurrentPartner("imageUrl", e.target.value);
-                              handleUpdateCurrentPartner("logoUrl", e.target.value);
-                            }}
-                            placeholder="URL รูปภาพ (เช่น /assets/partner.png หรือ data:image/svg+xml...)"
-                            className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono truncate"
-                          />
-                          <p className="text-[11px] text-zinc-500 mt-1">
-                            รองรับไฟล์ JPG, PNG, WebP หรือ SVG โดยระบบจะจัดแสดงในกรอบ 16:9
-                          </p>
+                        <div className="md:col-span-8 space-y-2">
+                          <div className="relative">
+                            <Link2 className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                            <input
+                              type="text"
+                              value={currentPartner.imageUrl || currentPartner.logoUrl || ""}
+                              onChange={(e) => {
+                                const formatted = formatGoogleDriveUrl(e.target.value);
+                                handleUpdateCurrentPartner("imageUrl", formatted);
+                                handleUpdateCurrentPartner("logoUrl", formatted);
+                              }}
+                              placeholder="วางลิงก์รูปภาพ เช่น https://.../image.png หรือ ลิงก์แชร์ Google Drive"
+                              className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono"
+                            />
+                          </div>
+                          <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 space-y-1 text-[11px] text-zinc-400 leading-relaxed">
+                            <p className="flex items-center gap-1.5 text-zinc-300 font-medium">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                              <span>วิธีใส่ลิงก์รูปภาพ:</span>
+                            </p>
+                            <p>
+                              • <strong>ลิงก์ตรงจากเว็บ:</strong> วาง URL รูปภาพได้ทุกแบบ (JPG, PNG, WebP)
+                            </p>
+                            <p>
+                              • <strong>Google Drive:</strong> วางลิงก์แชร์ของไฟล์รูป (ตั้งสิทธิ์เป็น &apos;ทุกคนที่มีลิงก์&apos;) ระบบจะแปลงเป็น Direct Image ให้ทันที
+                            </p>
+                            <p>
+                              • <strong>ใน Google Sheet:</strong> เพื่อนร่วมงานสามารถใส่ลิงก์รูปภาพในคอลัมน์ชื่อ <span className="text-zinc-200 font-mono font-semibold">&quot;รูปภาพ&quot;</span> ในชีตได้โดยตรงเช่นกัน
+                            </p>
+                          </div>
                         </div>
 
                         {/* Image Preview Box (16:9) */}
                         <div className="md:col-span-4">
-                          <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-black/60 border border-white/15 flex items-center justify-center relative">
+                          <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-black/60 border border-white/15 flex items-center justify-center relative shadow-inner">
                             {currentPartner.imageUrl || currentPartner.logoUrl ? (
                               <img
                                 src={currentPartner.imageUrl || currentPartner.logoUrl}
@@ -746,7 +748,7 @@ export default function AdminPage() {
                               />
                             ) : (
                               <span className="text-[10px] text-zinc-500 font-mono">
-                                พรีวิว 16:9
+                                พรีวิว 16:9 (ภาพเริ่มต้น)
                               </span>
                             )}
                           </div>
