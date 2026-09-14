@@ -684,20 +684,25 @@ export default function AdminPage() {
                         const rawUrl = currentPartner.imageUrl || currentPartner.logoUrl || "";
                         const isSvgFallback = rawUrl.startsWith("data:image/svg+xml");
                         const cleanImageUrl = isSvgFallback ? "" : rawUrl;
+                        const isGoogleDriveUrl =
+                          cleanImageUrl.includes("drive.google.com") ||
+                          cleanImageUrl.includes("lh3.googleusercontent.com/d/");
+                        const formattedPreviewUrl = cleanImageUrl
+                          ? formatGoogleDriveUrl(cleanImageUrl)
+                          : "";
                         const fallbackImage =
                           selectedPartnerIndex === 0
                             ? DEFAULT_GROW_ERA_16_9
                             : DEFAULT_LANDSCAPE_16_9;
-                        const activePreviewImage = cleanImageUrl || fallbackImage;
+                        const activePreviewImage = formattedPreviewUrl || fallbackImage;
 
                         const handlePasteFromClipboard = async () => {
                           try {
                             const text = await navigator.clipboard.readText();
                             if (text) {
                               const trimmed = text.trim().replace(/^["']|["']$/g, "");
-                              const formatted = formatGoogleDriveUrl(trimmed);
-                              handleUpdateCurrentPartner("imageUrl", formatted);
-                              handleUpdateCurrentPartner("logoUrl", formatted);
+                              handleUpdateCurrentPartner("imageUrl", trimmed);
+                              handleUpdateCurrentPartner("logoUrl", trimmed);
                             }
                           } catch {
                             alert("เบราว์เซอร์ยังไม่ได้เปิดสิทธิ์อ่านคลิปบอร์ดอัตโนมัติ กรุณากดคลิกในช่องข้อความแล้วกด Ctrl+V หรือคลิกขวาแล้วเลือก 'วาง' ได้เลยครับ");
@@ -726,7 +731,7 @@ export default function AdminPage() {
                                 {cleanImageUrl && (
                                   <>
                                     <a
-                                      href={cleanImageUrl}
+                                      href={formattedPreviewUrl || cleanImageUrl}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white text-[11px] flex items-center gap-1 transition-colors"
@@ -760,21 +765,28 @@ export default function AdminPage() {
                                     value={cleanImageUrl}
                                     onChange={(e) => {
                                       const val = e.target.value.trim().replace(/^["']|["']$/g, "");
-                                      const formatted = formatGoogleDriveUrl(val);
-                                      handleUpdateCurrentPartner("imageUrl", formatted);
-                                      handleUpdateCurrentPartner("logoUrl", formatted);
+                                      handleUpdateCurrentPartner("imageUrl", val);
+                                      handleUpdateCurrentPartner("logoUrl", val);
                                     }}
                                     placeholder="วางลิงก์รูปภาพที่นี่ (สามารถวางลิงก์ยาวได้ไม่จำกัด เช่น https://... หรือ ลิงก์ Google Drive)..."
                                     className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl p-3 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono break-all leading-relaxed resize-y"
                                   />
                                 </div>
 
-                                <div className="flex items-center justify-between text-[11px]">
+                                <div className="flex flex-col gap-1 text-[11px]">
                                   {cleanImageUrl ? (
-                                    <span className="text-emerald-400 flex items-center gap-1">
-                                      <CheckCircle2 className="w-3.5 h-3.5" />
-                                      <span>กำหนดลิงก์รูปภาพแล้ว ({cleanImageUrl.length} ตัวอักษร)</span>
-                                    </span>
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <span className="text-emerald-400 flex items-center gap-1 font-medium">
+                                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                                        <span>กำหนดลิงก์รูปภาพแล้ว ({cleanImageUrl.length} ตัวอักษร)</span>
+                                      </span>
+                                      {isGoogleDriveUrl && (
+                                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-sans">
+                                          <Sparkles className="w-2.5 h-2.5 shrink-0 text-amber-300" />
+                                          <span>Google Drive: แปลงเป็น Direct Image แสดงผลอัตโนมัติ</span>
+                                        </span>
+                                      )}
+                                    </div>
                                   ) : (
                                     <span className="text-amber-400/90 flex items-center gap-1">
                                       <span>★ กำลังใช้ภาพมาตรฐาน 16:9 ของระบบ (วางลิงก์ใหม่ได้ทันที)</span>
@@ -806,6 +818,11 @@ export default function AdminPage() {
                                     src={activePreviewImage}
                                     alt="Preview"
                                     className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      if (e.currentTarget.src !== fallbackImage) {
+                                        e.currentTarget.src = fallbackImage;
+                                      }
+                                    }}
                                   />
                                 </div>
                                 <span className="text-[10px] text-zinc-400 text-center block mt-1.5 font-mono">

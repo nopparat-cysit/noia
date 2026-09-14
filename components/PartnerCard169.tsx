@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ExternalLink, Edit3 } from "lucide-react";
-import { PartnerItem } from "@/lib/googleSheets";
+import { PartnerItem, formatGoogleDriveUrl } from "@/lib/googleSheets";
 
 import {
   DEFAULT_GROW_ERA_16_9,
@@ -31,13 +31,19 @@ export default function PartnerCard169({
   const defaultFallbackImage =
     index === 0 ? DEFAULT_GROW_ERA_16_9 : DEFAULT_LANDSCAPE_16_9;
 
+  const rawImage = partner.imageUrl || partner.logoUrl || "";
+  const resolveImage = (url: string) => {
+    if (!url) return defaultFallbackImage;
+    return formatGoogleDriveUrl(url);
+  };
+
   const [currentImg, setCurrentImg] = React.useState<string>(
-    partner.imageUrl || partner.logoUrl || defaultFallbackImage
+    resolveImage(rawImage)
   );
 
   React.useEffect(() => {
-    setCurrentImg(partner.imageUrl || partner.logoUrl || defaultFallbackImage);
-  }, [partner.imageUrl, partner.logoUrl, defaultFallbackImage]);
+    setCurrentImg(resolveImage(rawImage));
+  }, [rawImage, defaultFallbackImage]);
 
   return (
     <div

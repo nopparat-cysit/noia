@@ -658,19 +658,30 @@ function doGet(e) {
                               value={cleanImageUrl}
                               onChange={(e) => {
                                 const val = e.target.value.trim().replace(/^["']|["']$/g, "");
-                                const formatted = formatGoogleDriveUrl(val);
-                                handleFieldChange("imageUrl", formatted);
-                                handleFieldChange("logoUrl", formatted);
+                                handleFieldChange("imageUrl", val);
+                                handleFieldChange("logoUrl", val);
                               }}
                               placeholder="วางลิงก์รูปภาพที่นี่ (วางได้ยาวไม่จำกัด)..."
                               className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl p-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono break-all leading-relaxed resize-y"
                             />
                           </div>
-                          <span className="text-[10px] text-zinc-400 block leading-tight">
-                            {cleanImageUrl
-                              ? `กำหนดลิงก์แล้ว (${cleanImageUrl.length} ตัวอักษร)`
-                              : "รองรับ URL รูปภาพทุกประเภท และ ลิงก์แชร์ Google Drive (แปลงให้ดูได้ทันที)"}
-                          </span>
+                          <div className="flex flex-col gap-1 text-[10px] text-zinc-400 leading-tight">
+                            {cleanImageUrl ? (
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                <span className="text-emerald-400 font-medium">
+                                  กำหนดลิงก์แล้ว ({cleanImageUrl.length} ตัวอักษร)
+                                </span>
+                                {(cleanImageUrl.includes("drive.google.com") ||
+                                  cleanImageUrl.includes("lh3.googleusercontent.com/d/")) && (
+                                  <span className="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">
+                                    Google Drive Direct
+                                  </span>
+                                )}
+                              </div>
+                            ) : (
+                              <span>รองรับ URL รูปภาพทุกประเภท และ ลิงก์แชร์ Google Drive (แปลงให้ดูได้ทันที)</span>
+                            )}
+                          </div>
                         </>
                       );
                     })()}
