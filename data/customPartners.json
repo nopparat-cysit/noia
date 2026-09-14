@@ -1,20 +1,20 @@
 [
   {
     "id": "partner-1",
-    "name": "NOIRE Global Logistics & Sourcing Network",
-    "category": "Official Logistics & Import Gateway",
-    "description": "ศูนย์กลางเครือข่ายโลจิสติกส์และการนำเข้าเครื่องสำอางระดับสากล บริหารจัดการพิธีการศุลกากรและตรวจสอบใบอนุญาต LPI ประจำภูมิภาค",
+    "name": "Glow Era",
+    "category": "ความงาม",
+    "description": "Glow Era ธุรกิจบริการเสริมสวยนอกสถานที่\nรับแต่งหน้า ทำผม ทำเล็บ ต่อขนตา และสปาเท้า สำหรับลูกค้าที่ไม่สะดวกในการเดินทาง ทางเราพร้อมเสิร์ฟความสะดวกสบายให้คุณถึงที่",
     "websiteUrl": "https://en.wikipedia.org/wiki/Google",
-    "statusBadge": "Verified Official Partner",
-    "partnerType": "Logistics & Compliance"
+    "statusBadge": "บริการเสริมสวยนอกสถานที่",
+    "partnerType": "Authorized Gateway"
   },
   {
     "id": "partner-2",
-    "name": "Couture Cosmetics Retail Alliance",
-    "category": "Premier Retail & Clinic Distribution Network",
-    "description": "พันธมิตรเครือข่ายร้านค้าปลีก คลินิกความงาม และศูนย์ความงามระดับไฮเอนด์ทั่วประเทศ จัดจำหน่ายเครื่องสำอางแบรนด์ NOIRE ภายใต้มาตรฐาน อย. 100%",
-    "websiteUrl": "https://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/FRM_SEARCH_CMT.aspx",
-    "statusBadge": "Authorized Distributor",
-    "partnerType": "B2B Retail Platform"
+    "name": "MM Nail",
+    "category": "ความงาม",
+    "description": "MM Nail คือแบรนด์เล็บจากประเทศไทยที่เกิดขึ้นจาก\nความตั้งใจที่จะทำให้การทำเล็บเป็นมากกว่าความสวยงาม\nแต่เป็นพื้นที่ให้ทุกคนได้แสดงออกถึง ตัวตน สไตล์ และ\nความคิดสร้างสรรค์ของตัวเอง",
+    "websiteUrl": "http://mmnailstudio.my.canva.site/",
+    "statusBadge": "ร้านทำเล็บ",
+    "partnerType": "Authorized Gateway"
   }
 ]

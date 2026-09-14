@@ -57,6 +57,8 @@ export default function AdminPage() {
   const [sheetUrl, setSheetUrl] = useState(DEFAULT_GOOGLE_SHEET_URL);
   const [activeSheetUrl, setActiveSheetUrl] = useState(DEFAULT_GOOGLE_SHEET_URL);
   const [appsScriptUrl, setAppsScriptUrl] = useState(DEFAULT_APPS_SCRIPT_URL);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
   const [sheetSyncStatus, setSheetSyncStatus] = useState<string | null>(null);
   const [copiedTemplate, setCopiedTemplate] = useState(false);
   const [copiedScriptCode, setCopiedScriptCode] = useState(false);
@@ -85,14 +87,16 @@ export default function AdminPage() {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
             setPartners(parsed);
-            return;
           }
         } catch {
           // ignore
         }
       }
 
-      fetch("/api/partners")
+      fetch(`/api/partners?t=${Date.now()}`, {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" },
+      })
         .then((r) => r.json())
         .then((json) => {
           if (json.success && Array.isArray(json.data) && json.data.length > 0) {
@@ -108,6 +112,37 @@ export default function AdminPage() {
 
     loadData();
   }, [isAuthenticated]);
+
+  const handleSyncFromSheet = async () => {
+    setIsSyncing(true);
+    setSyncMessage(null);
+    try {
+      const res = await fetch(
+        `/api/partners?source=sheet&sheetUrl=${encodeURIComponent(sheetUrl)}&t=${Date.now()}`,
+        {
+          cache: "no-store",
+          headers: { "Cache-Control": "no-cache" },
+        }
+      );
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        setPartners(json.data);
+        setSelectedPartnerIndex(0);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("noire_custom_partners", JSON.stringify(json.data));
+          window.dispatchEvent(new Event("noire_partners_updated"));
+        }
+        setSyncMessage(`ดึงข้อมูลจาก Google Sheet สำเร็จ (${json.data.length} แถว)!`);
+        setTimeout(() => setSyncMessage(null), 4000);
+      } else {
+        setSyncMessage(json.message || "ไม่พบข้อมูลใน Google Sheet");
+      }
+    } catch (err: any) {
+      setSyncMessage("เกิดข้อผิดพลาดในการเชื่อมต่อกับ Google Sheet");
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -371,7 +406,18 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 self-start sm:self-auto">
+          <div className="flex flex-wrap items-center gap-3 self-start sm:self-auto">
+            {/* Direct Sync from Google Sheet Button */}
+            <button
+              onClick={handleSyncFromSheet}
+              disabled={isSyncing}
+              className="px-4 py-2.5 rounded-full text-xs font-semibold flex items-center gap-2 cursor-pointer bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition-all shadow-sm"
+              title="ดึงข้อมูลแถวและรูปภาพล่าสุดจาก Google Sheet ทันที"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin text-emerald-400" : ""}`} />
+              <span>{isSyncing ? "กำลังดึงข้อมูล Sheet..." : "ดึงข้อมูลจาก Google Sheet"}</span>
+            </button>
+
             <button
               onClick={handleSaveAll}
               disabled={isSaving}
@@ -401,6 +447,19 @@ export default function AdminPage() {
             </button>
           </div>
         </div>
+
+        {/* Sync message banner if active */}
+        {syncMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mb-6 p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2 shadow-lg"
+          >
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+            <span>{syncMessage}</span>
+          </motion.div>
+        )}
 
         {/* Tab Navigation */}
         <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 border-b border-white/10">
@@ -764,14 +823,25 @@ export default function AdminPage() {
                     สถานะปัจจุบัน: พร้อมใช้งานและซิงค์กับฐานข้อมูล
                   </span>
 
-                  <button
-                    onClick={handleSaveAll}
-                    disabled={isSaving}
-                    className="btn-chrome light-sweep px-5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2"
-                  >
-                    <Save className="w-3.5 h-3.5" />
-                    <span>บันทึกการตั้งค่า</span>
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleSyncFromSheet}
+                      disabled={isSyncing}
+                      className="px-4 py-2 rounded-xl text-xs font-medium flex items-center gap-2 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition-all cursor-pointer"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? "animate-spin text-emerald-400" : ""}`} />
+                      <span>{isSyncing ? "กำลังดึงข้อมูล..." : "ดึงข้อมูลจาก Google Sheet เดี๋ยวนี้"}</span>
+                    </button>
+
+                    <button
+                      onClick={handleSaveAll}
+                      disabled={isSaving}
+                      className="btn-chrome light-sweep px-5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer"
+                    >
+                      <Save className="w-3.5 h-3.5" />
+                      <span>บันทึกการตั้งค่า</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import { NextResponse } from "next/server";
 import {
   fetchPartnersFromGoogleSheet,
@@ -48,17 +51,26 @@ export async function GET(request: Request) {
   const sourceParam = searchParams.get("source"); // 'custom' | 'sheet' | 'auto'
   const sheetParam = searchParams.get("sheetUrl") || undefined;
 
+  const noCacheHeaders = {
+    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+    Pragma: "no-cache",
+    Expires: "0",
+  };
+
   // 1. Explicitly requested custom data
   if (sourceParam === "custom") {
     const custom = getCustomPartners();
     if (custom) {
-      return NextResponse.json({
-        success: true,
-        source: "web_custom",
-        hasCustomRows: true,
-        count: custom.length,
-        data: custom,
-      });
+      return NextResponse.json(
+        {
+          success: true,
+          source: "web_custom",
+          hasCustomRows: true,
+          count: custom.length,
+          data: custom,
+        },
+        { headers: noCacheHeaders }
+      );
     }
   }
 
@@ -67,40 +79,49 @@ export async function GET(request: Request) {
 
   // If sheet has custom rows or was explicitly requested
   if (sourceParam === "sheet" || sheetResult.hasCustomRows) {
-    return NextResponse.json({
-      success: true,
-      source: sheetResult.source,
-      sheetUrl: sheetResult.sheetUrl,
-      hasCustomRows: sheetResult.hasCustomRows,
-      message: sheetResult.message,
-      count: sheetResult.partners.length,
-      data: sheetResult.partners,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        source: sheetResult.source,
+        sheetUrl: sheetResult.sheetUrl,
+        hasCustomRows: sheetResult.hasCustomRows,
+        message: sheetResult.message,
+        count: sheetResult.partners.length,
+        data: sheetResult.partners,
+      },
+      { headers: noCacheHeaders }
+    );
   }
 
   // 3. Auto fallback: check if we have saved web custom partners
   const custom = getCustomPartners();
   if (custom) {
-    return NextResponse.json({
-      success: true,
-      source: "web_custom",
-      sheetUrl: sheetResult.sheetUrl,
-      hasCustomRows: true,
-      count: custom.length,
-      data: custom,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        source: "web_custom",
+        sheetUrl: sheetResult.sheetUrl,
+        hasCustomRows: true,
+        count: custom.length,
+        data: custom,
+      },
+      { headers: noCacheHeaders }
+    );
   }
 
   // 4. Default fallback
-  return NextResponse.json({
-    success: true,
-    source: "default_database",
-    sheetUrl: sheetResult.sheetUrl,
-    hasCustomRows: false,
-    message: sheetResult.message,
-    count: DEFAULT_PARTNERS.length,
-    data: DEFAULT_PARTNERS,
-  });
+  return NextResponse.json(
+    {
+      success: true,
+      source: "default_database",
+      sheetUrl: sheetResult.sheetUrl,
+      hasCustomRows: false,
+      message: sheetResult.message,
+      count: DEFAULT_PARTNERS.length,
+      data: DEFAULT_PARTNERS,
+    },
+    { headers: noCacheHeaders }
+  );
 }
 
 export async function POST(request: Request) {

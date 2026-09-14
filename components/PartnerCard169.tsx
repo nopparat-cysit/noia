@@ -4,6 +4,11 @@ import React from "react";
 import { ExternalLink, Edit3 } from "lucide-react";
 import { PartnerItem } from "@/lib/googleSheets";
 
+import {
+  DEFAULT_GROW_ERA_16_9,
+  DEFAULT_LANDSCAPE_16_9,
+} from "@/data/defaultPartnerImages";
+
 interface PartnerCard169Props {
   partner: PartnerItem;
   index: number;
@@ -22,6 +27,17 @@ export default function PartnerCard169({
   // If partner has "AC" or statusBadge, show badge pill
   const badgeText = partner.statusBadge || (index === 0 ? "AC" : "");
   const isRedBorder = isActive || index === 0;
+
+  const defaultFallbackImage =
+    index === 0 ? DEFAULT_GROW_ERA_16_9 : DEFAULT_LANDSCAPE_16_9;
+
+  const [currentImg, setCurrentImg] = React.useState<string>(
+    partner.imageUrl || partner.logoUrl || defaultFallbackImage
+  );
+
+  React.useEffect(() => {
+    setCurrentImg(partner.imageUrl || partner.logoUrl || defaultFallbackImage);
+  }, [partner.imageUrl, partner.logoUrl, defaultFallbackImage]);
 
   return (
     <div
@@ -49,12 +65,17 @@ export default function PartnerCard169({
                 "polygon(16px 0%, calc(100% - 16px) 0%, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0% calc(100% - 16px), 0% 16px)",
             }}
           >
-            {partner.imageUrl || partner.logoUrl ? (
+            {currentImg ? (
               <img
-                src={partner.imageUrl || partner.logoUrl}
+                src={currentImg}
                 alt={partner.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
+                onError={() => {
+                  if (currentImg !== defaultFallbackImage) {
+                    setCurrentImg(defaultFallbackImage);
+                  }
+                }}
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-950 text-zinc-400">

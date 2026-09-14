@@ -12,6 +12,7 @@ export default function ContactPartner() {
 
   useEffect(() => {
     const loadData = () => {
+      // 1. Initial fast display from cache if available (prevent layout flicker)
       const cached =
         typeof window !== "undefined"
           ? localStorage.getItem("noire_custom_partners")
@@ -21,18 +22,24 @@ export default function ContactPartner() {
           const parsed = JSON.parse(cached);
           if (Array.isArray(parsed) && parsed.length > 0) {
             setPartners(parsed);
-            return;
           }
         } catch {
           // ignore
         }
       }
 
-      fetch("/api/partners")
+      // 2. Always fetch fresh live data from Google Sheets / API in background (cache-aside)
+      fetch(`/api/partners?t=${Date.now()}`, {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" },
+      })
         .then((r) => r.json())
         .then((json) => {
           if (json.success && Array.isArray(json.data) && json.data.length > 0) {
             setPartners(json.data);
+            if (typeof window !== "undefined") {
+              localStorage.setItem("noire_custom_partners", JSON.stringify(json.data));
+            }
           }
         })
         .catch(() => {});
@@ -73,7 +80,7 @@ export default function ContactPartner() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {partners.slice(0, 2).map((partner, idx) => (
+            {partners.map((partner, idx) => (
               <PartnerCard169
                 key={partner.id || idx}
                 partner={partner}

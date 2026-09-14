@@ -21,29 +21,29 @@ import {
   DEFAULT_LANDSCAPE_16_9,
 } from "@/data/defaultPartnerImages";
 
-// Default 2 Partner Websites (matching user reference design)
+// Default 2 Partner Websites (matching user Google Sheet and reference design)
 export const DEFAULT_PARTNERS: PartnerItem[] = [
   {
     id: "partner-1",
-    name: "การเสริมสวยนอกสถานที่",
-    category: "บริการความงามนอกสถานที่",
+    name: "Glow Era",
+    category: "ความงาม",
     description:
-      "บริการเสริมความงาม ดูแลผิวพรรณ และแต่งหน้าระดับพรีเมียม ดูแลถึงที่โดยทีมช่างผู้เชี่ยวชาญ",
-    websiteUrl: "https://porta.fda.moph.go.th/",
-    statusBadge: "AC",
-    partnerType: "Beauty Service & Care",
+      "Glow Era ธุรกิจบริการเสริมสวยนอกสถานที่ รับแต่งหน้า ทำผม ทำเล็บ ต่อขนตา และสปาเท้า สำหรับลูกค้าที่ไม่สะดวกในการเดินทาง ทางเราพร้อมเสิร์ฟความสะดวกสบายให้คุณถึงที่",
+    websiteUrl: "https://en.wikipedia.org/wiki/Google",
+    statusBadge: "บริการเสริมสวยนอกสถานที่",
+    partnerType: "Authorized Gateway",
     imageUrl: DEFAULT_GROW_ERA_16_9,
     logoUrl: DEFAULT_GROW_ERA_16_9,
   },
   {
     id: "partner-2",
-    name: "ร้านทำเล็บ",
-    category: "เนลสปาและทรีตเมนต์",
+    name: "MM Nail",
+    category: "ความงาม",
     description:
-      "ศูนย์บริการสปาเล็บและออกแบบเล็บระดับพรีเมียม ภายใต้มาตรฐานความสะอาดและความปลอดภัยสูงสุด",
-    websiteUrl: "https://pertento.fda.moph.go.th/FDA_SEARCH_CENTER/PRODUCT/FRM_SEARCH_CMT.aspx",
-    statusBadge: "Verified",
-    partnerType: "Nail & Spa Salon",
+      "MM Nail คือแบรนด์เล็บจากประเทศไทยที่เกิดขึ้นจากความตั้งใจที่จะทำให้การทำเล็บเป็นมากกว่าความสวยงาม แต่เป็นพื้นที่ให้ทุกคนได้แสดงออกถึง ตัวตน สไตล์ และความคิดสร้างสรรค์ของตัวเอง",
+    websiteUrl: "http://mmnailstudio.my.canva.site/",
+    statusBadge: "ร้านทำเล็บ",
+    partnerType: "Authorized Gateway",
     imageUrl: DEFAULT_LANDSCAPE_16_9,
     logoUrl: DEFAULT_LANDSCAPE_16_9,
   },
@@ -59,7 +59,9 @@ export interface FetchPartnersResult {
 
 /**
  * Robust fetcher that connects to any public Google Sheet link.
- * Supports auto-detection of column headers in both Thai and English.
+ * Supports RFC 4180 CSV parsing (with newlines inside quoted cells),
+ * auto-detection of column headers in both Thai and English,
+ * and smart image detection with Google Drive conversion and luxury 16:9 fallbacks.
  */
 export async function fetchPartnersFromGoogleSheet(
   sheetUrlOrId?: string
@@ -80,6 +82,9 @@ export async function fetchPartnersFromGoogleSheet(
   try {
     const response = await fetch(csvExportUrl, {
       cache: "no-store",
+      headers: {
+        Accept: "text/csv,text/plain,*/*",
+      },
     });
 
     if (!response.ok) {
@@ -94,16 +99,15 @@ export async function fetchPartnersFromGoogleSheet(
     }
 
     const csvText = await response.text();
-    const rows = parseCSV(csvText).filter((row) => row.some((cell) => cell.trim().length > 0));
+    const rows = parseCSV(csvText);
 
-    // If sheet has no rows or only 0 bytes
     if (rows.length === 0) {
       return {
         partners: DEFAULT_PARTNERS,
         source: "google_sheet",
         sheetUrl: targetUrl,
         hasCustomRows: false,
-        message: "เชื่อมต่อ Google Sheet สำเร็จ แต่ยังไม่มีข้อมูลใน Sheet (กำลังแสดงข้อมูลตัวอย่าง 2 เว็บไซต์)",
+        message: "เชื่อมต่อ Google Sheet สำเร็จ แต่ยังไม่มีข้อมูลใน Sheet",
       };
     }
 
@@ -115,10 +119,27 @@ export async function fetchPartnersFromGoogleSheet(
     let descIdx = -1;
     let badgeIdx = -1;
     let typeIdx = -1;
+    let imgIdx = -1;
 
     headerRow.forEach((col, idx) => {
-      if (col.includes("name") || col.includes("ชื่อ") || col.includes("แบรนด์") || col.includes("partner")) {
+      if (
+        col.includes("name") ||
+        col.includes("ชื่อ") ||
+        col.includes("แบรนด์") ||
+        col.includes("partner")
+      ) {
         if (nameIdx === -1) nameIdx = idx;
+      } else if (
+        col.includes("image") ||
+        col.includes("img") ||
+        col.includes("photo") ||
+        col.includes("pic") ||
+        col.includes("รูป") ||
+        col.includes("ภาพ") ||
+        col.includes("logo") ||
+        col.includes("โลโก้")
+      ) {
+        if (imgIdx === -1) imgIdx = idx;
       } else if (
         col.includes("url") ||
         col.includes("link") ||
@@ -128,13 +149,30 @@ export async function fetchPartnersFromGoogleSheet(
         col.includes("ลิ้งค์")
       ) {
         if (urlIdx === -1) urlIdx = idx;
-      } else if (col.includes("cat") || col.includes("หมวด") || col.includes("ประเภทงาน")) {
+      } else if (
+        col.includes("cat") ||
+        col.includes("หมวด") ||
+        col.includes("ประเภทงาน")
+      ) {
         if (catIdx === -1) catIdx = idx;
-      } else if (col.includes("desc") || col.includes("รายละ") || col.includes("คำอธิบาย") || col.includes("detail")) {
+      } else if (
+        col.includes("desc") ||
+        col.includes("รายละ") ||
+        col.includes("คำอธิบาย") ||
+        col.includes("detail")
+      ) {
         if (descIdx === -1) descIdx = idx;
-      } else if (col.includes("badge") || col.includes("status") || col.includes("สถานะ")) {
+      } else if (
+        col.includes("badge") ||
+        col.includes("status") ||
+        col.includes("สถานะ")
+      ) {
         if (badgeIdx === -1) badgeIdx = idx;
-      } else if (col.includes("type") || col.includes("ประเภท") || col.includes("รูปแบบ")) {
+      } else if (
+        col.includes("type") ||
+        col.includes("ประเภท") ||
+        col.includes("รูปแบบ")
+      ) {
         if (typeIdx === -1) typeIdx = idx;
       }
     });
@@ -148,14 +186,14 @@ export async function fetchPartnersFromGoogleSheet(
         source: "google_sheet",
         sheetUrl: targetUrl,
         hasCustomRows: false,
-        message: "พบหัวตารางใน Google Sheet แต่ยังไม่มีแถวข้อมูล (กำลังแสดงข้อมูลตัวอย่าง 2 เว็บไซต์)",
+        message: "พบหัวตารางใน Google Sheet แต่ยังไม่มีแถวข้อมูล",
       };
     }
 
     const parsedPartners: PartnerItem[] = [];
 
     dataRows.forEach((row, i) => {
-      // Find URL if not strictly mapped
+      // Find URL
       let websiteUrl = "";
       if (urlIdx !== -1 && row[urlIdx]) {
         websiteUrl = row[urlIdx];
@@ -169,33 +207,73 @@ export async function fetchPartnersFromGoogleSheet(
       if (nameIdx !== -1 && row[nameIdx]) {
         name = row[nameIdx];
       } else {
-        const candidate = row.find((cell) => cell.trim() && cell !== websiteUrl);
+        const candidate = row.find(
+          (cell) => cell.trim() && cell !== websiteUrl && !isImageUrl(cell)
+        );
         if (candidate) name = candidate;
       }
 
-      if (!name && !websiteUrl) return; // skip completely blank row
+      // Skip completely empty row
+      if (!name && !websiteUrl) return;
 
       const category =
         (catIdx !== -1 && row[catIdx]) ||
-        row.find((cell) => cell !== name && cell !== websiteUrl && cell.length < 40) ||
+        row.find(
+          (cell) =>
+            cell !== name &&
+            cell !== websiteUrl &&
+            !isImageUrl(cell) &&
+            cell.length < 40
+        ) ||
         "Official Partner";
 
       const description =
         (descIdx !== -1 && row[descIdx]) ||
-        row.find((cell) => cell !== name && cell !== websiteUrl && cell !== category && cell.length > 20) ||
+        row.find(
+          (cell) =>
+            cell !== name &&
+            cell !== websiteUrl &&
+            cell !== category &&
+            !isImageUrl(cell) &&
+            cell.length > 20
+        ) ||
         "พันธมิตรธุรกิจร่วมกับ NOIRE Luxury Cosmetics Hub";
 
-      const statusBadge = (badgeIdx !== -1 && row[badgeIdx]) || "Verified Partner";
-      const partnerType = (typeIdx !== -1 && row[typeIdx]) || "Authorized Gateway";
+      const statusBadge =
+        (badgeIdx !== -1 && row[badgeIdx]) || (i === 0 ? "AC" : "Verified Partner");
+
+      const partnerType =
+        (typeIdx !== -1 && row[typeIdx]) || "Authorized Gateway";
+
+      // 16:9 Image resolution:
+      // 1) From designated image column
+      let imageUrl = "";
+      if (imgIdx !== -1 && row[imgIdx]) {
+        imageUrl = formatGoogleDriveUrl(row[imgIdx]);
+      }
+
+      // 2) If not found in imgIdx, scan row for any image URL
+      if (!imageUrl) {
+        const foundImg = row.find((cell) => isImageUrl(cell));
+        if (foundImg) imageUrl = formatGoogleDriveUrl(foundImg);
+      }
+
+      // 3) Graceful luxury fallback so the card always displays a 16:9 banner
+      if (!imageUrl) {
+        const defaultPartner = DEFAULT_PARTNERS[i % DEFAULT_PARTNERS.length];
+        imageUrl = defaultPartner?.imageUrl || DEFAULT_GROW_ERA_16_9;
+      }
 
       parsedPartners.push({
         id: `partner-${i + 1}`,
         name: name || `Partner ${i + 1}`,
         category,
         description,
-        websiteUrl: formatUrl(websiteUrl || "https://porta.fda.moph.go.th/"),
+        websiteUrl: formatUrl(websiteUrl || "#"),
         statusBadge,
         partnerType,
+        imageUrl,
+        logoUrl: imageUrl,
       });
     });
 
@@ -205,7 +283,7 @@ export async function fetchPartnersFromGoogleSheet(
         source: "google_sheet",
         sheetUrl: targetUrl,
         hasCustomRows: false,
-        message: "ไม่สามารถแปลงแถวข้อมูลใน Sheet ได้ จึงแสดงข้อมูลตัวอย่าง 2 เว็บไซต์",
+        message: "ไม่สามารถแปลงแถวข้อมูลใน Sheet ได้ จึงแสดงข้อมูลตัวอย่าง",
       };
     }
 
@@ -224,6 +302,37 @@ export async function fetchPartnersFromGoogleSheet(
       hasCustomRows: false,
     };
   }
+}
+
+/**
+ * Converts Google Drive share links into direct viewable image URLs
+ * e.g. https://drive.google.com/file/d/123/view -> https://lh3.googleusercontent.com/d/123
+ */
+export function formatGoogleDriveUrl(url: string): string {
+  if (!url) return "";
+  const trimmed = url.trim();
+  const fileMatch = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileMatch && fileMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${fileMatch[1]}`;
+  }
+  const idMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idMatch && idMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+  }
+  return trimmed;
+}
+
+export function isImageUrl(str: string): boolean {
+  if (!str) return false;
+  const s = str.trim().toLowerCase();
+  return (
+    s.startsWith("data:image/") ||
+    s.includes("drive.google.com") ||
+    s.includes("googleusercontent.com") ||
+    s.includes("imgur.com") ||
+    s.includes("unsplash.com") ||
+    /\.(png|jpe?g|webp|svg|gif)($|\?)/i.test(s)
+  );
 }
 
 function isPotentialUrl(str: string): boolean {
@@ -249,24 +358,53 @@ function formatUrl(url: string): string {
   return `https://${trimmed}`;
 }
 
-function parseCSV(text: string): string[][] {
-  const lines = text.split(/\r?\n/);
-  return lines.map((line) => {
-    const cells: string[] = [];
-    let current = "";
-    let inQuotes = false;
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i];
-      if (char === '"') {
-        inQuotes = !inQuotes;
-      } else if (char === "," && !inQuotes) {
-        cells.push(current.trim().replace(/^"(.*)"$/, "$1"));
-        current = "";
+/**
+ * RFC 4180 compliant CSV parser.
+ * Handles multiline quoted text cells, embedded commas, and escaped quotes ("").
+ */
+export function parseCSV(text: string): string[][] {
+  const rows: string[][] = [];
+  let currentRow: string[] = [];
+  let currentCell = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        // Escaped quote: "" -> "
+        currentCell += '"';
+        i++;
       } else {
-        current += char;
+        inQuotes = !inQuotes;
       }
+    } else if (char === "," && !inQuotes) {
+      currentRow.push(currentCell.trim());
+      currentCell = "";
+    } else if ((char === "\r" || char === "\n") && !inQuotes) {
+      if (char === "\r" && nextChar === "\n") {
+        i++; // skip \n in \r\n
+      }
+      currentRow.push(currentCell.trim());
+      currentCell = "";
+      if (currentRow.some((c) => c.length > 0)) {
+        rows.push(currentRow);
+      }
+      currentRow = [];
+    } else {
+      currentCell += char;
     }
-    cells.push(current.trim().replace(/^"(.*)"$/, "$1"));
-    return cells;
-  });
+  }
+
+  if (currentCell.length > 0 || currentRow.length > 0) {
+    currentRow.push(currentCell.trim());
+    if (currentRow.some((c) => c.length > 0)) {
+      rows.push(currentRow);
+    }
+  }
+
+  return rows;
 }
+
