@@ -407,3 +407,54 @@ export function parseCSV(text: string): string[][] {
   return rows;
 }
 
+/**
+ * Compresses an image file or blob to max 1600x900 resolution (JPEG 0.85 quality)
+ * to keep data lightweight (< 150KB) while maintaining crisp 16:9 HD visual clarity.
+ */
+export function compressImageFile(file: File | Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (typeof window === "undefined") {
+      return reject(new Error("compressImageFile can only be run in browser"));
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const src = event.target?.result as string;
+      if (!src) return resolve("");
+
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+          const maxWidth = 1600;
+          const maxHeight = 900;
+
+          if (width > maxWidth || height > maxHeight) {
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            return resolve(src);
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
+          resolve(compressedDataUrl);
+        } catch {
+          resolve(src);
+        }
+      };
+      img.onerror = () => resolve(src);
+      img.src = src;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+

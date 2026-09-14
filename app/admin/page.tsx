@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -35,6 +35,7 @@ import {
   DEFAULT_GOOGLE_SHEET_URL,
   DEFAULT_APPS_SCRIPT_URL,
   formatGoogleDriveUrl,
+  compressImageFile,
 } from "@/lib/googleSheets";
 import {
   DEFAULT_GROW_ERA_16_9,
@@ -67,6 +68,7 @@ export default function AdminPage() {
   const [sheetSyncStatus, setSheetSyncStatus] = useState<string | null>(null);
   const [copiedTemplate, setCopiedTemplate] = useState(false);
   const [copiedScriptCode, setCopiedScriptCode] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Check existing session
   useEffect(() => {
@@ -687,6 +689,7 @@ export default function AdminPage() {
                         const isGoogleDriveUrl =
                           cleanImageUrl.includes("drive.google.com") ||
                           cleanImageUrl.includes("lh3.googleusercontent.com/d/");
+                        const isDataUrl = cleanImageUrl.startsWith("data:image/");
                         const formattedPreviewUrl = cleanImageUrl
                           ? formatGoogleDriveUrl(cleanImageUrl)
                           : "";
@@ -696,36 +699,96 @@ export default function AdminPage() {
                             : DEFAULT_LANDSCAPE_16_9;
                         const activePreviewImage = formattedPreviewUrl || fallbackImage;
 
+                        const applyImageChange = (newUrl: string) => {
+                          handleUpdateCurrentPartner("imageUrl", newUrl);
+                          handleUpdateCurrentPartner("logoUrl", newUrl);
+                        };
+
                         const handlePasteFromClipboard = async () => {
                           try {
-                            const text = await navigator.clipboard.readText();
-                            if (text) {
-                              const trimmed = text.trim().replace(/^["']|["']$/g, "");
-                              handleUpdateCurrentPartner("imageUrl", trimmed);
-                              handleUpdateCurrentPartner("logoUrl", trimmed);
+                            // 1. Try reading clipboard items directly (handles images & screenshots!)
+                            if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.read) {
+                              try {
+                                const items = await navigator.clipboard.read();
+                                for (const item of items) {
+                                  const imageType = item.types.find((t) => t.startsWith("image/"));
+                                  if (imageType) {
+                                    const blob = await item.getType(imageType);
+                                    const compressed = await compressImageFile(blob);
+                                    if (compressed) {
+                                      applyImageChange(compressed);
+                                      return;
+                                    }
+                                  }
+                                }
+                              } catch (readErr) {
+                                console.warn("navigator.clipboard.read() not permitted, falling back to readText():", readErr);
+                              }
                             }
+
+                            // 2. Try reading plain text / URL
+                            if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.readText) {
+                              const text = await navigator.clipboard.readText();
+                              if (text && text.trim()) {
+                                const trimmed = text.trim().replace(/^["']|["']$/g, "");
+                                applyImageChange(trimmed);
+                                return;
+                              }
+                            }
+
+                            alert("ไม่พบลิงก์หรือรูปภาพในคลิปบอร์ด กรุณาลองคัดลอกใหม่อีกครั้ง หรือคลิกปุ่ม 'เลือกรูปจากเครื่อง' แทนได้เลยครับ");
                           } catch {
-                            alert("เบราว์เซอร์ยังไม่ได้เปิดสิทธิ์อ่านคลิปบอร์ดอัตโนมัติ กรุณากดคลิกในช่องข้อความแล้วกด Ctrl+V หรือคลิกขวาแล้วเลือก 'วาง' ได้เลยครับ");
+                            alert("เบราว์เซอร์ยังไม่ได้เปิดสิทธิ์อ่านคลิปบอร์ดอัตโนมัติ กรุณากดคลิกในช่องข้อความแล้วกด Ctrl+V หรือคลิก 'เลือกรูปจากเครื่อง' แทนได้เลยครับ");
                           }
+                        };
+
+                        const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const compressed = await compressImageFile(file);
+                            if (compressed) {
+                              applyImageChange(compressed);
+                            }
+                          }
+                          e.target.value = "";
                         };
 
                         return (
                           <div>
+                            {/* Hidden file input for native file selection */}
+                            <input
+                              type="file"
+                              ref={fileInputRef}
+                              accept="image/*"
+                              className="hidden"
+                              onChange={handleFileChange}
+                            />
+
                             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                               <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
                                 <Link2 className="w-3.5 h-3.5 text-emerald-400" />
-                                <span>ลิงก์รูปภาพพาร์ทเนอร์ (Image Link / URL 16:9)</span>
+                                <span>รูปภาพพาร์ทเนอร์ 16:9 (วางรูปภาพโดยตรง / วางลิงก์ URL)</span>
                               </label>
 
-                              <div className="flex items-center gap-2">
+                              <div className="flex flex-wrap items-center gap-2">
                                 <button
                                   type="button"
                                   onClick={handlePasteFromClipboard}
                                   className="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-[11px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
-                                  title="กดเพื่อวางลิงก์จากคลิปบอร์ดทันที"
+                                  title="กดเพื่อวางรูปภาพหรือลิงก์จากคลิปบอร์ดทันที"
                                 >
                                   <Clipboard className="w-3 h-3" />
                                   <span>กดวางจากคลิปบอร์ด</span>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => fileInputRef.current?.click()}
+                                  className="px-2.5 py-1 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 border border-blue-500/30 text-[11px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
+                                  title="เลือกไฟล์รูปภาพจากเครื่องคอมพิวเตอร์ของคุณ"
+                                >
+                                  <Upload className="w-3 h-3" />
+                                  <span>เลือกรูปจากเครื่อง</span>
                                 </button>
 
                                 {cleanImageUrl && (
@@ -743,14 +806,13 @@ export default function AdminPage() {
                                     <button
                                       type="button"
                                       onClick={() => {
-                                        handleUpdateCurrentPartner("imageUrl", "");
-                                        handleUpdateCurrentPartner("logoUrl", "");
+                                        applyImageChange("");
                                       }}
                                       className="px-2.5 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-300 hover:text-red-200 text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
-                                      title="ล้างลิงก์และกลับไปใช้ภาพมาตรฐาน"
+                                      title="ล้างภาพและกลับไปใช้ภาพมาตรฐาน"
                                     >
                                       <Undo2 className="w-3 h-3" />
-                                      <span>ล้างลิงก์</span>
+                                      <span>ล้างภาพ</span>
                                     </button>
                                   </>
                                 )}
@@ -759,16 +821,55 @@ export default function AdminPage() {
 
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
                               <div className="md:col-span-8 space-y-2">
-                                <div className="relative">
+                                <div
+                                  className="relative"
+                                  onDragOver={(e) => e.preventDefault()}
+                                  onDrop={async (e) => {
+                                    e.preventDefault();
+                                    const file = e.dataTransfer?.files?.[0];
+                                    if (file && file.type.startsWith("image/")) {
+                                      const compressed = await compressImageFile(file);
+                                      if (compressed) {
+                                        applyImageChange(compressed);
+                                      }
+                                    }
+                                  }}
+                                >
                                   <textarea
                                     rows={3}
-                                    value={cleanImageUrl}
+                                    value={isDataUrl ? "🖼️ [รูปภาพถูกบันทึกในรูปแบบ Image Data แล้ว - แสดงผลด้านขวาเรียบร้อย]" : cleanImageUrl}
+                                    onPaste={async (e) => {
+                                      // 1. Check if user pasted an image directly (screenshot, copy image)
+                                      const items = e.clipboardData?.items;
+                                      if (items && items.length > 0) {
+                                        for (let i = 0; i < items.length; i++) {
+                                          if (items[i].type.startsWith("image/")) {
+                                            e.preventDefault();
+                                            const file = items[i].getAsFile();
+                                            if (file) {
+                                              const compressed = await compressImageFile(file);
+                                              if (compressed) {
+                                                applyImageChange(compressed);
+                                                return;
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+
+                                      // 2. Text / URL paste
+                                      const pastedText = e.clipboardData?.getData("text");
+                                      if (pastedText && pastedText.trim()) {
+                                        e.preventDefault();
+                                        const trimmed = pastedText.trim().replace(/^["']|["']$/g, "");
+                                        applyImageChange(trimmed);
+                                      }
+                                    }}
                                     onChange={(e) => {
                                       const val = e.target.value.trim().replace(/^["']|["']$/g, "");
-                                      handleUpdateCurrentPartner("imageUrl", val);
-                                      handleUpdateCurrentPartner("logoUrl", val);
+                                      applyImageChange(val);
                                     }}
-                                    placeholder="วางลิงก์รูปภาพที่นี่ (สามารถวางลิงก์ยาวได้ไม่จำกัด เช่น https://... หรือ ลิงก์ Google Drive)..."
+                                    placeholder="วางรูปภาพที่นี่ (กด Ctrl+V เพื่อวางรูปภาพได้ทันที หรือ วางลิงก์ URL รูปภาพ / Google Drive)..."
                                     className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl p-3 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono break-all leading-relaxed resize-y"
                                   />
                                 </div>
@@ -776,10 +877,18 @@ export default function AdminPage() {
                                 <div className="flex flex-col gap-1 text-[11px]">
                                   {cleanImageUrl ? (
                                     <div className="flex flex-wrap items-center gap-2">
-                                      <span className="text-emerald-400 flex items-center gap-1 font-medium">
-                                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
-                                        <span>กำหนดลิงก์รูปภาพแล้ว ({cleanImageUrl.length} ตัวอักษร)</span>
-                                      </span>
+                                      {isDataUrl ? (
+                                        <span className="text-emerald-400 flex items-center gap-1 font-medium">
+                                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                                          <span>บันทึกรูปภาพจากคลิปบอร์ด / ไฟล์เรียบร้อย (พร้อมแสดงผลทันที)</span>
+                                        </span>
+                                      ) : (
+                                        <span className="text-emerald-400 flex items-center gap-1 font-medium">
+                                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                                          <span>กำหนดลิงก์รูปภาพแล้ว ({cleanImageUrl.length} ตัวอักษร)</span>
+                                        </span>
+                                      )}
+
                                       {isGoogleDriveUrl && (
                                         <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30 flex items-center gap-1 font-sans">
                                           <Sparkles className="w-2.5 h-2.5 shrink-0 text-amber-300" />
@@ -789,7 +898,7 @@ export default function AdminPage() {
                                     </div>
                                   ) : (
                                     <span className="text-amber-400/90 flex items-center gap-1">
-                                      <span>★ กำลังใช้ภาพมาตรฐาน 16:9 ของระบบ (วางลิงก์ใหม่ได้ทันที)</span>
+                                      <span>★ กำลังใช้ภาพมาตรฐาน 16:9 ของระบบ (วางรูปด้วย Ctrl+V หรือวางลิงก์ได้ทันที)</span>
                                     </span>
                                   )}
                                 </div>
@@ -797,16 +906,16 @@ export default function AdminPage() {
                                 <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 space-y-1 text-[11px] text-zinc-400 leading-relaxed">
                                   <p className="flex items-center gap-1.5 text-zinc-300 font-medium">
                                     <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                                    <span>วิธีใส่ลิงก์รูปภาพ (วางได้ไม่จำกัดความยาว):</span>
+                                    <span>วิธีใส่รูปภาพ (รองรับครบทุกรูปแบบ):</span>
                                   </p>
                                   <p>
-                                    • <strong>ลิงก์จากเว็บ / Canva / Imgur:</strong> คัดลอก URL รูปภาพแล้วกดปุ่ม &quot;กดวางจากคลิปบอร์ด&quot; หรือ Ctrl+V
+                                    • <strong>วางรูปภาพโดยตรง (Ctrl+V):</strong> แคปภาพหน้าจอ (Screenshot) หรือคลิกขวาที่ภาพ &quot;คัดลอกรูปภาพ&quot; แล้วกด Ctrl+V ในช่องนี้ได้ทันที
                                   </p>
                                   <p>
-                                    • <strong>Google Drive:</strong> วางลิงก์แชร์ของไฟล์รูป (ตั้งสิทธิ์เป็น &apos;ทุกคนที่มีลิงก์&apos;) ระบบจะแปลงเป็น Direct Image ให้อัตโนมัติ
+                                    • <strong>เลือกไฟล์รูปจากเครื่อง:</strong> กดปุ่มสีฟ้า &quot;เลือกรูปจากเครื่อง&quot; หรือลากไฟล์ภาพมาปล่อยลงในช่องนี้
                                   </p>
                                   <p>
-                                    • <strong>ใน Google Sheet:</strong> เพื่อนร่วมงานสามารถใส่ลิงก์ในคอลัมน์ชื่อ <span className="text-zinc-200 font-mono font-semibold">&quot;รูปภาพ&quot;</span> ในชีตได้โดยตรง
+                                    • <strong>ลิงก์จากเว็บ / Canva / Google Drive:</strong> วาง URL ในช่องนี้ได้เต็มความยาว ระบบรองรับทุกความยาวไม่จำกัด
                                   </p>
                                 </div>
                               </div>
@@ -826,7 +935,7 @@ export default function AdminPage() {
                                   />
                                 </div>
                                 <span className="text-[10px] text-zinc-400 text-center block mt-1.5 font-mono">
-                                  {cleanImageUrl ? "พรีวิวจากลิงก์ที่คุณใส่" : "พรีวิวภาพมาตรฐาน 16:9"}
+                                  {cleanImageUrl ? "พรีวิวภาพที่คุณใส่ (16:9)" : "พรีวิวภาพมาตรฐาน 16:9"}
                                 </span>
                               </div>
                             </div>

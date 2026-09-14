@@ -34,6 +34,7 @@ import {
   DEFAULT_GOOGLE_SHEET_URL,
   DEFAULT_APPS_SCRIPT_URL,
   formatGoogleDriveUrl,
+  compressImageFile,
 } from "@/lib/googleSheets";
 import PartnerCard169 from "@/components/PartnerCard169";
 
@@ -652,25 +653,72 @@ function doGet(e) {
                             )}
                           </div>
 
-                          <div className="relative mb-2">
+                          <div
+                            className="relative mb-2"
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={async (e) => {
+                              e.preventDefault();
+                              const file = e.dataTransfer?.files?.[0];
+                              if (file && file.type.startsWith("image/")) {
+                                const compressed = await compressImageFile(file);
+                                if (compressed) {
+                                  handleFieldChange("imageUrl", compressed);
+                                  handleFieldChange("logoUrl", compressed);
+                                }
+                              }
+                            }}
+                          >
                             <textarea
                               rows={2}
-                              value={cleanImageUrl}
+                              value={cleanImageUrl.startsWith("data:image/") ? "🖼️ [รูปภาพจากคลิปบอร์ด / ไฟล์อัปโหลด]" : cleanImageUrl}
+                              onPaste={async (e) => {
+                                const items = e.clipboardData?.items;
+                                if (items && items.length > 0) {
+                                  for (let i = 0; i < items.length; i++) {
+                                    if (items[i].type.startsWith("image/")) {
+                                      e.preventDefault();
+                                      const file = items[i].getAsFile();
+                                      if (file) {
+                                        const compressed = await compressImageFile(file);
+                                        if (compressed) {
+                                          handleFieldChange("imageUrl", compressed);
+                                          handleFieldChange("logoUrl", compressed);
+                                          return;
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+
+                                const pastedText = e.clipboardData?.getData("text");
+                                if (pastedText && pastedText.trim()) {
+                                  e.preventDefault();
+                                  const trimmed = pastedText.trim().replace(/^["']|["']$/g, "");
+                                  handleFieldChange("imageUrl", trimmed);
+                                  handleFieldChange("logoUrl", trimmed);
+                                }
+                              }}
                               onChange={(e) => {
                                 const val = e.target.value.trim().replace(/^["']|["']$/g, "");
                                 handleFieldChange("imageUrl", val);
                                 handleFieldChange("logoUrl", val);
                               }}
-                              placeholder="วางลิงก์รูปภาพที่นี่ (วางได้ยาวไม่จำกัด)..."
+                              placeholder="วางรูปภาพที่นี่ (กด Ctrl+V เพื่อวางรูปภาพได้ทันที หรือ วางลิงก์ URL รูปภาพ / Google Drive)..."
                               className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl p-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono break-all leading-relaxed resize-y"
                             />
                           </div>
                           <div className="flex flex-col gap-1 text-[10px] text-zinc-400 leading-tight">
                             {cleanImageUrl ? (
                               <div className="flex flex-wrap items-center gap-1.5">
-                                <span className="text-emerald-400 font-medium">
-                                  กำหนดลิงก์แล้ว ({cleanImageUrl.length} ตัวอักษร)
-                                </span>
+                                {cleanImageUrl.startsWith("data:image/") ? (
+                                  <span className="text-emerald-400 font-medium">
+                                    บันทึกรูปภาพจากคลิปบอร์ดแล้ว
+                                  </span>
+                                ) : (
+                                  <span className="text-emerald-400 font-medium">
+                                    กำหนดลิงก์แล้ว ({cleanImageUrl.length} ตัวอักษร)
+                                  </span>
+                                )}
                                 {(cleanImageUrl.includes("drive.google.com") ||
                                   cleanImageUrl.includes("lh3.googleusercontent.com/d/")) && (
                                   <span className="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">
@@ -679,7 +727,7 @@ function doGet(e) {
                                 )}
                               </div>
                             ) : (
-                              <span>รองรับ URL รูปภาพทุกประเภท และ ลิงก์แชร์ Google Drive (แปลงให้ดูได้ทันที)</span>
+                              <span>รองรับทั้งการกด Ctrl+V วางรูปภาพโดยตรง, URL ทั่วไป และ Google Drive</span>
                             )}
                           </div>
                         </>
