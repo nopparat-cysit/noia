@@ -654,16 +654,21 @@ export default function AdminPage() {
 
                     {/* Description */}
                     <div>
-                      <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                        คำอธิบายพาร์ทเนอร์ (Description)
-                      </label>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="text-xs font-medium text-zinc-300">
+                          คำอธิบายพาร์ทเนอร์ (Description - แสดงผลเต็มทุกบรรทัด)
+                        </label>
+                        <span className="text-[11px] text-zinc-400 font-mono">
+                          {currentPartner.description?.length || 0} ตัวอักษร
+                        </span>
+                      </div>
                       <textarea
-                        rows={3}
+                        rows={6}
                         value={currentPartner.description || ""}
                         onChange={(e) =>
                           handleUpdateCurrentPartner("description", e.target.value)
                         }
-                        placeholder="คำอธิบายสั้นๆ เกี่ยวกับบริการหรือจุดเด่นของพาร์ทเนอร์..."
+                        placeholder="กรอกรายละเอียด จุดเด่น หรือบริการของพาร์ทเนอร์ได้เต็มที่ สามารถกด Enter ขึ้นบรรทัดใหม่ได้ ระบบจะแสดงผลครบถ้วนไม่ตัดทอน..."
                         className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl p-3.5 text-xs text-white placeholder-zinc-500 focus:outline-none leading-relaxed"
                       />
                     </div>

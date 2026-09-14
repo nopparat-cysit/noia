@@ -41,7 +41,7 @@ export default function PartnerCard169({
 
   return (
     <div
-      className={`relative rounded-3xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 group overflow-hidden ${
+      className={`relative rounded-3xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 group overflow-hidden h-full ${
         isRedBorder
           ? "border-2 border-red-500/80 shadow-[0_0_30px_rgba(239,68,68,0.18)]"
           : "border border-white/20 hover:border-white/40 shadow-2xl"
@@ -100,14 +100,14 @@ export default function PartnerCard169({
         </div>
 
         {/* 2. ชื่อ (Title / Name below the image) */}
-        <div className="flex items-center justify-between gap-3 mb-2">
-          <h4 className="text-lg sm:text-xl font-bold text-white tracking-wide truncate">
+        <div className="flex items-start justify-between gap-3 mb-2.5">
+          <h4 className="text-lg sm:text-xl font-bold text-white tracking-wide leading-snug break-words">
             {partner.name || (index === 0 ? "การเสริมสวยนอกสถานที่" : "ร้านทำเล็บ")}
           </h4>
 
           {badgeText && (
             <span
-              className={`px-2.5 py-0.5 rounded text-[11px] font-bold tracking-wider uppercase shadow-md shrink-0 ${
+              className={`px-2.5 py-0.5 rounded text-[11px] font-bold tracking-wider uppercase shadow-md shrink-0 mt-0.5 ${
                 badgeText === "AC" || isRedBorder
                   ? "bg-red-600 text-white"
                   : "bg-white/15 text-zinc-200 border border-white/20"
@@ -118,8 +118,8 @@ export default function PartnerCard169({
           )}
         </div>
 
-        {/* 3. อธิบาย (Description below the title) */}
-        <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed mb-5 line-clamp-3">
+        {/* 3. อธิบาย (Description below the title - displays FULL text without truncation) */}
+        <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed mb-6 whitespace-pre-line break-words">
           {partner.description ||
             (index === 0
               ? "บริการเสริมความงาม ดูแลผิวพรรณ และแต่งหน้าระดับพรีเมียม ดูแลถึงที่โดยทีมช่างผู้เชี่ยวชาญ"

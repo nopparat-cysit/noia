@@ -607,15 +607,20 @@ function doGet(e) {
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-mono text-zinc-400 uppercase tracking-wider mb-1">
-                      คำอธิบาย / รายละเอียด (Description)
-                    </label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
+                        คำอธิบาย / รายละเอียด (Description - แสดงผลเต็ม)
+                      </label>
+                      <span className="text-[10px] text-zinc-400 font-mono">
+                        {currentEdit.description?.length || 0} ตัวอักษร
+                      </span>
+                    </div>
                     <textarea
-                      rows={2}
+                      rows={5}
                       value={currentEdit.description}
                       onChange={(e) => handleFieldChange("description", e.target.value)}
-                      placeholder="อธิบายข้อมูลของพาร์ทเนอร์เพื่อแสดงบนหน้าเว็บ..."
-                      className="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/15 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors resize-none"
+                      placeholder="อธิบายข้อมูลหรือรายละเอียดบริการของพาร์ทเนอร์..."
+                      className="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/15 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors leading-relaxed"
                     />
                   </div>
 
