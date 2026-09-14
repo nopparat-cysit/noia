@@ -32,8 +32,8 @@ export const DEFAULT_PARTNERS: PartnerItem[] = [
     websiteUrl: "https://en.wikipedia.org/wiki/Google",
     statusBadge: "บริการเสริมสวยนอกสถานที่",
     partnerType: "Authorized Gateway",
-    imageUrl: "",
-    logoUrl: "",
+    imageUrl: "/partners/grow-era.jpg",
+    logoUrl: "/partners/grow-era.jpg",
   },
   {
     id: "partner-2",
@@ -44,8 +44,8 @@ export const DEFAULT_PARTNERS: PartnerItem[] = [
     websiteUrl: "http://mmnailstudio.my.canva.site/",
     statusBadge: "ร้านทำเล็บ",
     partnerType: "Authorized Gateway",
-    imageUrl: "",
-    logoUrl: "",
+    imageUrl: "/partners/mm-nail.png",
+    logoUrl: "/partners/mm-nail.png",
   },
 ];
 
@@ -258,9 +258,9 @@ export async function fetchPartnersFromGoogleSheet(
         if (foundImg) imageUrl = formatGoogleDriveUrl(foundImg);
       }
 
-      // 3) If no image URL is provided in the sheet, keep empty so input box is clean (PartnerCard renders luxury fallback)
+      // 3) If no image URL is provided in the sheet, default to official partner graphics
       if (!imageUrl) {
-        imageUrl = "";
+        imageUrl = i === 0 ? "/partners/grow-era.jpg" : "/partners/mm-nail.png";
       }
 
       parsedPartners.push({
