@@ -32,8 +32,8 @@ export const DEFAULT_PARTNERS: PartnerItem[] = [
     websiteUrl: "https://en.wikipedia.org/wiki/Google",
     statusBadge: "บริการเสริมสวยนอกสถานที่",
     partnerType: "Authorized Gateway",
-    imageUrl: DEFAULT_GROW_ERA_16_9,
-    logoUrl: DEFAULT_GROW_ERA_16_9,
+    imageUrl: "",
+    logoUrl: "",
   },
   {
     id: "partner-2",
@@ -44,8 +44,8 @@ export const DEFAULT_PARTNERS: PartnerItem[] = [
     websiteUrl: "http://mmnailstudio.my.canva.site/",
     statusBadge: "ร้านทำเล็บ",
     partnerType: "Authorized Gateway",
-    imageUrl: DEFAULT_LANDSCAPE_16_9,
-    logoUrl: DEFAULT_LANDSCAPE_16_9,
+    imageUrl: "",
+    logoUrl: "",
   },
 ];
 
@@ -258,10 +258,9 @@ export async function fetchPartnersFromGoogleSheet(
         if (foundImg) imageUrl = formatGoogleDriveUrl(foundImg);
       }
 
-      // 3) Graceful luxury fallback so the card always displays a 16:9 banner
+      // 3) If no image URL is provided in the sheet, keep empty so input box is clean (PartnerCard renders luxury fallback)
       if (!imageUrl) {
-        const defaultPartner = DEFAULT_PARTNERS[i % DEFAULT_PARTNERS.length];
-        imageUrl = defaultPartner?.imageUrl || DEFAULT_GROW_ERA_16_9;
+        imageUrl = "";
       }
 
       parsedPartners.push({

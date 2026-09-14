@@ -27,6 +27,7 @@ import {
   Check,
   Undo2,
   Image as ImageIcon,
+  Clipboard,
 } from "lucide-react";
 import {
   PartnerItem,
@@ -35,6 +36,10 @@ import {
   DEFAULT_APPS_SCRIPT_URL,
   formatGoogleDriveUrl,
 } from "@/lib/googleSheets";
+import {
+  DEFAULT_GROW_ERA_16_9,
+  DEFAULT_LANDSCAPE_16_9,
+} from "@/data/defaultPartnerImages";
 import PartnerCard169 from "@/components/PartnerCard169";
 import LiquidChromeBackground from "@/components/visuals/LiquidChromeBackground";
 
@@ -675,90 +680,142 @@ export default function AdminPage() {
 
                     {/* 16:9 Image Link Input */}
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
-                          <Link2 className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>ลิงก์รูปภาพพาร์ทเนอร์ (Image Link / URL 16:9)</span>
-                        </label>
+                      {(() => {
+                        const rawUrl = currentPartner.imageUrl || currentPartner.logoUrl || "";
+                        const isSvgFallback = rawUrl.startsWith("data:image/svg+xml");
+                        const cleanImageUrl = isSvgFallback ? "" : rawUrl;
+                        const fallbackImage =
+                          selectedPartnerIndex === 0
+                            ? DEFAULT_GROW_ERA_16_9
+                            : DEFAULT_LANDSCAPE_16_9;
+                        const activePreviewImage = cleanImageUrl || fallbackImage;
 
-                        {currentPartner.imageUrl && (
-                          <div className="flex items-center gap-3">
-                            <a
-                              href={currentPartner.imageUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[11px] text-zinc-400 hover:text-white flex items-center gap-1 transition-colors"
-                              title="เปิดดูภาพในแท็บใหม่"
-                            >
-                              <span>เปิดดูรูป</span>
-                              <ExternalLink className="w-3 h-3" />
-                            </a>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                handleUpdateCurrentPartner("imageUrl", "");
-                                handleUpdateCurrentPartner("logoUrl", "");
-                              }}
-                              className="text-[11px] text-zinc-400 hover:text-rose-400 flex items-center gap-1 transition-colors cursor-pointer"
-                              title="ล้างลิงก์และกลับไปใช้ภาพมาตรฐาน"
-                            >
-                              <Undo2 className="w-3 h-3" />
-                              <span>รีเซ็ตภาพ</span>
-                            </button>
-                          </div>
-                        )}
-                      </div>
+                        const handlePasteFromClipboard = async () => {
+                          try {
+                            const text = await navigator.clipboard.readText();
+                            if (text) {
+                              const trimmed = text.trim().replace(/^["']|["']$/g, "");
+                              const formatted = formatGoogleDriveUrl(trimmed);
+                              handleUpdateCurrentPartner("imageUrl", formatted);
+                              handleUpdateCurrentPartner("logoUrl", formatted);
+                            }
+                          } catch {
+                            alert("เบราว์เซอร์ยังไม่ได้เปิดสิทธิ์อ่านคลิปบอร์ดอัตโนมัติ กรุณากดคลิกในช่องข้อความแล้วกด Ctrl+V หรือคลิกขวาแล้วเลือก 'วาง' ได้เลยครับ");
+                          }
+                        };
 
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                        <div className="md:col-span-8 space-y-2">
-                          <div className="relative">
-                            <Link2 className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                            <input
-                              type="text"
-                              value={currentPartner.imageUrl || currentPartner.logoUrl || ""}
-                              onChange={(e) => {
-                                const formatted = formatGoogleDriveUrl(e.target.value);
-                                handleUpdateCurrentPartner("imageUrl", formatted);
-                                handleUpdateCurrentPartner("logoUrl", formatted);
-                              }}
-                              placeholder="วางลิงก์รูปภาพ เช่น https://.../image.png หรือ ลิงก์แชร์ Google Drive"
-                              className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono"
-                            />
-                          </div>
-                          <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 space-y-1 text-[11px] text-zinc-400 leading-relaxed">
-                            <p className="flex items-center gap-1.5 text-zinc-300 font-medium">
-                              <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                              <span>วิธีใส่ลิงก์รูปภาพ:</span>
-                            </p>
-                            <p>
-                              • <strong>ลิงก์ตรงจากเว็บ:</strong> วาง URL รูปภาพได้ทุกแบบ (JPG, PNG, WebP)
-                            </p>
-                            <p>
-                              • <strong>Google Drive:</strong> วางลิงก์แชร์ของไฟล์รูป (ตั้งสิทธิ์เป็น &apos;ทุกคนที่มีลิงก์&apos;) ระบบจะแปลงเป็น Direct Image ให้ทันที
-                            </p>
-                            <p>
-                              • <strong>ใน Google Sheet:</strong> เพื่อนร่วมงานสามารถใส่ลิงก์รูปภาพในคอลัมน์ชื่อ <span className="text-zinc-200 font-mono font-semibold">&quot;รูปภาพ&quot;</span> ในชีตได้โดยตรงเช่นกัน
-                            </p>
-                          </div>
-                        </div>
+                        return (
+                          <div>
+                            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                              <label className="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
+                                <Link2 className="w-3.5 h-3.5 text-emerald-400" />
+                                <span>ลิงก์รูปภาพพาร์ทเนอร์ (Image Link / URL 16:9)</span>
+                              </label>
 
-                        {/* Image Preview Box (16:9) */}
-                        <div className="md:col-span-4">
-                          <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-black/60 border border-white/15 flex items-center justify-center relative shadow-inner">
-                            {currentPartner.imageUrl || currentPartner.logoUrl ? (
-                              <img
-                                src={currentPartner.imageUrl || currentPartner.logoUrl}
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <span className="text-[10px] text-zinc-500 font-mono">
-                                พรีวิว 16:9 (ภาพเริ่มต้น)
-                              </span>
-                            )}
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={handlePasteFromClipboard}
+                                  className="px-2.5 py-1 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-[11px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
+                                  title="กดเพื่อวางลิงก์จากคลิปบอร์ดทันที"
+                                >
+                                  <Clipboard className="w-3 h-3" />
+                                  <span>กดวางจากคลิปบอร์ด</span>
+                                </button>
+
+                                {cleanImageUrl && (
+                                  <>
+                                    <a
+                                      href={cleanImageUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white text-[11px] flex items-center gap-1 transition-colors"
+                                      title="เปิดดูรูปภาพในแท็บใหม่"
+                                    >
+                                      <span>เปิดดูรูป</span>
+                                      <ExternalLink className="w-3 h-3" />
+                                    </a>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        handleUpdateCurrentPartner("imageUrl", "");
+                                        handleUpdateCurrentPartner("logoUrl", "");
+                                      }}
+                                      className="px-2.5 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-300 hover:text-red-200 text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
+                                      title="ล้างลิงก์และกลับไปใช้ภาพมาตรฐาน"
+                                    >
+                                      <Undo2 className="w-3 h-3" />
+                                      <span>ล้างลิงก์</span>
+                                    </button>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+                              <div className="md:col-span-8 space-y-2">
+                                <div className="relative">
+                                  <textarea
+                                    rows={3}
+                                    value={cleanImageUrl}
+                                    onChange={(e) => {
+                                      const val = e.target.value.trim().replace(/^["']|["']$/g, "");
+                                      const formatted = formatGoogleDriveUrl(val);
+                                      handleUpdateCurrentPartner("imageUrl", formatted);
+                                      handleUpdateCurrentPartner("logoUrl", formatted);
+                                    }}
+                                    placeholder="วางลิงก์รูปภาพที่นี่ (สามารถวางลิงก์ยาวได้ไม่จำกัด เช่น https://... หรือ ลิงก์ Google Drive)..."
+                                    className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl p-3 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono break-all leading-relaxed resize-y"
+                                  />
+                                </div>
+
+                                <div className="flex items-center justify-between text-[11px]">
+                                  {cleanImageUrl ? (
+                                    <span className="text-emerald-400 flex items-center gap-1">
+                                      <CheckCircle2 className="w-3.5 h-3.5" />
+                                      <span>กำหนดลิงก์รูปภาพแล้ว ({cleanImageUrl.length} ตัวอักษร)</span>
+                                    </span>
+                                  ) : (
+                                    <span className="text-amber-400/90 flex items-center gap-1">
+                                      <span>★ กำลังใช้ภาพมาตรฐาน 16:9 ของระบบ (วางลิงก์ใหม่ได้ทันที)</span>
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 space-y-1 text-[11px] text-zinc-400 leading-relaxed">
+                                  <p className="flex items-center gap-1.5 text-zinc-300 font-medium">
+                                    <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                                    <span>วิธีใส่ลิงก์รูปภาพ (วางได้ไม่จำกัดความยาว):</span>
+                                  </p>
+                                  <p>
+                                    • <strong>ลิงก์จากเว็บ / Canva / Imgur:</strong> คัดลอก URL รูปภาพแล้วกดปุ่ม &quot;กดวางจากคลิปบอร์ด&quot; หรือ Ctrl+V
+                                  </p>
+                                  <p>
+                                    • <strong>Google Drive:</strong> วางลิงก์แชร์ของไฟล์รูป (ตั้งสิทธิ์เป็น &apos;ทุกคนที่มีลิงก์&apos;) ระบบจะแปลงเป็น Direct Image ให้อัตโนมัติ
+                                  </p>
+                                  <p>
+                                    • <strong>ใน Google Sheet:</strong> เพื่อนร่วมงานสามารถใส่ลิงก์ในคอลัมน์ชื่อ <span className="text-zinc-200 font-mono font-semibold">&quot;รูปภาพ&quot;</span> ในชีตได้โดยตรง
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Image Preview Box (16:9) */}
+                              <div className="md:col-span-4">
+                                <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-black/60 border border-white/15 flex items-center justify-center relative shadow-inner">
+                                  <img
+                                    src={activePreviewImage}
+                                    alt="Preview"
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                                <span className="text-[10px] text-zinc-400 text-center block mt-1.5 font-mono">
+                                  {cleanImageUrl ? "พรีวิวจากลิงก์ที่คุณใส่" : "พรีวิวภาพมาตรฐาน 16:9"}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>

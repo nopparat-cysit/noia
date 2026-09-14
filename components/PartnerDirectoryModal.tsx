@@ -626,42 +626,54 @@ function doGet(e) {
 
                   {/* Image Link Section */}
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <Link2 className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>ลิงก์รูปภาพพาร์ทเนอร์ (Image Link 16:9)</span>
-                      </label>
-                      {currentEdit.imageUrl && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            handleFieldChange("imageUrl", "");
-                            handleFieldChange("logoUrl", "");
-                          }}
-                          className="text-[10px] text-zinc-400 hover:text-rose-400 transition-colors"
-                        >
-                          รีเซ็ตภาพ
-                        </button>
-                      )}
-                    </div>
+                    {(() => {
+                      const rawUrl = currentEdit.imageUrl || currentEdit.logoUrl || "";
+                      const isSvgFallback = rawUrl.startsWith("data:image/svg+xml");
+                      const cleanImageUrl = isSvgFallback ? "" : rawUrl;
 
-                    <div className="relative mb-2">
-                      <Link2 className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                      <input
-                        type="text"
-                        value={currentEdit.imageUrl || currentEdit.logoUrl || ""}
-                        onChange={(e) => {
-                          const formatted = formatGoogleDriveUrl(e.target.value);
-                          handleFieldChange("imageUrl", formatted);
-                          handleFieldChange("logoUrl", formatted);
-                        }}
-                        placeholder="วางลิงก์รูปภาพ เช่น https://.../image.png หรือ ลิงก์ Google Drive"
-                        className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl py-2 pl-9 pr-3 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono"
-                      />
-                    </div>
-                    <span className="text-[10px] text-zinc-400 block leading-tight">
-                      รองรับ URL รูปภาพทุกประเภท และ ลิงก์แชร์ Google Drive (แปลงให้ดูได้ทันที)
-                    </span>
+                      return (
+                        <>
+                          <div className="flex items-center justify-between mb-1.5">
+                            <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                              <Link2 className="w-3.5 h-3.5 text-emerald-400" />
+                              <span>ลิงก์รูปภาพพาร์ทเนอร์ (Image Link 16:9)</span>
+                            </label>
+                            {cleanImageUrl && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleFieldChange("imageUrl", "");
+                                  handleFieldChange("logoUrl", "");
+                                }}
+                                className="text-[10px] text-zinc-400 hover:text-rose-400 transition-colors"
+                              >
+                                รีเซ็ตภาพ
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="relative mb-2">
+                            <textarea
+                              rows={2}
+                              value={cleanImageUrl}
+                              onChange={(e) => {
+                                const val = e.target.value.trim().replace(/^["']|["']$/g, "");
+                                const formatted = formatGoogleDriveUrl(val);
+                                handleFieldChange("imageUrl", formatted);
+                                handleFieldChange("logoUrl", formatted);
+                              }}
+                              placeholder="วางลิงก์รูปภาพที่นี่ (วางได้ยาวไม่จำกัด)..."
+                              className="w-full bg-black/60 border border-white/15 focus:border-white/50 rounded-xl p-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none font-mono break-all leading-relaxed resize-y"
+                            />
+                          </div>
+                          <span className="text-[10px] text-zinc-400 block leading-tight">
+                            {cleanImageUrl
+                              ? `กำหนดลิงก์แล้ว (${cleanImageUrl.length} ตัวอักษร)`
+                              : "รองรับ URL รูปภาพทุกประเภท และ ลิงก์แชร์ Google Drive (แปลงให้ดูได้ทันที)"}
+                          </span>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
 
